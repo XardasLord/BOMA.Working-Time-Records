@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BOMA.WRT.Infrastructure\BOMA.WRT.Infrastructure.csproj" />
+      <ProjectReference Include="..\BOMA.WTR.Infrastructure\BOMA.WTR.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

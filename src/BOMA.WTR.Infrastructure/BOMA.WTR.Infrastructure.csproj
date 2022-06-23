@@ -4,13 +4,22 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>BOMA.WRT.Infrastructure</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Hangfire.AspNetCore" Version="1.7.30" />
+      <PackageReference Include="Hangfire.Console" Version="1.4.2" />
+      <PackageReference Include="Hangfire.Core" Version="1.7.30" />
+      <PackageReference Include="Hangfire.SqlServer" Version="1.7.30" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BOMA.WTR.Application\BOMA.WTR.Application.csproj" />
     </ItemGroup>
 
 </Project>

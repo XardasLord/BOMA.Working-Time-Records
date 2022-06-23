@@ -2,7 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOMA.WTR.Api", "BOMA.WTR.Api\BOMA.WTR.Api.csproj", "{E237B41C-BC9B-4A48-94C6-014A2091A596}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOMA.WRT.Infrastructure", "BOMA.WRT.Infrastructure\BOMA.WRT.Infrastructure.csproj", "{EBFD5397-28AF-440F-BBA9-01A369C4A5C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOMA.WTR.Infrastructure", "BOMA.WTR.Infrastructure\BOMA.WTR.Infrastructure.csproj", "{EBFD5397-28AF-440F-BBA9-01A369C4A5C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOMA.WTR.Application", "BOMA.WTR.Application\BOMA.WTR.Application.csproj", "{8D9064AB-FAD8-4746-90E4-4D474BCB4B58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{EBFD5397-28AF-440F-BBA9-01A369C4A5C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBFD5397-28AF-440F-BBA9-01A369C4A5C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBFD5397-28AF-440F-BBA9-01A369C4A5C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D9064AB-FAD8-4746-90E4-4D474BCB4B58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D9064AB-FAD8-4746-90E4-4D474BCB4B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D9064AB-FAD8-4746-90E4-4D474BCB4B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D9064AB-FAD8-4746-90E4-4D474BCB4B58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
