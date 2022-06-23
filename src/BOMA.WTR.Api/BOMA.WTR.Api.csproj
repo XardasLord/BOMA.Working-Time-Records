@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+      <ProjectReference Include="..\BOMA.WRT.Infrastructure\BOMA.WRT.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
