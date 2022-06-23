@@ -1,15 +1,29 @@
-﻿using Hangfire.Console;
+﻿using BOMA.WRT.Application.RogerFiles;
+using Hangfire.Console;
 using Hangfire.Server;
+using Microsoft.Extensions.Options;
 
 namespace BOMA.WRT.Application.Hangfire;
 
 public class ParseWorkingTimeRecordsFileJob
 {
-    public Task Execute(PerformContext? context, CancellationToken cancellationToken)
+    private readonly RogerFileConfiguration _rogerFileOptions;
+
+    public ParseWorkingTimeRecordsFileJob(IOptions<RogerFileConfiguration> options)
     {
-        // Look for a CSV file
-        // If file exists try to parse it to the model class
-        // 
-        return Task.CompletedTask;
+        _rogerFileOptions = options.Value;
+    }
+    
+    public async Task Execute(PerformContext? context, CancellationToken cancellationToken)
+    {
+        if (Directory.GetFiles(_rogerFileOptions.FileLocation, "*.csv").Length < 1)
+        {
+            context.WriteLine("There is no CSV files to get");
+            return;
+        }
+        
+        
+
+        return;
     }
 }

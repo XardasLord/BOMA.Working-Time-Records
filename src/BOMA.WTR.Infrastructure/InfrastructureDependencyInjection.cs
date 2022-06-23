@@ -1,4 +1,5 @@
 ﻿using BOMA.WRT.Application.Hangfire;
+using BOMA.WRT.Application.RogerFiles;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
@@ -14,6 +15,8 @@ public static class InfrastructureDependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<RogerFileConfiguration>(configuration.GetSection(RogerFileConfiguration.Position));
+        
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         
