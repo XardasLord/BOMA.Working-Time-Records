@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using BOMA.WRT.Application.RogerFiles;
 using BOMA.WTR.Domain.Entities;
+using BOMA.WTR.Domain.Entities.Interfaces;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Hangfire.Console;
@@ -11,10 +12,12 @@ namespace BOMA.WRT.Application.Hangfire;
 
 public class ParseWorkingTimeRecordsFileJob
 {
+    private readonly IWorkingTimeRecordRepository _workingTimeRecordRepository;
     private readonly RogerFileConfiguration _rogerFileOptions;
 
-    public ParseWorkingTimeRecordsFileJob(IOptions<RogerFileConfiguration> options)
+    public ParseWorkingTimeRecordsFileJob(IOptions<RogerFileConfiguration> options, IWorkingTimeRecordRepository workingTimeRecordRepository)
     {
+        _workingTimeRecordRepository = workingTimeRecordRepository;
         _rogerFileOptions = options.Value;
     }
     
@@ -41,11 +44,18 @@ public class ParseWorkingTimeRecordsFileJob
                     new DateTime(x.Date.Value.Year, x.Date.Value.Month, x.Date.Value.Day, x.Time.Value.Hours, x.Time.Value.Minutes, x.Time.Value.Seconds),
                     x.UserRcpId.Value,
                     x.GroupId.Value));
-            
-            // TODO: add entries to DB
-        }
 
-        return;
+            
+            var recordsToAdd = await GetNonExistingOnly(workingTimeRecords);
+
+            if (recordsToAdd.Any())
+            {
+                await _workingTimeRecordRepository.AddAsync(recordsToAdd.ToArray());
+                await _workingTimeRecordRepository.SaveChangesAsync();
+            }
+            
+            context.WriteLine($"Number of entries saved in DB - {recordsToAdd.Count}.");
+        }
     }
 
     private static IEnumerable<RogerFileModel> ParseCsvToRogerFile(string fileLocation)
@@ -60,5 +70,17 @@ public class ParseWorkingTimeRecordsFileJob
         });
         
         return csv.GetRecords<RogerFileModel>().ToList();
+    }
+
+    private async Task<List<WorkingTimeRecord>> GetNonExistingOnly(IEnumerable<WorkingTimeRecord> workingTimeRecords)
+    {
+        var recordsToAdd = new List<WorkingTimeRecord>();
+        foreach (var record in workingTimeRecords)
+        {
+            if (!await _workingTimeRecordRepository.ExistsAsync(record))
+                recordsToAdd.Add(record);
+        }
+
+        return recordsToAdd;
     }
 }

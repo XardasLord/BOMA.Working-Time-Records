@@ -3,5 +3,5 @@ cd BOMA.WTR.Infrastructure
 dotnet ef --startup-project ../BOMA.WTR.Api/ migrations add <migration_name> -o ./Database/Migrations
 
 -- Update database migrations
-cd BOMA.WTR.Infrastructure
-dotnet ef --startup-project ../BOMA.WTR.Api/ database update
+cd BOMA.WTR.Infrastructure/Migrations
+dotnet ef --startup-project ../../BOMA.WTR.Api/ database update

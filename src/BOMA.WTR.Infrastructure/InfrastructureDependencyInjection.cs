@@ -1,6 +1,8 @@
 ﻿using BOMA.WRT.Application.Hangfire;
 using BOMA.WRT.Application.RogerFiles;
 using BOMA.WRT.Infrastructure.Database;
+using BOMA.WRT.Infrastructure.Database.Repositories;
+using BOMA.WTR.Domain.Entities.Interfaces;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
@@ -23,6 +25,7 @@ public static class InfrastructureDependencyInjection
         services.AddSwaggerGen();
 
         services.AddDbContext<BomaDbContext>(x => x.UseSqlServer(configuration.GetConnectionString("Boma")));
+        services.AddTransient<IWorkingTimeRecordRepository, WorkingTimeRecordRepository>();
         
         services.AddHangfire(config =>
         {
