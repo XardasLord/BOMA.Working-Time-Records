@@ -1,4 +1,5 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using BOMA.WTR.Domain.SharedKernel;
+using CsvHelper.Configuration.Attributes;
 
 namespace BOMA.WRT.Application.RogerFiles;
 
@@ -8,7 +9,7 @@ public class RogerFileModel
     public string? RogerEventName { get; set; }
     
     [Index(1)]
-    public RogerEventType? RogerEventType { get; set; }
+    public RecordEventType? RogerEventType { get; set; }
     
     [Index(2)]
     public string? UserId { get; set; }
@@ -34,12 +35,5 @@ public class RogerFileModel
     [Index(9)]
     public string? GroupName { get; set; }
 
-    public bool IsValid() => RogerEventType is not RogerFiles.RogerEventType.None && !string.IsNullOrEmpty(UserId);
-}
-
-public enum RogerEventType
-{
-    Entry = 0,
-    Exit = 16,
-    None = 32
+    public bool IsValid() => RogerEventType.HasValue && RogerEventType.Value is not RecordEventType.None && !string.IsNullOrEmpty(UserId);
 }

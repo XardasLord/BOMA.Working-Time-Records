@@ -1,10 +1,12 @@
 ﻿using BOMA.WRT.Application.Hangfire;
 using BOMA.WRT.Application.RogerFiles;
+using BOMA.WRT.Infrastructure.Database;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +21,8 @@ public static class InfrastructureDependencyInjection
         
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+
+        services.AddDbContext<BomaDbContext>(x => x.UseSqlServer(configuration.GetConnectionString("Boma")));
         
         services.AddHangfire(config =>
         {

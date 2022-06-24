@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using BOMA.WRT.Application.RogerFiles;
+using BOMA.WTR.Domain.Entities;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Hangfire.Console;
@@ -34,6 +35,13 @@ public class ParseWorkingTimeRecordsFileJob
             
             context.WriteLine($"There are {rogerFileModels.Count()} valid entries in the file - {file}");
 
+            var workingTimeRecords = rogerFileModels.Select(x =>
+                WorkingTimeRecord.Create(
+                    x.RogerEventType.Value,
+                    new DateTime(x.Date.Value.Year, x.Date.Value.Month, x.Date.Value.Day, x.Time.Value.Hours, x.Time.Value.Minutes, x.Time.Value.Seconds),
+                    x.UserRcpId.Value,
+                    x.GroupId.Value));
+            
             // TODO: add entries to DB
         }
 

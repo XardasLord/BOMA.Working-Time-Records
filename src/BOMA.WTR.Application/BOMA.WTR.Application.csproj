@@ -20,4 +20,8 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BOMA.WTR.Domain\BOMA.WTR.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

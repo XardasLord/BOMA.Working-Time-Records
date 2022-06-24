@@ -12,6 +12,13 @@
       <PackageReference Include="Hangfire.Console" Version="1.4.2" />
       <PackageReference Include="Hangfire.Core" Version="1.7.30" />
       <PackageReference Include="Hangfire.SqlServer" Version="1.7.30" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.6" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
