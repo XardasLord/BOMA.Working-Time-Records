@@ -1,4 +1,5 @@
-﻿using BOMA.WTR.Application.Hangfire;
+﻿using System.Reflection;
+using BOMA.WTR.Application.Hangfire;
 using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Infrastructure.Database;
@@ -7,6 +8,7 @@ using BOMA.WTR.Infrastructure.ErrorHandling;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +48,8 @@ public static class InfrastructureDependencyInjection
                 });
         });
         services.AddHangfireServer();
+        
+        services.AddMediatR(Assembly.GetExecutingAssembly());
 
         return services;
     }
