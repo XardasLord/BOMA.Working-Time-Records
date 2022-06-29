@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
-using BOMA.WTR.Domain.Entities;
+using BOMA.WTR.Domain.AggregateModels;
+using BOMA.WTR.Domain.AggregateModels.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -24,6 +25,7 @@ public class BomaDbContext : DbContext
     }
 
     public DbSet<WorkingTimeRecord> WorkingTimeRecords { get; set; }
+    public DbSet<Employee> Employees { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,4 +1,4 @@
-﻿using BOMA.WTR.Domain.Entities;
+﻿using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,10 +27,6 @@ public class WorkingTimeRecordConfiguration : IEntityTypeConfiguration<WorkingTi
         builder
             .Property(x => x.OccuredAt)
             .HasColumnName("OccuredAt")
-            .IsRequired();
-
-        builder.Property(x => x.UserRcpId)
-            .HasColumnName("UserRcpId")
             .IsRequired();
 
         builder.Property(x => x.GroupId)
