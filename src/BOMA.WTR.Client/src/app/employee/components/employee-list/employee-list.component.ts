@@ -14,9 +14,15 @@ import GetAll = Employee.GetAll;
 export class EmployeeListComponent implements OnInit {
 	@Select(EmployeeState.getEmployees) employees$!: Observable<EmployeeModel[]>;
 
+	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName'];
+
 	constructor(private store: Store) {}
 
 	ngOnInit(): void {
 		this.store.dispatch(new GetAll());
+	}
+
+	addEmployee() {
+		// TODO: Open dialog with form
 	}
 }
