@@ -63,6 +63,12 @@ public static class InfrastructureDependencyInjection
         }
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
+        
+        app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+        
         app.UseHttpsRedirection();
         app.UseAuthorization();
 
