@@ -1,7 +1,7 @@
 ﻿using BOMA.WTR.Domain.SharedKernel;
 using CsvHelper.Configuration.Attributes;
 
-namespace BOMA.WRT.Application.RogerFiles;
+namespace BOMA.WTR.Application.RogerFiles;
 
 public class RogerFileModel
 {

@@ -1,5 +1,5 @@
-using BOMA.WRT.Application;
-using BOMA.WRT.Infrastructure;
+using BOMA.WTR.Application;
+using BOMA.WTR.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

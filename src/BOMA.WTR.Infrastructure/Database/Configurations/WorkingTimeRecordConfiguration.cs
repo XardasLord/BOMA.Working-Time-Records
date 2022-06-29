@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace BOMA.WRT.Infrastructure.Database.Configurations;
+namespace BOMA.WTR.Infrastructure.Database.Configurations;
 
 public class WorkingTimeRecordConfiguration : IEntityTypeConfiguration<WorkingTimeRecord>
 {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BOMA.WRT.Infrastructure.Database.Configurations;
+namespace BOMA.WTR.Infrastructure.Database.Configurations;
 
 public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {

@@ -2,7 +2,7 @@
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BOMA.WRT.Infrastructure.Database.Repositories;
+namespace BOMA.WTR.Infrastructure.Database.Repositories;
 
 public class EmployeeRepository : IEmployeeRepository
 {

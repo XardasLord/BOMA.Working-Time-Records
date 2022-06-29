@@ -4,7 +4,7 @@ using BOMA.WTR.Domain.AggregateModels.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace BOMA.WRT.Infrastructure.Database;
+namespace BOMA.WTR.Infrastructure.Database;
 
 public class BomaDbContext : DbContext
 {

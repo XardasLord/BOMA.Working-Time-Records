@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using BOMA.WRT.Application.RogerFiles;
+using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
@@ -10,7 +10,7 @@ using Hangfire.Console;
 using Hangfire.Server;
 using Microsoft.Extensions.Options;
 
-namespace BOMA.WRT.Application.Hangfire;
+namespace BOMA.WTR.Application.Hangfire;
 
 public class ParseWorkingTimeRecordsFileJob
 {

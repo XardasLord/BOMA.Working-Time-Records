@@ -1,4 +1,4 @@
-﻿namespace BOMA.WRT.Application.RogerFiles;
+﻿namespace BOMA.WTR.Application.RogerFiles;
 
 public class RogerFileConfiguration
 {

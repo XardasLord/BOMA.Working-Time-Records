@@ -1,8 +1,9 @@
-﻿using BOMA.WRT.Application.Hangfire;
-using BOMA.WRT.Application.RogerFiles;
-using BOMA.WRT.Infrastructure.Database;
-using BOMA.WRT.Infrastructure.Database.Repositories;
+﻿using BOMA.WTR.Application.Hangfire;
+using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Infrastructure.Database;
+using BOMA.WTR.Infrastructure.Database.Repositories;
+using BOMA.WTR.Infrastructure.ErrorHandling;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
@@ -13,12 +14,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BOMA.WRT.Infrastructure;
+namespace BOMA.WTR.Infrastructure;
 
 public static class InfrastructureDependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<ExceptionHandlingMiddleware>();
+        
         services.Configure<RogerFileConfiguration>(configuration.GetSection(RogerFileConfiguration.Position));
         
         services.AddEndpointsApiExplorer();
@@ -54,7 +57,8 @@ public static class InfrastructureDependencyInjection
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseHttpsRedirection();
         app.UseAuthorization();
 
