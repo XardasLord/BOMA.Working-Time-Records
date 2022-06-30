@@ -13,6 +13,9 @@ public class EmployeeRepository : IEmployeeRepository
         _dbContext = dbContext;
     }
 
+    public Task<Employee> GetAsync(int id)
+        => _dbContext.Employees.SingleOrDefaultAsync(x => x.Id == id)!;
+
     public Task<Employee> GetByRcpIdAsync(int rcpId)
         => _dbContext.Employees
             .Include(x => x.WorkingTimeRecords)

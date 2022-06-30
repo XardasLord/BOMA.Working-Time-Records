@@ -32,6 +32,12 @@ public class Employee : Entity<int>, IAggregateRoot
         return new Employee(name, rcpId);
     }
     
+    public void UpdateData(Name name, int rcpId)
+    {
+        _name = name;
+        _rcpId = rcpId;
+    }
+    
     public void AddWorkingTimeRecord(WorkingTimeRecord record)
     {
         if (WorkingTimeRecords

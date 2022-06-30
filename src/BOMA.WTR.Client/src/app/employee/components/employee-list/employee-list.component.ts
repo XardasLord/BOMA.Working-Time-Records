@@ -7,6 +7,7 @@ import { EmployeeModel } from '../../models/employee.model';
 import { Modal } from '../../../shared/state/modal.action';
 import GetAll = Employee.GetAll;
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
+import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 
 @Component({
 	selector: 'app-employee-list',
@@ -16,15 +17,23 @@ import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 export class EmployeeListComponent implements OnInit {
 	@Select(EmployeeState.getEmployees) employees$!: Observable<EmployeeModel[]>;
 
-	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName'];
+	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'actions'];
 
 	constructor(private store: Store) {}
 
 	ngOnInit(): void {
-		this.store.dispatch(new GetAll());
+		this.refresh();
 	}
 
 	addEmployee() {
 		this.store.dispatch(new OpenAddNewEmployeeDialog());
+	}
+
+	edit(employee: EmployeeModel) {
+		this.store.dispatch(new OpenEditEmployeeDialog(employee));
+	}
+
+	refresh() {
+		this.store.dispatch(new GetAll());
 	}
 }

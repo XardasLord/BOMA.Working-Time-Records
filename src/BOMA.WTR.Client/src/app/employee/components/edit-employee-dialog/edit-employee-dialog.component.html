@@ -1,0 +1,31 @@
+<form [formGroup]="editEmployeeForm" (ngSubmit)="onSubmit()" ngxsForm="employee.editEmployeeForm">
+  <div class="content">
+    <h2 mat-dialog-title>Edytuj pracownika</h2>
+
+    <mat-dialog-content>
+      <section>
+        <mat-form-field appearance="fill" class="input">
+          <mat-label>Imię</mat-label>
+          <input type="text" matInput formControlName="firstName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="input">
+          <mat-label>Nazwisko</mat-label>
+          <input type="text" matInput formControlName="lastName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="input">
+          <mat-label>RCP ID</mat-label>
+          <input type="number" matInput formControlName="rcpId" />
+        </mat-form-field>
+      </section>
+
+      <input type="hidden" formControlName="id" />
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button color="primary" type="button" mat-dialog-close>Anuluj</button>
+      <button mat-raised-button color="primary" type="submit" cdkFocusInitial>Edytuj</button>
+    </mat-dialog-actions>
+  </div>
+</form>

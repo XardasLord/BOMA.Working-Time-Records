@@ -9,11 +9,13 @@ import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-
 import { AddNewEmployeeFormModel } from '../models/add-new-employee-form.model';
 import GetAll = Employee.GetAll;
 import Add = Employee.Add;
-import { append, patch } from '@ngxs/store/operators';
+import { append, patch, updateItem } from '@ngxs/store/operators';
+import Edit = Employee.Edit;
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
 	addNewEmployeeForm: FormStateModel<AddNewEmployeeFormModel>;
+	editEmployeeForm: FormStateModel<AddNewEmployeeFormModel>;
 }
 
 const EMPLOYEE_STATE_TOKEN = new StateToken<EmployeeStateModel>('employee');
@@ -21,7 +23,8 @@ const EMPLOYEE_STATE_TOKEN = new StateToken<EmployeeStateModel>('employee');
 	name: EMPLOYEE_STATE_TOKEN,
 	defaults: {
 		employees: [],
-		addNewEmployeeForm: DefaultFormStateValue
+		addNewEmployeeForm: DefaultFormStateValue,
+		editEmployeeForm: DefaultFormStateValue
 	}
 })
 @Injectable()
@@ -65,6 +68,29 @@ export class EmployeeState {
 					`Nowy pracownik został dodany - ${action.employee.firstName} ${action.employee.lastName}`,
 					'Sukces'
 				);
+			})
+		);
+	}
+
+	@Action(Edit)
+	edit(ctx: StateContext<EmployeeStateModel>, action: Edit): Observable<void> {
+		return this.employeeService.editEmployee(action.employeeId, action.employee).pipe(
+			tap((_) => {
+				ctx.setState(
+					patch({
+						employees: updateItem<EmployeeModel>(
+							(x) => x?.id === action.employeeId,
+							patch({
+								id: action.employeeId,
+								firstName: action.employee.firstName,
+								lastName: action.employee.lastName,
+								rcpId: action.employee.rcpId
+							})
+						)
+					})
+				);
+
+				this.toastService.success(`Pracownik został edytowany`, 'Sukces');
 			})
 		);
 	}
