@@ -4,7 +4,9 @@ import { Observable } from 'rxjs';
 import { Employee } from '../../state/employee.action';
 import { EmployeeState } from '../../state/employee.state';
 import { EmployeeModel } from '../../models/employee.model';
+import { Modal } from '../../../shared/state/modal.action';
 import GetAll = Employee.GetAll;
+import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 
 @Component({
 	selector: 'app-employee-list',
@@ -23,6 +25,6 @@ export class EmployeeListComponent implements OnInit {
 	}
 
 	addEmployee() {
-		// TODO: Open dialog with form
+		this.store.dispatch(new OpenAddNewEmployeeDialog());
 	}
 }

@@ -1,7 +1,15 @@
-export namespace Employee {
-  const prefix = '[Employee]';
+import { AddNewEmployeeFormModel } from '../models/add-new-employee-form.model';
 
-  export class GetAll {
-    static readonly type = `${prefix} ${GetAll.name}`;
-  }
+export namespace Employee {
+	const prefix = '[Employee]';
+
+	export class GetAll {
+		static readonly type = `${prefix} ${GetAll.name}`;
+	}
+
+	export class Add {
+		constructor(public employee: AddNewEmployeeFormModel) {}
+
+		static readonly type = `${prefix} ${Add.name}`;
+	}
 }
