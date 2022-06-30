@@ -50,6 +50,7 @@ public static class InfrastructureDependencyInjection
         services.AddHangfireServer();
         
         services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }
