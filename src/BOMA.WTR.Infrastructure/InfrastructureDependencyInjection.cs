@@ -4,6 +4,7 @@ using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Infrastructure.Database;
 using BOMA.WTR.Infrastructure.Database.Repositories;
+using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
 using Hangfire;
 using Hangfire.Console;
@@ -51,6 +52,8 @@ public static class InfrastructureDependencyInjection
         
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        
+        services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
 
         return services;
     }
