@@ -27,7 +27,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                     {
                         WorkedMinutes = aggregatedMinutesForDay,
                         WorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2,
-                        Date = previousDate,
+                        Date = previousDate.Date,
                         EventType = previousEventType
                     });
                     
@@ -41,7 +41,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                     {
                         WorkedMinutes = aggregatedMinutesForDay,
                         WorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2,
-                        Date = previousDate,
+                        Date = previousDate.Date,
                         EventType = previousEventType
                     });
                     
@@ -80,7 +80,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 WorkedMinutes = aggregatedMinutesForDay,
                 WorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2,
-                Date = previousDate,
+                Date = previousDate.Date,
                 EventType = previousEventType
             });
         }
