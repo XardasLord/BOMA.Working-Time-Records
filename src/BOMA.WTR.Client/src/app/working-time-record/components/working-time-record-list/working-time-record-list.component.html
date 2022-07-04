@@ -1,3 +1,55 @@
-<pre>
-  {{ detailedRecords$ | async | json }}
-</pre>
+<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!">
+  <ng-container matColumnDef="fullName">
+    <th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+      <td mat-cell *matCellDef="let record; let i = index" [attr.rowspan]="i % 5 == 0 ? '5' : null" [style.display]="i % 5? 'none' : null">
+        aa
+      </td>
+  </ng-container>
+
+  <ng-container matColumnDef="rate">
+    <th mat-header-cell *matHeaderCellDef>Stawka</th>
+    <td mat-cell *matCellDef="let record">Stawka</td>
+  </ng-container>
+
+  <ng-container matColumnDef="gross">
+    <th mat-header-cell *matHeaderCellDef>Brutto</th>
+    <td mat-cell *matCellDef="let record">Brutto</td>
+  </ng-container>
+
+  <ng-container matColumnDef="bonus">
+    <th mat-header-cell *matHeaderCellDef>Premia</th>
+    <td mat-cell *matCellDef="let record">Premia</td>
+  </ng-container>
+
+  <ng-container matColumnDef="sumValue">
+    <th mat-header-cell *matHeaderCellDef>Suma duża</th>
+    <td mat-cell *matCellDef="let record">Suma duża</td>
+  </ng-container>
+
+  <ng-container matColumnDef="sumBonus">
+    <th mat-header-cell *matHeaderCellDef>Suma premia</th>
+    <td mat-cell *matCellDef="let record">Suma premia</td>
+  </ng-container>
+
+  <ng-container matColumnDef="sumHours">
+    <th mat-header-cell *matHeaderCellDef>Suma [h]</th>
+    <td mat-cell *matCellDef="let record">Suma [h]</td>
+  </ng-container>
+
+  <ng-container matColumnDef="emptyLabel">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let record">Godziny</td>
+  </ng-container>
+
+  <ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of daysArray">
+    <th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
+    <td mat-cell *matCellDef="let record"></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+</table>
+
+<!--<pre>-->
+<!--  {{ detailedRecords$ | async | json }}-->
+<!--</pre>-->

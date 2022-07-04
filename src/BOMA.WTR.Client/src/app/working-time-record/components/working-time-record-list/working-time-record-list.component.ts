@@ -14,9 +14,21 @@ import GetAll = WorkingTimeRecord.GetAll;
 export class WorkingTimeRecordListComponent implements OnInit {
 	@Select(WorkingTimeRecordState.getDetailedRecords) detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
 
-	constructor(private store: Store) {}
+	columnsToDisplay = ['fullName', 'rate', 'gross', 'bonus', 'sumValue', 'sumBonus', 'sumHours', 'emptyLabel'];
+	daysArray: string[] = [];
+
+	constructor(private store: Store) {
+		for (let i = 1; i <= this.daysInMonth(6, 2022); i++) {
+			this.columnsToDisplay.push(i.toString());
+			this.daysArray.push(i.toString());
+		}
+	}
 
 	ngOnInit(): void {
 		this.store.dispatch(new GetAll(2022, 6, 4));
+	}
+
+	daysInMonth(month: number, year: number) {
+		return new Date(year, month, 0).getDate();
 	}
 }
