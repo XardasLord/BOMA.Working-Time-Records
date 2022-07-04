@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="(employees$ | async)!">
+<table mat-table class="mat-elevation-z6" [dataSource]="(employees$ | async)!">
   <ng-container matColumnDef="rcpId">
     <th mat-header-cell *matHeaderCellDef>RCP ID</th>
     <td mat-cell *matCellDef="let employee">{{ employee?.rcpId }}</td>
