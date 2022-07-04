@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Store } from '@ngxs/store';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ResetForm } from '@ngxs/form-plugin';
-import { EmployeeModel } from '../../models/employee.model';
+import { EmployeeModel } from '../../../shared/models/employee.model';
 import { Employee } from '../../state/employee.action';
 import Edit = Employee.Edit;
 

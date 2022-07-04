@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Employee } from './employee.action';
-import { EmployeeModel } from '../models/employee.model';
+import { EmployeeModel } from '../../shared/models/employee.model';
 import { IEmployeeService } from '../services/employee.service.base';
 import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-states.model';
 import { AddNewEmployeeFormModel } from '../models/add-new-employee-form.model';

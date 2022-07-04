@@ -1,4 +1,4 @@
-import { EmployeeModel } from '../../employee/models/employee.model';
+import { EmployeeModel } from '../models/employee.model';
 
 export namespace Modal {
 	const prefix = '[Modal]';

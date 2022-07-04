@@ -1,6 +1,6 @@
 import { RemoteServiceBase } from '../../shared/services/remote.service.base';
 import { Observable } from 'rxjs';
-import { EmployeeModel } from '../models/employee.model';
+import { EmployeeModel } from '../../shared/models/employee.model';
 import { AddNewEmployeeFormModel } from '../models/add-new-employee-form.model';
 import { EditEmployeeFormModel } from '../models/edit-employee-form.model';
 

@@ -3,7 +3,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Employee } from '../../state/employee.action';
 import { EmployeeState } from '../../state/employee.state';
-import { EmployeeModel } from '../../models/employee.model';
+import { EmployeeModel } from '../../../shared/models/employee.model';
 import { Modal } from '../../../shared/state/modal.action';
 import GetAll = Employee.GetAll;
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
