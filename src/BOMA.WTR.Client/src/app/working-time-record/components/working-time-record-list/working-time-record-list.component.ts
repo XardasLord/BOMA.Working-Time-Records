@@ -12,7 +12,9 @@ import GetAll = WorkingTimeRecord.GetAll;
 	styleUrls: ['./working-time-record-list.component.scss']
 })
 export class WorkingTimeRecordListComponent implements OnInit {
-	@Select(WorkingTimeRecordState.getDetailedRecords) detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
+	@Select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable) detailedRecords$!: Observable<
+		EmployeeWorkingTimeRecordDetailsModel[]
+	>;
 
 	columnsToDisplay = ['fullName', 'rate', 'gross', 'bonus', 'sumValue', 'sumBonus', 'sumHours', 'emptyLabel'];
 	daysArray: string[] = [];

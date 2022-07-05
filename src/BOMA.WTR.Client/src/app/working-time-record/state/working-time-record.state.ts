@@ -26,6 +26,24 @@ export class WorkingTimeRecordState {
 		return state.detailedRecords;
 	}
 
+	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
+	static getDetailedRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
+		const result: any = [];
+
+		// For table binding with rowspan simplicity
+		state.detailedRecords.map((x) => {
+			const model = new EmployeeWorkingTimeRecordDetailsModel();
+			model.employee = x.employee;
+			model.workingTimeRecordsAggregated = x.workingTimeRecordsAggregated;
+
+			for (let i = 0; i < 6; i++) {
+				result.push(model);
+			}
+		});
+
+		return result;
+	}
+
 	@Action(GetAll)
 	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, action: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
 		return this.workingTimeRecordService.getAll(action.year, action.month, action.groupId).pipe(
