@@ -156,12 +156,12 @@
 				'default-value-hours': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
 			}"
 		>
-			<span *ngIf="i % 6 == 0"></span>
-			<span *ngIf="i % 6 == 1"></span>
-			<span *ngIf="i % 6 == 2"></span>
-			<span *ngIf="i % 6 == 3"></span>
-			<span *ngIf="i % 6 == 4"></span>
-			<span *ngIf="i % 6 == 5"></span>
+			<span *ngIf="i % 6 == 0">{{ getWorkingHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
+			<span *ngIf="i % 6 == 1">{{ getNormativeHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
+			<span *ngIf="i % 6 == 2">{{ get50PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
+			<span *ngIf="i % 6 == 3">{{ get100PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
+			<span *ngIf="i % 6 == 4">{{ getSaturdayHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
+			<span *ngIf="i % 6 == 5">{{ getNightHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
 		</td>
 	</ng-container>
 
