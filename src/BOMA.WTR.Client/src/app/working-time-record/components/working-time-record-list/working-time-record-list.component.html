@@ -1,111 +1,172 @@
 <table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!">
-  <ng-container matColumnDef="fullName">
-    <th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
-      <td mat-cell *matCellDef="let record; let i = index"
-          [attr.rowspan]="i % 6 == 0 ? '6' : null"
-          [style.display]="i % 6? 'none' : null">
-        {{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
-      </td>
-  </ng-container>
+	<ng-container matColumnDef="fullName">
+		<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[attr.rowspan]="i % 6 == 0 ? '6' : null"
+			[style.display]="i % 6 ? 'none' : null"
+		>
+			{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="rate">
-    <th mat-header-cell *matHeaderCellDef>Stawka</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="rate">
+		<th mat-header-cell *matHeaderCellDef>Stawka</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'empty-value': i % 6 === 0 || i % 6 === 5,
+				'base-rate': i % 6 === 1,
+				'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
+			}"
+		>
+			<ng-container *ngIf="i % 6 == 0"></ng-container>
+			<ng-container *ngIf="i % 6 == 1">Stawka</ng-container>
+			<ng-container *ngIf="i % 6 == 2"></ng-container>
+			<ng-container *ngIf="i % 6 == 3"></ng-container>
+			<ng-container *ngIf="i % 6 == 4"></ng-container>
+			<ng-container *ngIf="i % 6 == 5"></ng-container>
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="gross">
-    <th mat-header-cell *matHeaderCellDef>Brutto</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="gross">
+		<th mat-header-cell *matHeaderCellDef>Brutto</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'empty-value': i % 6 === 0 || i % 6 === 5,
+				'base-gross': i % 6 === 1,
+				'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
+			}"
+		>
+			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 1"></span>
+			<span *ngIf="i % 6 == 2"></span>
+			<span *ngIf="i % 6 == 3"></span>
+			<span *ngIf="i % 6 == 4"></span>
+			<span *ngIf="i % 6 == 5"></span>
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="bonus">
-    <th mat-header-cell *matHeaderCellDef>Premia</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="bonus">
+		<th mat-header-cell *matHeaderCellDef>Premia</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'percentage-bonus': i % 6 === 0,
+				'base-bonus': i % 6 === 1,
+				'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4,
+				'empty-value': i % 6 === 5
+			}"
+		>
+			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 1"></span>
+			<span *ngIf="i % 6 == 2"></span>
+			<span *ngIf="i % 6 == 3"></span>
+			<span *ngIf="i % 6 == 4"></span>
+			<span *ngIf="i % 6 == 5"></span>
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="sumValue">
-    <th mat-header-cell *matHeaderCellDef>Suma duża</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="sumValue">
+		<th mat-header-cell *matHeaderCellDef>Suma duża</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'empty-value': i % 6 === 0 || i % 6 === 5,
+				'default-value': i % 6 === 1,
+				'fifty-percentage-gross-sum': i % 6 === 2,
+				'hundred-percentage-gross-sum': i % 6 === 3,
+				'saturday-gross-sum': i % 6 === 4
+			}"
+		>
+			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 1"></span>
+			<span *ngIf="i % 6 == 2"></span>
+			<span *ngIf="i % 6 == 3"></span>
+			<span *ngIf="i % 6 == 4"></span>
+			<span *ngIf="i % 6 == 5"></span>
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="sumBonus">
-    <th mat-header-cell *matHeaderCellDef>Suma premia</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="sumBonus">
+		<th mat-header-cell *matHeaderCellDef>Suma premia</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'empty-value': i % 6 === 0 || i % 6 === 1 || i % 6 === 5,
+				'fifty-percentage-bonus-sum': i % 6 === 2,
+				'hundred-percentage-bonus-sum': i % 6 === 3,
+				'saturday-bonus-sum': i % 6 === 4
+			}"
+		>
+			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 1"></span>
+			<span *ngIf="i % 6 == 2"></span>
+			<span *ngIf="i % 6 == 3"></span>
+			<span *ngIf="i % 6 == 4"></span>
+			<span *ngIf="i % 6 == 5"></span>
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="sumHours">
-    <th mat-header-cell *matHeaderCellDef>Suma [h]</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="sumHours">
+		<th mat-header-cell *matHeaderCellDef>Suma [h]</th>
+		<td mat-cell *matCellDef="let record; let i = index" class="default-value">
+			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 1"></span>
+			<span *ngIf="i % 6 == 2"></span>
+			<span *ngIf="i % 6 == 3"></span>
+			<span *ngIf="i % 6 == 4"></span>
+			<span *ngIf="i % 6 == 5"></span>
+		</td>
+	</ng-container>
 
-  <ng-container matColumnDef="emptyLabel">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0">Godziny</span>
-      <span *ngIf="i % 6 == 1">Normatywne</span>
-      <span *ngIf="i % 6 == 2">50%</span>
-      <span *ngIf="i % 6 == 3">100%</span>
-      <span *ngIf="i % 6 == 4">Sobota</span>
-      <span *ngIf="i % 6 == 5">Nocka</span>
-    </td>
-  </ng-container>
+	<ng-container matColumnDef="emptyLabel">
+		<th mat-header-cell *matHeaderCellDef></th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
+				'default-value': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
+			}"
+		>
+			<span *ngIf="i % 6 == 0">Godziny</span>
+			<span *ngIf="i % 6 == 1">Normatywne</span>
+			<span *ngIf="i % 6 == 2">50%</span>
+			<span *ngIf="i % 6 == 3">100%</span>
+			<span *ngIf="i % 6 == 4">Sobota</span>
+			<span *ngIf="i % 6 == 5">Nocka</span>
+		</td>
+	</ng-container>
 
-  <ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of daysArray">
-    <th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
-    <td mat-cell *matCellDef="let record; let i = index">
-      <span *ngIf="i % 6 == 0"></span>
-      <span *ngIf="i % 6 == 1"></span>
-      <span *ngIf="i % 6 == 2"></span>
-      <span *ngIf="i % 6 == 3"></span>
-      <span *ngIf="i % 6 == 4"></span>
-      <span *ngIf="i % 6 == 5"></span>
-    </td>
-  </ng-container>
+	<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of daysArray">
+		<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
+		<td
+			mat-cell
+			*matCellDef="let record; let i = index"
+			[ngClass]="{
+				'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
+				'default-value-hours': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
+			}"
+		>
+			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 1"></span>
+			<span *ngIf="i % 6 == 2"></span>
+			<span *ngIf="i % 6 == 3"></span>
+			<span *ngIf="i % 6 == 4"></span>
+			<span *ngIf="i % 6 == 5"></span>
+		</td>
+	</ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+	<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+	<tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
 </table>
 
 <!--<pre>-->
