@@ -24,27 +24,14 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 if (previousEventType == RecordEventType.Exit && timeRecord.EventType == RecordEventType.Entry)
                 {
-                    result.Add(new WorkingTimeRecordAggregatedViewModel
-                    {
-                        WorkedMinutes = aggregatedMinutesForDay,
-                        WorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2,
-                        Date = previousDate.Date,
-                        EventType = previousEventType
-                    });
+                    result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, previousEventType));
                     
                     aggregatedMinutesForDay = 0;
                 } else if (previousEventType == RecordEventType.Entry && timeRecord.EventType == RecordEventType.Exit)
                 {
-                    // TODO: Add that difference between previous date and current date
                     aggregatedMinutesForDay += (int)(normalizedOccuredAt - previousDate).TotalMinutes;
                     
-                    result.Add(new WorkingTimeRecordAggregatedViewModel
-                    {
-                        WorkedMinutes = aggregatedMinutesForDay,
-                        WorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2,
-                        Date = previousDate.Date,
-                        EventType = previousEventType
-                    });
+                    result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, previousEventType));
                     
                     aggregatedMinutesForDay = 0;
                     previousEventType = timeRecord.EventType;
@@ -77,13 +64,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         if (aggregatedMinutesForDay > 0)
         {
-            result.Add(new WorkingTimeRecordAggregatedViewModel
-            {
-                WorkedMinutes = aggregatedMinutesForDay,
-                WorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2,
-                Date = previousDate.Date,
-                EventType = previousEventType
-            });
+            result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, previousEventType));
         }
         
         return result;
@@ -140,5 +121,23 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             default:
                 throw new ArgumentOutOfRangeException(nameof(recordEventType), recordEventType, null);
         }
+    }
+
+    private static WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime previousDate, RecordEventType previousEventType)
+    {
+        var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+        
+        return new WorkingTimeRecordAggregatedViewModel
+        {
+            Date = previousDate.Date,
+            EventType = previousEventType,
+            WorkedMinutes = aggregatedMinutesForDay,
+            WorkedHoursRounded = allWorkedHoursRounded,
+            BaseNormativeHours = previousDate.Date.DayOfWeek != DayOfWeek.Saturday ? allWorkedHoursRounded > 8 ? allWorkedHoursRounded + 8 - allWorkedHoursRounded : allWorkedHoursRounded : 0,
+            FiftyPercentageBonusHours = previousDate.Date.DayOfWeek != DayOfWeek.Saturday ? allWorkedHoursRounded > 8 ? (allWorkedHoursRounded - 8 > 2 ? 2 : allWorkedHoursRounded - 8) : 0 : 0,
+            HundredPercentageBonusHours = previousDate.Date.DayOfWeek != DayOfWeek.Saturday ? allWorkedHoursRounded > 10 ? allWorkedHoursRounded - 10 : 0 : 0,
+            SaturdayHours = previousDate.Date.DayOfWeek == DayOfWeek.Saturday ? allWorkedHoursRounded : 0,
+            NightHours = 0 // TODO
+        };
     }
 }
