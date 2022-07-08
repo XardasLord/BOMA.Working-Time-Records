@@ -39,8 +39,10 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             WorkingTimeRecordsAggregated = _employeeWorkingTimeRecordCalculationDomainService.CalculateAggregatedWorkingTimeRecords(employee.WorkingTimeRecords)
         }).ToList();
 
-        // TODO: Calculate salaries (base, gross, bonus, etc.) for every section
-        
+        result.ForEach(x =>
+        {
+            x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(x);
+        });
         
         return result;
     }
