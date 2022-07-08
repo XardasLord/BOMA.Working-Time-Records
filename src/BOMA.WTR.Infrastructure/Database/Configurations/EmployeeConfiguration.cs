@@ -22,6 +22,26 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             x.Property(p => p.LastName).HasColumnName("LastName").HasMaxLength(64).IsRequired();
         });
 
+        builder.OwnsOne(x => x.Salary, salary =>
+        {
+            salary.Property(p => p.Amount)
+                .HasColumnName("BaseSalaryAmount")
+                .HasDefaultValue(0)
+                .HasColumnType("money");
+            
+            salary.Property(p => p.Currency)
+                .HasColumnName("Currency")
+                .HasDefaultValue("PLN");
+        });
+        
+        builder.OwnsOne(x => x.PercentageSalaryBonus, bonus =>
+        {
+            bonus.Property(p => p.Value)
+                .HasColumnName("PercentageBonusSalary")
+                .HasDefaultValue(0)
+                .HasColumnType("money");
+        });
+
         builder.Property(x => x.RcpId)
             .HasColumnName("RcpId")
             .IsRequired();
