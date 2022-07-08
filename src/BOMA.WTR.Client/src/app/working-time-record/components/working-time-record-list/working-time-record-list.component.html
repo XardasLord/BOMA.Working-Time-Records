@@ -23,7 +23,7 @@
 			}"
 		>
 			<ng-container *ngIf="i % 6 == 0"></ng-container>
-			<ng-container *ngIf="i % 6 == 1">Stawka</ng-container>
+			<ng-container *ngIf="i % 6 == 1">{{ record?.employee?.baseSalary | currency: 'PLN' }}</ng-container>
 			<ng-container *ngIf="i % 6 == 2"></ng-container>
 			<ng-container *ngIf="i % 6 == 3"></ng-container>
 			<ng-container *ngIf="i % 6 == 4"></ng-container>
@@ -63,7 +63,7 @@
 				'empty-value': i % 6 === 5
 			}"
 		>
-			<span *ngIf="i % 6 == 0"></span>
+			<span *ngIf="i % 6 == 0">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} % </span>
 			<span *ngIf="i % 6 == 1"></span>
 			<span *ngIf="i % 6 == 2"></span>
 			<span *ngIf="i % 6 == 3"></span>
@@ -157,9 +157,27 @@
 			}"
 		>
 			<span *ngIf="i % 6 == 0">{{ getWorkingHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
-			<span *ngIf="i % 6 == 1">{{ getNormativeHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
-			<span *ngIf="i % 6 == 2">{{ get50PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
-			<span *ngIf="i % 6 == 3">{{ get100PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
+			<span
+				*ngIf="i % 6 == 1"
+				[ngClass]="{
+					'zero-hours': getNormativeHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) === 0
+				}"
+				>{{ getNormativeHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span
+			>
+			<span
+				*ngIf="i % 6 == 2"
+				[ngClass]="{
+					'zero-hours': get50PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) === 0
+				}"
+				>{{ get50PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span
+			>
+			<span
+				*ngIf="i % 6 == 3"
+				[ngClass]="{
+					'zero-hours': get100PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) === 0
+				}"
+				>{{ get100PercentageHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span
+			>
 			<span *ngIf="i % 6 == 4">{{ getSaturdayHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
 			<span *ngIf="i % 6 == 5">{{ getNightHoursForDay(record?.workingTimeRecordsAggregated, +dayNumber) }}</span>
 		</td>

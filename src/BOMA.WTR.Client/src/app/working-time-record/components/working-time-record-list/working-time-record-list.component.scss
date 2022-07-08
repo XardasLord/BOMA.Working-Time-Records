@@ -61,6 +61,10 @@
   width: 30px;
 }
 
+.mat-cell > .zero-hours {
+  color: $red-color;
+}
+
 tr.mat-row {
   height: 24px;
 }
@@ -118,5 +122,4 @@ tr.mat-row:nth-child(6n) > .mat-cell {
 
 // Hours column
 .mat-cell.default-value-hours {
-  color: $red-color
 }
