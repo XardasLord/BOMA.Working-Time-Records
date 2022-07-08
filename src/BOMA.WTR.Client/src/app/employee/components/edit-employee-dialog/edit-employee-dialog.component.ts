@@ -21,6 +21,8 @@ export class EditEmployeeDialogComponent implements OnInit {
 			id: new FormControl<number>(employee.id, [Validators.required]),
 			firstName: new FormControl<string>(employee.firstName, [Validators.required, Validators.max(64)]),
 			lastName: new FormControl<string>(employee.lastName, [Validators.required, Validators.max(64)]),
+			baseSalary: new FormControl<number>(employee.baseSalary, [Validators.required, Validators.min(0)]),
+			salaryBonusPercentage: new FormControl<number>(employee.salaryBonusPercentage, [Validators.required, Validators.min(0)]),
 			rcpId: new FormControl<number>(employee.rcpId, [Validators.required, Validators.min(1)])
 		});
 

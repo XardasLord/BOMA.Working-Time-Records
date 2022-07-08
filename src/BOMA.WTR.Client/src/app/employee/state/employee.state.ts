@@ -58,6 +58,8 @@ export class EmployeeState {
 								id: employeeId,
 								firstName: action.employee.firstName,
 								lastName: action.employee.lastName,
+								baseSalary: action.employee.baseSalary,
+								salaryBonusPercentage: action.employee.salaryBonusPercentage,
 								rcpId: action.employee.rcpId
 							}
 						])
@@ -84,6 +86,8 @@ export class EmployeeState {
 								id: action.employeeId,
 								firstName: action.employee.firstName,
 								lastName: action.employee.lastName,
+								baseSalary: action.employee.baseSalary,
+								salaryBonusPercentage: action.employee.salaryBonusPercentage,
 								rcpId: action.employee.rcpId
 							})
 						)

@@ -5,5 +5,7 @@ public class EmployeeViewModel
     public int Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public decimal BaseSalary { get; set; }
+    public decimal SalaryBonusPercentage { get; set; }
     public int RcpId { get; set; }
 }

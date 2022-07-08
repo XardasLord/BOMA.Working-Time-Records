@@ -1,29 +1,39 @@
 <form [formGroup]="addNewEmployeeForm" (ngSubmit)="onSubmit()" ngxsForm="employee.addNewEmployeeForm">
-  <div class="content">
-    <h2 mat-dialog-title>Dodaj nowego pracownika</h2>
+	<div class="content">
+		<h2 mat-dialog-title>Dodaj nowego pracownika</h2>
 
-    <mat-dialog-content>
-      <section>
-        <mat-form-field appearance="fill" class="input">
-          <mat-label>Imię</mat-label>
-          <input type="text" matInput formControlName="firstName" />
-        </mat-form-field>
+		<mat-dialog-content>
+			<section>
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Imię</mat-label>
+					<input type="text" matInput formControlName="firstName" />
+				</mat-form-field>
 
-        <mat-form-field appearance="fill" class="input">
-          <mat-label>Nazwisko</mat-label>
-          <input type="text" matInput formControlName="lastName" />
-        </mat-form-field>
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Nazwisko</mat-label>
+					<input type="text" matInput formControlName="lastName" />
+				</mat-form-field>
 
-        <mat-form-field appearance="fill" class="input">
-          <mat-label>RCP ID</mat-label>
-          <input type="number" matInput formControlName="rcpId" />
-        </mat-form-field>
-      </section>
-    </mat-dialog-content>
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Stawka [PLN]</mat-label>
+					<input type="number" matInput formControlName="baseSalary" />
+				</mat-form-field>
 
-    <mat-dialog-actions>
-      <button mat-button color="primary" type="button" mat-dialog-close>Anuluj</button>
-      <button mat-raised-button color="primary" type="submit" cdkFocusInitial>Dodaj</button>
-    </mat-dialog-actions>
-  </div>
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Premia [%]</mat-label>
+					<input type="number" matInput formControlName="salaryBonusPercentage" />
+				</mat-form-field>
+
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>RCP ID</mat-label>
+					<input type="number" matInput formControlName="rcpId" />
+				</mat-form-field>
+			</section>
+		</mat-dialog-content>
+
+		<mat-dialog-actions>
+			<button mat-button color="primary" type="button" mat-dialog-close>Anuluj</button>
+			<button mat-raised-button color="primary" type="submit" cdkFocusInitial>Dodaj</button>
+		</mat-dialog-actions>
+	</div>
 </form>

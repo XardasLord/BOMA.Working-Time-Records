@@ -34,7 +34,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                 .HasDefaultValue("PLN");
         });
         
-        builder.OwnsOne(x => x.PercentageSalaryBonus, bonus =>
+        builder.OwnsOne(x => x.SalaryBonusPercentage, bonus =>
         {
             bonus.Property(p => p.Value)
                 .HasColumnName("PercentageBonusSalary")

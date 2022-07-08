@@ -9,7 +9,7 @@ public class Employee : Entity<int>, IAggregateRoot
 {
     private Name _name;
     private Money _salary;
-    private PercentageBonus _percentageSalaryBonus;
+    private PercentageBonus _salaryBonusPercentage;
     private int _rcpId;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
 
@@ -18,18 +18,18 @@ public class Employee : Entity<int>, IAggregateRoot
         _workingTimeRecords = new List<WorkingTimeRecord>();
     }
 
-    private Employee(Name name, Money salary, PercentageBonus percentageSalaryBonus, int rcpId) 
+    private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, int rcpId) 
         : this()
     {
         _name = name;
         _salary = salary;
-        _percentageSalaryBonus = percentageSalaryBonus;
+        _salaryBonusPercentage = salaryBonusPercentage;
         _rcpId = rcpId;
     }
     
     public Name Name => _name;
     public Money Salary => _salary;
-    public PercentageBonus PercentageSalaryBonus => _percentageSalaryBonus;
+    public PercentageBonus SalaryBonusPercentage => _salaryBonusPercentage;
     public int RcpId => _rcpId;
     public IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
 
@@ -38,9 +38,11 @@ public class Employee : Entity<int>, IAggregateRoot
         return new Employee(name, salary, percentageSalaryBonus, rcpId);
     }
     
-    public void UpdateData(Name name, int rcpId)
+    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, int rcpId)
     {
         _name = name;
+        _salary = salary;
+        _salaryBonusPercentage = salaryPercentageBonus;
         _rcpId = rcpId;
     }
     

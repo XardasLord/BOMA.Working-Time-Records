@@ -18,7 +18,11 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.LastName,
                 opt => opt.MapFrom(src => src.Name.LastName))
             .ForMember(dest => dest.RcpId,
-                opt => opt.MapFrom(src => src.RcpId));
+                opt => opt.MapFrom(src => src.RcpId))
+            .ForMember(dest => dest.BaseSalary,
+                opt => opt.MapFrom(src => src.Salary.Amount))
+            .ForMember(dest => dest.SalaryBonusPercentage,
+                opt => opt.MapFrom(src => src.SalaryBonusPercentage.Value));
         
         CreateMap<WorkingTimeRecord, WorkingTimeRecordDetailsViewModel>()
             .ForMember(dest => dest.EventType,

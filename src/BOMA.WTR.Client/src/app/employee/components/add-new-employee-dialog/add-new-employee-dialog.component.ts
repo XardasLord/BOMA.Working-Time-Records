@@ -16,6 +16,8 @@ export class AddNewEmployeeDialogComponent implements OnInit {
 		this.addNewEmployeeForm = fb.group({
 			firstName: new FormControl<string>('', [Validators.required, Validators.max(64)]),
 			lastName: new FormControl<string>('', [Validators.required, Validators.max(64)]),
+			baseSalary: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+			salaryBonusPercentage: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
 			rcpId: new FormControl<number>(0, [Validators.required, Validators.min(1)])
 		});
 	}

@@ -20,7 +20,14 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
         var employee = await _employeeRepository.GetAsync(command.Id) 
             ?? throw new NotFoundException($"Employee with ID = {command.Id} was not found");
 
-        employee.UpdateData(new Name(command.FirstName, command.LastName), command.RcpId);
+        var name = new Name(command.FirstName, command.LastName);
+        var salary = employee.Salary with
+        {
+            Amount = command.BaseSalary
+        };
+        var salaryBonusPercentage = new PercentageBonus(command.SalaryBonusPercentage);
+        
+        employee.UpdateData(name, salary, salaryBonusPercentage, command.RcpId);
 
         await _employeeRepository.SaveChangesAsync();
         
