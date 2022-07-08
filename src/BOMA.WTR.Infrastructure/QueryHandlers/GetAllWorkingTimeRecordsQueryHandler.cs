@@ -33,10 +33,15 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
                 .Where(w => w.GroupId == query.GroupId))
             .ToListAsync(cancellationToken);
 
-        return employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
+        var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
             Employee = _mapper.Map<EmployeeViewModel>(employee), 
             WorkingTimeRecordsAggregated = _employeeWorkingTimeRecordCalculationDomainService.CalculateAggregatedWorkingTimeRecords(employee.WorkingTimeRecords)
         }).ToList();
+
+        // TODO: Calculate salaries (base, gross, bonus, etc.) for every section
+        
+        
+        return result;
     }
 }

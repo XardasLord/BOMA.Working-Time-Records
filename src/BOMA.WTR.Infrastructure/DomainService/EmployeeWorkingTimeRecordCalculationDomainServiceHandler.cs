@@ -133,11 +133,45 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             EventType = previousEventType,
             WorkedMinutes = aggregatedMinutesForDay,
             WorkedHoursRounded = allWorkedHoursRounded,
-            BaseNormativeHours = previousDate.Date.DayOfWeek != DayOfWeek.Saturday ? allWorkedHoursRounded > 8 ? allWorkedHoursRounded + 8 - allWorkedHoursRounded : allWorkedHoursRounded : 0,
-            FiftyPercentageBonusHours = previousDate.Date.DayOfWeek != DayOfWeek.Saturday ? allWorkedHoursRounded > 8 ? (allWorkedHoursRounded - 8 > 2 ? 2 : allWorkedHoursRounded - 8) : 0 : 0,
-            HundredPercentageBonusHours = previousDate.Date.DayOfWeek != DayOfWeek.Saturday ? allWorkedHoursRounded > 10 ? allWorkedHoursRounded - 10 : 0 : 0,
-            SaturdayHours = previousDate.Date.DayOfWeek == DayOfWeek.Saturday ? allWorkedHoursRounded : 0,
-            NightHours = 0 // TODO
+            BaseNormativeHours = GetBaseNormativeHours(),
+            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(),
+            HundredPercentageBonusHours = GetHundredPercentageBonusHours(),
+            SaturdayHours = GetSaturdayHours(),
+            NightHours = GetNightHours() // TODO
         };
+
+        double GetBaseNormativeHours()
+        {
+            if (previousDate.Date.DayOfWeek == DayOfWeek.Saturday)
+                return 0;
+            
+            return allWorkedHoursRounded > 8 ? allWorkedHoursRounded + 8 - allWorkedHoursRounded : allWorkedHoursRounded;
+        }
+
+        double GetFiftyPercentageBonusHours()
+        {
+            if (previousDate.Date.DayOfWeek == DayOfWeek.Saturday)
+                return 0;
+            
+            return allWorkedHoursRounded > 8 ? (allWorkedHoursRounded - 8 > 2 ? 2 : allWorkedHoursRounded - 8) : 0;
+        }
+
+        double GetHundredPercentageBonusHours()
+        {
+            if (previousDate.Date.DayOfWeek == DayOfWeek.Saturday)
+                return 0;
+            
+            return allWorkedHoursRounded > 10 ? allWorkedHoursRounded - 10 : 0;
+        }
+
+        double GetSaturdayHours()
+        {
+            return previousDate.Date.DayOfWeek == DayOfWeek.Saturday ? allWorkedHoursRounded : 0;
+        }
+
+        int GetNightHours()
+        {
+            return 0;
+        }
     }
 }
