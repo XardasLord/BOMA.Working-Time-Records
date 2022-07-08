@@ -52,7 +52,11 @@ public class ParseWorkingTimeRecordsFileJob
                     
                     if (currentEmployee is null)
                     {
-                        currentEmployee = Employee.Add(new Name(rogerFileModel.Name, rogerFileModel.LastName), rogerFileModel.UserRcpId.Value);
+                        var name = new Name(rogerFileModel.Name, rogerFileModel.LastName);
+                        var salary = Money.Empty;
+                        var bonus = PercentageBonus.Empty;
+                        
+                        currentEmployee = Employee.Add(name, salary, bonus, rogerFileModel.UserRcpId.Value);
                         await _employeeRepository.AddAsync(currentEmployee);
                     }
                     
