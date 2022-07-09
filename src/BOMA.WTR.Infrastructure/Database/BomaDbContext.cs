@@ -24,8 +24,8 @@ public class BomaDbContext : DbContext
         optionsBuilder.UseSqlServer(configuration.GetConnectionString("Boma"));
     }
 
-    public DbSet<WorkingTimeRecord> WorkingTimeRecords { get; set; }
-    public DbSet<Employee> Employees { get; set; }
+    public virtual DbSet<WorkingTimeRecord> WorkingTimeRecords { get; set; }
+    public virtual DbSet<Employee> Employees { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

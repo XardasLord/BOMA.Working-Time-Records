@@ -5,7 +5,6 @@ namespace BOMA.WTR.Domain.AggregateModels.Entities;
 
 public class WorkingTimeRecord : Entity<int>
 {
-
     public static WorkingTimeRecord Create(RecordEventType eventType, DateTime occuredAt, int groupId)
     {
         return new WorkingTimeRecord(eventType, occuredAt, groupId);

@@ -31,7 +31,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public Money Salary => _salary;
     public PercentageBonus SalaryBonusPercentage => _salaryBonusPercentage;
     public int RcpId => _rcpId;
-    public IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
+    public virtual IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
 
     public static Employee Add(Name name, Money salary, PercentageBonus percentageSalaryBonus, int rcpId)
     {
