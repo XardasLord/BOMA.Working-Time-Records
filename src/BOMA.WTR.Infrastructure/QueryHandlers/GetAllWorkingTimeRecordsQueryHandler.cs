@@ -31,7 +31,12 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
                 .Where(w => w.OccuredAt.Year == query.Year)
                 .Where(w => w.OccuredAt.Month == query.Month)
                 .Where(w => w.GroupId == query.GroupId))
+            .Where(x => x.WorkingTimeRecords
+                .Where(w => w.OccuredAt.Year == query.Year)
+                .Where(w => w.OccuredAt.Month == query.Month)
+                .Any(w => w.GroupId == query.GroupId))
             .ToListAsync(cancellationToken);
+
 
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
