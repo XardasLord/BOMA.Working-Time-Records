@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-ti
 	templateUrl: './working-time-record-list.component.html',
 	styleUrls: ['./working-time-record-list.component.scss']
 })
-export class WorkingTimeRecordListComponent implements OnInit {
+export class WorkingTimeRecordListComponent implements AfterViewInit {
 	@Select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable) detailedRecords$!: Observable<
 		EmployeeWorkingTimeRecordDetailsModel[]
 	>;
@@ -27,8 +27,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		}
 	}
 
-	ngOnInit(): void {
-		this.store.dispatch(new GetAll(2022, 6, 4));
+	ngAfterViewInit() {
+		const today = new Date();
+
+		this.store.dispatch(new GetAll(today.getFullYear(), 6, 4));
 	}
 
 	daysInMonth(month: number, year: number) {
@@ -45,6 +47,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		return recordsFromDay.reduce<number>((accumulator, obj) => accumulator + obj.workedHoursRounded, 0);
 	}
 
+	getWorkingHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.workedHoursRounded, 0);
+	}
+
 	getNormativeHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
 		const recordsFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);
 
@@ -53,6 +59,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		}
 
 		return recordsFromDay.reduce<number>((accumulator, obj) => accumulator + obj.baseNormativeHours, 0);
+	}
+
+	getNormativeHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.baseNormativeHours, 0);
 	}
 
 	get50PercentageHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
@@ -65,6 +75,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		return recordsFromDay.reduce<number>((accumulator, obj) => accumulator + obj.fiftyPercentageBonusHours, 0);
 	}
 
+	get50PercentageHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.fiftyPercentageBonusHours, 0);
+	}
+
 	get100PercentageHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
 		const recordsFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);
 
@@ -73,6 +87,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		}
 
 		return recordsFromDay.reduce<number>((accumulator, obj) => accumulator + obj.hundredPercentageBonusHours, 0);
+	}
+
+	get100PercentageHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.hundredPercentageBonusHours, 0);
 	}
 
 	getSaturdayHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
@@ -85,6 +103,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		return recordsFromDay.reduce<number>((accumulator, obj) => accumulator + obj.saturdayHours, 0);
 	}
 
+	getSaturdayHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.saturdayHours, 0);
+	}
+
 	getNightHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
 		const recordsFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);
 
@@ -93,5 +115,9 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		}
 
 		return recordsFromDay.reduce<number>((accumulator, obj) => accumulator + obj.nightHours, 0);
+	}
+
+	getNightHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.nightHours, 0);
 	}
 }

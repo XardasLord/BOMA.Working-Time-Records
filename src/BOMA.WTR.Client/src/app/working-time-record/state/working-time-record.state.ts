@@ -34,6 +34,7 @@ export class WorkingTimeRecordState {
 		state.detailedRecords.map((x) => {
 			const model = new EmployeeWorkingTimeRecordDetailsModel();
 			model.employee = x.employee;
+			model.salaryInformation = x.salaryInformation;
 			model.workingTimeRecordsAggregated = x.workingTimeRecordsAggregated;
 
 			for (let i = 0; i < 6; i++) {

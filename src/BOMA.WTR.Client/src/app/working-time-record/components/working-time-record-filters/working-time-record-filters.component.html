@@ -1,0 +1,14 @@
+<section>
+	<mat-form-field appearance="fill">
+		<mat-label>Pracownik</mat-label>
+		<input matInput />
+	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Grupa</mat-label>
+		<mat-select (selectionChange)="groupChanged($event.value)">
+			<mat-option value="4">Administracja</mat-option>
+			<mat-option value="6">Produkcja</mat-option>
+		</mat-select>
+	</mat-form-field>
+</section>
