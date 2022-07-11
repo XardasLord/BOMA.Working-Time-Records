@@ -5,9 +5,9 @@ import { IProgressSpinnerService } from '../../shared/services/progress-spinner.
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
 import { WorkingTimeRecord } from './working-time-record.action';
 import { IWorkingTimeRecordService } from '../services/working-time-record.service.base';
+import { DefaultQueryModel, QueryModel } from '../models/query.model';
 import GetAll = WorkingTimeRecord.GetAll;
 import ApplyFilter = WorkingTimeRecord.ApplyFilter;
-import { DefaultQueryModel, QueryModel } from '../models/query.model';
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
 import ChangeDate = WorkingTimeRecord.ChangeDate;
 
