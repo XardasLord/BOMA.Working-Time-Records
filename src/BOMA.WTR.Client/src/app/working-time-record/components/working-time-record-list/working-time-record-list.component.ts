@@ -28,9 +28,7 @@ export class WorkingTimeRecordListComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		const today = new Date();
-
-		this.store.dispatch(new GetAll(today.getFullYear(), 6, 4));
+		this.store.dispatch(new GetAll());
 	}
 
 	daysInMonth(month: number, year: number) {

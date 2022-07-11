@@ -5,8 +5,13 @@ import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-workin
 import { WorkingTimeRecord } from './working-time-record.action';
 import { IWorkingTimeRecordService } from '../services/working-time-record.service.base';
 import GetAll = WorkingTimeRecord.GetAll;
+import ApplyFilter = WorkingTimeRecord.ApplyFilter;
+import { DefaultQueryModel, QueryModel } from '../models/query.model';
+import ChangeGroup = WorkingTimeRecord.ChangeGroup;
+import ChangeDate = WorkingTimeRecord.ChangeDate;
 
 export interface WorkingTimeRecordStateModel {
+	query: QueryModel;
 	detailedRecords: EmployeeWorkingTimeRecordDetailsModel[];
 }
 
@@ -14,12 +19,18 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 @State<WorkingTimeRecordStateModel>({
 	name: WORKING_TIME_RECORD_STATE_TOKEN,
 	defaults: {
+		query: DefaultQueryModel,
 		detailedRecords: []
 	}
 })
 @Injectable()
 export class WorkingTimeRecordState {
 	constructor(private workingTimeRecordService: IWorkingTimeRecordService) {}
+
+	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
+	static getSearchQueryModel(state: WorkingTimeRecordStateModel): QueryModel {
+		return state.query;
+	}
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getDetailedRecords(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
@@ -47,12 +58,51 @@ export class WorkingTimeRecordState {
 
 	@Action(GetAll)
 	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, action: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		return this.workingTimeRecordService.getAll(action.year, action.month, action.groupId).pipe(
+		const state = ctx.getState();
+
+		return this.workingTimeRecordService.getAll(state.query).pipe(
 			tap((response) => {
 				ctx.patchState({
 					detailedRecords: response
 				});
 			})
 		);
+	}
+
+	@Action(ApplyFilter)
+	applyFilter(ctx: StateContext<WorkingTimeRecordStateModel>, action: ApplyFilter): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.searchText = action.searchPhrase;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
+	}
+
+	@Action(ChangeGroup)
+	changeGroup(ctx: StateContext<WorkingTimeRecordStateModel>, action: ChangeGroup): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.groupId = action.groupId;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
+	}
+
+	@Action(ChangeDate)
+	changeDate(ctx: StateContext<WorkingTimeRecordStateModel>, action: ChangeDate): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.year = action.year;
+		updatedQuery.month = action.month;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
 	}
 }

@@ -1,14 +1,30 @@
 <section>
 	<mat-form-field appearance="fill">
 		<mat-label>Pracownik</mat-label>
-		<input matInput />
+		<input matInput (valueChanged)="searchTextChanged($event)" [value]="(queryModel$ | async)?.searchText" appDebounce />
+	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Rok</mat-label>
+		<mat-select (selectionChange)="yearChanged($event.value)" [value]="(queryModel$ | async)?.year">
+			<mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Miesiąc</mat-label>
+		<mat-select (selectionChange)="monthChanged($event.value)" [value]="(queryModel$ | async)?.month">
+			<mat-option *ngFor="let month of months" [value]="month.value">{{ month.key }}</mat-option>
+		</mat-select>
 	</mat-form-field>
 
 	<mat-form-field appearance="fill">
 		<mat-label>Grupa</mat-label>
-		<mat-select (selectionChange)="groupChanged($event.value)">
-			<mat-option value="4">Administracja</mat-option>
-			<mat-option value="6">Produkcja</mat-option>
+		<mat-select (selectionChange)="groupChanged($event.value)" [value]="(queryModel$ | async)?.groupId">
+			<mat-option [value]="4">Administracja</mat-option>
+			<mat-option [value]="6">Produkcja</mat-option>
 		</mat-select>
 	</mat-form-field>
 </section>
+
+<pre>{{ queryModel$ | async | json }}</pre>

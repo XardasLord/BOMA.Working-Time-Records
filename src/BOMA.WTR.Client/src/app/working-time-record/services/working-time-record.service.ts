@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
 import { Observable } from 'rxjs';
+import { QueryModel } from '../models/query.model';
 
 @Injectable()
 export class WorkingTimeRecordService extends IWorkingTimeRecordService {
@@ -10,8 +11,8 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 		super(httpClient);
 	}
 
-	getAll(year: number, month: number, groupId: number): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		const queryParams = new HttpParams().set('year', year).set('month', month).set('groupId', groupId);
+	getAll(queryModel: QueryModel): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
+		const queryParams = new HttpParams().set('year', queryModel.year).set('month', queryModel.month).set('groupId', queryModel.groupId);
 
 		return this.httpClient.get<EmployeeWorkingTimeRecordDetailsModel[]>(`${this.apiEndpoint}/workingTimeRecords`, {
 			params: queryParams
