@@ -25,4 +25,8 @@ export interface SalaryInformationModel {
 
 	// Bonus Sum
 	bonusSumSalary: number;
+
+	// Night
+	nightBaseSalary: number;
+	nightWorkedHours: number;
 }

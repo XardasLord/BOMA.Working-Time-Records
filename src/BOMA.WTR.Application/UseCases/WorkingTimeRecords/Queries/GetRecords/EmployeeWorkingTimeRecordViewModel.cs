@@ -46,4 +46,8 @@ public class EmployeeSalaryViewModel
     
     // Bonus Sum
     public decimal BonusSumSalary { get; set; }
+    
+    // Night
+    public decimal NightBaseSalary { get; set; }
+    public double NightWorkedHours { get; set; }
 }

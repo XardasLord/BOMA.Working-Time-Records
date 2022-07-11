@@ -57,7 +57,13 @@ public class AutoMapperProfile : Profile
                 opt => opt.MapFrom(src => CalculateGrossSumBaseSaturdaySalary(src)))
             
             .ForMember(dest => dest.BonusSumSalary,
-                opt => opt.MapFrom(src => CalculateBonusSumSalary(src)));
+                opt => opt.MapFrom(src => CalculateBonusSumSalary(src)))
+            
+            .ForMember(dest => dest.NightBaseSalary,
+                opt => opt.MapFrom(src => CalculateNightSumSalary(src)))
+            
+            .ForMember(dest => dest.NightWorkedHours,
+                opt => opt.MapFrom(src => CalculateAllNightWorkedHours(src)));
     }
 
     private static decimal CalculateGrossBaseSalary(EmployeeWorkingTimeRecordViewModel src)
@@ -67,17 +73,17 @@ public class AutoMapperProfile : Profile
 
     private static decimal CalculateGrossBase50PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.FiftyPercentageBonusHours);
+        return src.Employee.BaseSalary * 1.5m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.FiftyPercentageBonusHours);
     }
 
     private static decimal CalculateGrossBase100PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.HundredPercentageBonusHours);
+        return src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.HundredPercentageBonusHours);
     }
 
     private static decimal CalculateGrossBaseSaturdaySalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.SaturdayHours);
+        return src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.SaturdayHours);
     }
 
     private static decimal CalculateBonusBaseSalary(EmployeeWorkingTimeRecordViewModel src)
@@ -123,5 +129,19 @@ public class AutoMapperProfile : Profile
     private static decimal CalculateBonusSumSalary(EmployeeWorkingTimeRecordViewModel src)
     {
         return CalculateGrossSumBase50PercentageSalary(src) + CalculateGrossSumBase100PercentageSalary(src) + CalculateGrossSumBaseSaturdaySalary(src);
+    }
+
+    private static decimal CalculateNightSumSalary(EmployeeWorkingTimeRecordViewModel src)
+    {
+        var period = src.WorkingTimeRecordsAggregated.FirstOrDefault();
+        if (period is null)
+            return 0;
+
+        return (src.Employee.BaseSalary + (decimal)(3010 / DateTime.DaysInMonth(period.Date.Year, period.Date.Month) * 0.2)) * (decimal)CalculateAllNightWorkedHours(src);
+    }
+
+    private static double CalculateAllNightWorkedHours(EmployeeWorkingTimeRecordViewModel src)
+    {
+        return src.WorkingTimeRecordsAggregated.Sum(x => x.NightHours);
     }
 }
