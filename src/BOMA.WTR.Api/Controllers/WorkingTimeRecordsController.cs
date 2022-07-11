@@ -6,9 +6,10 @@ namespace BOMA.WTR.Api.Controllers;
 public class WorkingTimeRecordsController : ApiBaseController
 {
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] int month, [FromQuery] int year, [FromQuery] int groupId)
+    public async Task<IActionResult> Get([FromQuery] int month, [FromQuery] int year, [FromQuery] int groupId, [FromQuery] string? searchText = null)
     {
-        return Ok(await Mediator.Send(new GetAllWorkingTimeRecordsQuery(month, year, groupId)));
+        var queryModel = new GetRecordsQueryModel(month, year, groupId, searchText);
+        return Ok(await Mediator.Send(new GetAllWorkingTimeRecordsQuery(queryModel)));
     }
     
 }

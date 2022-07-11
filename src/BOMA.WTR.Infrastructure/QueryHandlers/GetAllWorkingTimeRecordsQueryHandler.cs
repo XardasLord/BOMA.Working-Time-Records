@@ -26,16 +26,22 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
     
     public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordsQuery query, CancellationToken cancellationToken)
     {
-        var employeesWithWorkingTimeRecords = await _dbContext.Employees
+        var databaseQuery = _dbContext.Employees
             .Include(x => x.WorkingTimeRecords
-                .Where(w => w.OccuredAt.Year == query.Year)
-                .Where(w => w.OccuredAt.Month == query.Month)
-                .Where(w => w.GroupId == query.GroupId))
+                .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
+                .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
+                .Where(w => w.GroupId == query.QueryModel.GroupId))
             .Where(x => x.WorkingTimeRecords
-                .Where(w => w.OccuredAt.Year == query.Year)
-                .Where(w => w.OccuredAt.Month == query.Month)
-                .Any(w => w.GroupId == query.GroupId))
-            .ToListAsync(cancellationToken);
+                .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
+                .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
+                .Any(w => w.GroupId == query.QueryModel.GroupId));
+
+        if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
+        {
+            databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
+        }
+
+        var employeesWithWorkingTimeRecords = await databaseQuery.ToListAsync(cancellationToken);
 
 
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel

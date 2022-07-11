@@ -57,7 +57,7 @@ export class WorkingTimeRecordState {
 	}
 
 	@Action(GetAll)
-	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, action: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
+	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, _: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
 		const state = ctx.getState();
 
 		return this.workingTimeRecordService.getAll(state.query).pipe(

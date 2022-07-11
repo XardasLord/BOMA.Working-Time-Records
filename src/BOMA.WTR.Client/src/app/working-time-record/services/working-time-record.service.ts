@@ -12,7 +12,11 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 	}
 
 	getAll(queryModel: QueryModel): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		const queryParams = new HttpParams().set('year', queryModel.year).set('month', queryModel.month).set('groupId', queryModel.groupId);
+		let queryParams = new HttpParams().set('year', queryModel.year).set('month', queryModel.month).set('groupId', queryModel.groupId);
+		console.warn(queryModel.searchText);
+		if (queryModel.searchText) {
+			queryParams = queryParams.set('searchText', queryModel.searchText);
+		}
 
 		return this.httpClient.get<EmployeeWorkingTimeRecordDetailsModel[]>(`${this.apiEndpoint}/workingTimeRecords`, {
 			params: queryParams
