@@ -1,6 +1,7 @@
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
 import { WorkingTimeRecord } from './working-time-record.action';
 import { IWorkingTimeRecordService } from '../services/working-time-record.service.base';
@@ -25,7 +26,7 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 })
 @Injectable()
 export class WorkingTimeRecordState {
-	constructor(private workingTimeRecordService: IWorkingTimeRecordService) {}
+	constructor(private workingTimeRecordService: IWorkingTimeRecordService, private progressSpinnerService: IProgressSpinnerService) {}
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getSearchQueryModel(state: WorkingTimeRecordStateModel): QueryModel {
@@ -60,11 +61,19 @@ export class WorkingTimeRecordState {
 	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, _: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
 		const state = ctx.getState();
 
+		this.progressSpinnerService.showProgressSpinner();
+
 		return this.workingTimeRecordService.getAll(state.query).pipe(
 			tap((response) => {
 				ctx.patchState({
 					detailedRecords: response
 				});
+
+				this.progressSpinnerService.hideProgressSpinner();
+			}),
+			catchError((e) => {
+				this.progressSpinnerService.hideProgressSpinner();
+				return throwError(e);
 			})
 		);
 	}

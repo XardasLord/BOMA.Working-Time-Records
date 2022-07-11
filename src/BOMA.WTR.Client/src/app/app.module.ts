@@ -8,13 +8,18 @@ import { SharedModule } from './shared/shared.module';
 
 import localePl from '@angular/common/locales/pl';
 import { registerLocaleData } from '@angular/common';
+import { IProgressSpinnerService } from './shared/services/progress-spinner.base.service';
+import { ProgressSpinnerService } from './shared/services/progress-spinner.service';
 
 registerLocaleData(localePl);
 
 @NgModule({
 	declarations: [AppComponent],
 	imports: [BrowserModule, BrowserAnimationsModule, CoreModule, SharedModule],
-	providers: [{ provide: LOCALE_ID, useValue: 'pl-PL' }],
+	providers: [
+		{ provide: LOCALE_ID, useValue: 'pl-PL' },
+		{ provide: IProgressSpinnerService, useClass: ProgressSpinnerService }
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule {}
