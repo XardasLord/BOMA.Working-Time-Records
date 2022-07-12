@@ -31,7 +31,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                 {
                     aggregatedMinutesForDay += (int)(normalizedOccuredAt - previousDate).TotalMinutes;
                     
-                    result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, previousEventType));
+                    result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, normalizedOccuredAt, previousEventType));
                     
                     aggregatedMinutesForDay = 0;
                     previousEventType = timeRecord.EventType;
@@ -123,13 +123,14 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         }
     }
 
-    private static WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime previousDate, RecordEventType previousEventType)
+    private static WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, RecordEventType previousEventType)
     {
         var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+        var startWorkDate = endWorkDate.AddHours(-allWorkedHoursRounded);
         
         return new WorkingTimeRecordAggregatedViewModel
         {
-            Date = previousDate.Date,
+            Date = startWorkDate.Date,
             EventType = previousEventType,
             WorkedMinutes = aggregatedMinutesForDay,
             WorkedHoursRounded = allWorkedHoursRounded,
@@ -137,12 +138,12 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(),
             HundredPercentageBonusHours = GetHundredPercentageBonusHours(),
             SaturdayHours = GetSaturdayHours(),
-            NightHours = GetNightHours() // TODO
+            NightHours = GetNightHours()
         };
 
         double GetBaseNormativeHours()
         {
-            if (previousDate.Date.DayOfWeek == DayOfWeek.Saturday)
+            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
                 return 0;
             
             return allWorkedHoursRounded > 8 ? allWorkedHoursRounded + 8 - allWorkedHoursRounded : allWorkedHoursRounded;
@@ -150,7 +151,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         double GetFiftyPercentageBonusHours()
         {
-            if (previousDate.Date.DayOfWeek == DayOfWeek.Saturday)
+            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
                 return 0;
             
             return allWorkedHoursRounded > 8 ? (allWorkedHoursRounded - 8 > 2 ? 2 : allWorkedHoursRounded - 8) : 0;
@@ -158,7 +159,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         double GetHundredPercentageBonusHours()
         {
-            if (previousDate.Date.DayOfWeek == DayOfWeek.Saturday)
+            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
                 return 0;
             
             return allWorkedHoursRounded > 10 ? allWorkedHoursRounded - 10 : 0;
@@ -166,11 +167,41 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         double GetSaturdayHours()
         {
-            return previousDate.Date.DayOfWeek == DayOfWeek.Saturday ? allWorkedHoursRounded : 0;
+            return endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday ? allWorkedHoursRounded : 0;
         }
 
-        int GetNightHours()
+        double GetNightHours()
         {
+            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
+                return 0;
+
+            if (startWorkDate.Hour < 22 && endWorkDate.Hour > 6 && endWorkDate.Day > startWorkDate.Day)
+            {
+                // Worked all night
+                return 8;
+            }
+            
+            if (startWorkDate.Hour is < 22 and > 6 && endWorkDate.Hour is > 22 or <= 6)
+            {
+                // Started before 10pm but finished in night hours
+                var nightWorkTimeSpan = endWorkDate.Subtract(new DateTime(startWorkDate.Year, startWorkDate.Month, startWorkDate.Day, 22, 0, 0));
+                return Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+            }
+            
+            if (startWorkDate.Hour is >= 22 or <= 6 && endWorkDate.Hour <= 6)
+            {
+                // Started work in night hours and finished in night hours
+                var nightWorkTimeSpan = endWorkDate.Subtract(startWorkDate);
+                return Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+            }
+            
+            if (startWorkDate.Hour is >= 22 or < 6 && endWorkDate.Hour > 6)
+            {
+                // Started work in night hours and finished after 6am
+                var nightWorkTimeSpan =  new DateTime(endWorkDate.Year, endWorkDate.Month, endWorkDate.Day, 6, 0, 0).Subtract(startWorkDate);
+                return Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+            }
+
             return 0;
         }
     }
