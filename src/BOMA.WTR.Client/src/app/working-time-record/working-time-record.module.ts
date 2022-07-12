@@ -9,13 +9,15 @@ import { IWorkingTimeRecordService } from './services/working-time-record.servic
 import { WorkingTimeRecordService } from './services/working-time-record.service';
 import { WorkingTimeRecordFiltersComponent } from './components/working-time-record-filters/working-time-record-filters.component';
 import { WorkingTimeRecordDetailedTableComponent } from './components/working-time-record-detailed-table/working-time-record-detailed-table.component';
+import { WorkingTimeRecordSummaryTableComponent } from './components/working-time-record-summary-table/working-time-record-summary-table.component';
 
 @NgModule({
 	declarations: [
 		WorkingTimeRecordComponent,
 		WorkingTimeRecordListComponent,
 		WorkingTimeRecordFiltersComponent,
-		WorkingTimeRecordDetailedTableComponent
+		WorkingTimeRecordDetailedTableComponent,
+  WorkingTimeRecordSummaryTableComponent
 	],
 	imports: [SharedModule, WorkingTimeRecordRoutingModule, NgxsModule.forFeature([WorkingTimeRecordState])],
 	providers: [{ provide: IWorkingTimeRecordService, useClass: WorkingTimeRecordService }]

@@ -1,0 +1,84 @@
+<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!">
+	<ng-container matColumnDef="fullName">
+		<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+		<td mat-cell *matCellDef="let record; let i = index">{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="rate">
+		<th mat-header-cell *matHeaderCellDef>Stawka</th>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.employee?.baseSalary | currency: 'PLN' }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="bonusPercentage">
+		<th mat-header-cell *matHeaderCellDef>Premia</th>
+		<td mat-cell *matCellDef="let record; let i = index">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} %</td>
+	</ng-container>
+
+	<ng-container matColumnDef="gross">
+		<th mat-header-cell *matHeaderCellDef>Brutto</th>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="bonus">
+		<th mat-header-cell *matHeaderCellDef>Premia</th>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="overtimes">
+		<th mat-header-cell *matHeaderCellDef>Nadgodziny</th>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{
+				record?.salaryInformation?.grossSumBase50PercentageSalary + record?.salaryInformation?.grossSumBase100PercentageSalary
+					| currency: 'PLN'
+			}}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="saturdays">
+		<th mat-header-cell *matHeaderCellDef>Soboty</th>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="night">
+		<th mat-header-cell *matHeaderCellDef>Nocka</th>
+		<td mat-cell *matCellDef="let record; let i = index">{{ record?.salaryInformation?.nightBaseSalary | currency: 'PLN' }}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="nightHours">
+		<th mat-header-cell *matHeaderCellDef>Nocka [h]</th>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.nightWorkedHours | number: '1.1-1' }}
+		</td>
+	</ng-container>
+
+	<ng-container matColumnDef="holiday">
+		<th mat-header-cell *matHeaderCellDef>Urlop</th>
+		<td mat-cell *matCellDef="let record; let i = index"></td>
+	</ng-container>
+
+	<ng-container matColumnDef="sickness">
+		<th mat-header-cell *matHeaderCellDef>Chorobowe</th>
+		<td mat-cell *matCellDef="let record; let i = index"></td>
+	</ng-container>
+
+	<ng-container matColumnDef="additional">
+		<th mat-header-cell *matHeaderCellDef>Dodatkowe</th>
+		<td mat-cell *matCellDef="let record; let i = index"></td>
+	</ng-container>
+
+	<ng-container matColumnDef="sum">
+		<th mat-header-cell *matHeaderCellDef>Suma</th>
+		<td mat-cell *matCellDef="let record; let i = index"></td>
+	</ng-container>
+
+	<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+	<tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+</table>
