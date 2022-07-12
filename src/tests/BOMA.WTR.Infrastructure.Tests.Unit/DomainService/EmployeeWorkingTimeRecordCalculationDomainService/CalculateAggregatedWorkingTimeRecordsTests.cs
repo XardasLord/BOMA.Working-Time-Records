@@ -8,7 +8,7 @@ namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRe
 
 public class CalculateAggregatedWorkingTimeRecords : TestBase
 {
-    private Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
+    private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
     private IList<WorkingTimeRecord> _workingTimeRecords;
 
     public CalculateAggregatedWorkingTimeRecords()
@@ -17,8 +17,8 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         _workingTimeRecords = new List<WorkingTimeRecord>();
     }
 
-    private IEnumerable<WorkingTimeRecordAggregatedViewModel> Act()
-        => _sut.CalculateAggregatedWorkingTimeRecords(_workingTimeRecords);
+    private List<WorkingTimeRecordAggregatedViewModel> Act()
+        => _sut.CalculateAggregatedWorkingTimeRecords(_workingTimeRecords).ToList();
 
     [Fact]
     public void ProvidedEmptyWorkingTimeRecords_Should_ReturnEmptyList()
@@ -30,7 +30,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         var result = Act();
         
         // Assert
-        result.Count().Should().Be(0);
+        result.Count.Should().Be(0);
     }
 
     [Theory]
@@ -58,9 +58,9 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         
         // Act
         var result = Act();
-        
+
         // Assert
-        result.Count().Should().Be(2);
+        result.Count.Should().Be(2);
         
         result.First().Date.Should().Be(firstDay);
         result.First().WorkedHoursRounded.Should().Be(expectedHoursForFirstDay);
@@ -87,7 +87,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         var result = Act();
         
         // Assert
-        result.Count().Should().Be(1);
+        result.Count.Should().Be(1);
         result.First().WorkedHoursRounded.Should().Be(expectedTotalHours);
         result.First().BaseNormativeHours.Should().Be(expectedBaseNormativeHours);
         result.First().FiftyPercentageBonusHours.Should().Be(expectedFiftyPercentageHours);
@@ -114,7 +114,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         var result = Act();
         
         // Assert
-        result.Count().Should().Be(1);
+        result.Count.Should().Be(1);
         result.First().WorkedHoursRounded.Should().Be(expectedTotalHours);
         result.First().BaseNormativeHours.Should().Be(expectedBaseNormativeHours);
         result.First().FiftyPercentageBonusHours.Should().Be(expectedFiftyPercentageHours);
