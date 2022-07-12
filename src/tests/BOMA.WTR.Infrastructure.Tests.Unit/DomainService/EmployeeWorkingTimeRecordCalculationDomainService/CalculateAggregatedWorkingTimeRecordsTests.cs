@@ -96,6 +96,33 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         result.First().NightHours.Should().Be(expectedNightHours);
     }
 
+    [Theory]
+    [MemberData(nameof(NightHoursCalculationData))]
+    public void ProvidedWorkingTimeRecordsForSingleDay_Should_ReturnProperCalculatedNightWorkedHoursForDifferentHourSections(
+        List<WorkingTimeRecord> records, 
+        double expectedTotalHours,
+        double expectedBaseNormativeHours, 
+        double expectedFiftyPercentageHours,
+        double expectedHundredPercentageHours,
+        double expectedSaturdayHours,
+        double expectedNightHours)
+    {
+        // Arrange
+        _workingTimeRecords = records;
+        
+        // Act
+        var result = Act();
+        
+        // Assert
+        result.Count().Should().Be(1);
+        result.First().WorkedHoursRounded.Should().Be(expectedTotalHours);
+        result.First().BaseNormativeHours.Should().Be(expectedBaseNormativeHours);
+        result.First().FiftyPercentageBonusHours.Should().Be(expectedFiftyPercentageHours);
+        result.First().HundredPercentageBonusHours.Should().Be(expectedHundredPercentageHours);
+        result.First().SaturdayHours.Should().Be(expectedSaturdayHours);
+        result.First().NightHours.Should().Be(expectedNightHours);
+    }
+
     public static IEnumerable<object[]> SingleDayData()
     {
         yield return new object[] { new List<WorkingTimeRecord>
@@ -192,6 +219,45 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
             WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 1, 8, 0 ,0), 0),
             WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 1, 14, 0 ,0), 0)
         }, 6, 0, 0, 0, 6, 0};
+    }
+
+    public static IEnumerable<object[]> NightHoursCalculationData()
+    {
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 3, 22, 0 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 5, 0 ,0), 0)
+        }, 7, 7, 0, 0, 0, 7};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 3, 20, 0 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 4, 0 ,0), 0)
+        }, 8, 8, 0, 0, 0, 6};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 3, 20, 0 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 8, 0 ,0), 0)
+        }, 12, 8, 2, 2, 0, 8};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 4, 2, 0 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 4, 0 ,0), 0)
+        }, 2, 2, 0, 0, 0, 2};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 4, 2, 0 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 10, 0 ,0), 0)
+        }, 8, 8, 0, 0, 0, 4};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 4, 5, 52 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 16, 2 ,0), 0)
+        }, 10, 8, 2, 0, 0, 0};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 4, 5, 30 ,0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 4, 16, 0 ,0), 0)
+        }, 10.5, 8, 2, 0.5, 0, 0.5};
     }
     
     public static IEnumerable<object[]> TwoDaysData()
