@@ -34,7 +34,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
     }
 
     [Theory]
-    [MemberData(nameof(SingleDayData))]
+    [MemberData(nameof(SingleDayEdgeCasesData))]
     public void ProvidedWorkingTimeRecordsForSingleDay_Should_ReturnProperCalculatedWorkedHours(List<WorkingTimeRecord> records, double expectedHours)
     {
         // Arrange
@@ -49,7 +49,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
     }
     
     [Theory]
-    [MemberData(nameof(TwoDaysData))]
+    [MemberData(nameof(TwoDaysEdgeCasesData))]
     public void ProvidedWorkingTimeRecordsForTwoDays_Should_ReturnProperCalculatedWorkedHours(
         List<WorkingTimeRecord> records, DateTime firstDay, DateTime secondDay, double expectedHoursForFirstDay, double expectedHoursForSecondDay)
     {
@@ -68,9 +68,28 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         result.Last().Date.Should().Be(secondDay);
         result.Last().WorkedHoursRounded.Should().Be(expectedHoursForSecondDay);
     }
+    
+    [Theory]
+    [MemberData(nameof(TwoDaysRealExamplesData))]
+    public void ProvidedRealExamplesForTwoDays_Should_ReturnProperCalculatedWorkedHours(
+        List<WorkingTimeRecord> records, DateTime firstDay, DateTime secondDay, double expectedHoursForFirstDay, double expectedHoursForSecondDay)
+    {
+        // Arrange
+        _workingTimeRecords = records;
+        
+        // Act
+        var result = Act();
+
+        // Assert
+        result.First().Date.Should().Be(firstDay);
+        result.First().WorkedHoursRounded.Should().Be(expectedHoursForFirstDay);
+        
+        result.Last().Date.Should().Be(secondDay);
+        result.Last().WorkedHoursRounded.Should().Be(expectedHoursForSecondDay);
+    }
 
     [Theory]
-    [MemberData(nameof(HoursCalculationData))]
+    [MemberData(nameof(HoursCalculationEdgeCasesData))]
     public void ProvidedWorkingTimeRecordsForSingleDay_Should_ReturnProperCalculatedWorkedHoursForDifferentHourSections(
         List<WorkingTimeRecord> records, 
         double expectedTotalHours,
@@ -97,7 +116,34 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
     }
 
     [Theory]
-    [MemberData(nameof(NightHoursCalculationData))]
+    [MemberData(nameof(HoursCalculationRealExamplesData))]
+    public void ProvidedRealExamplesForSingleDay_Should_ReturnProperCalculatedWorkedHoursForDifferentHourSections(
+        List<WorkingTimeRecord> records, 
+        double expectedTotalHours,
+        double expectedBaseNormativeHours, 
+        double expectedFiftyPercentageHours,
+        double expectedHundredPercentageHours,
+        double expectedSaturdayHours,
+        double expectedNightHours)
+    {
+        // Arrange
+        _workingTimeRecords = records;
+        
+        // Act
+        var result = Act();
+        
+        // Assert
+        result.Count.Should().Be(1);
+        result.First().WorkedHoursRounded.Should().Be(expectedTotalHours);
+        result.First().BaseNormativeHours.Should().Be(expectedBaseNormativeHours);
+        result.First().FiftyPercentageBonusHours.Should().Be(expectedFiftyPercentageHours);
+        result.First().HundredPercentageBonusHours.Should().Be(expectedHundredPercentageHours);
+        result.First().SaturdayHours.Should().Be(expectedSaturdayHours);
+        result.First().NightHours.Should().Be(expectedNightHours);
+    }
+
+    [Theory]
+    [MemberData(nameof(NightHoursCalculationEdgeCasesData))]
     public void ProvidedWorkingTimeRecordsForSingleDay_Should_ReturnProperCalculatedNightWorkedHoursForDifferentHourSections(
         List<WorkingTimeRecord> records, 
         double expectedTotalHours,
@@ -123,7 +169,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         result.First().NightHours.Should().Be(expectedNightHours);
     }
 
-    public static IEnumerable<object[]> SingleDayData()
+    public static IEnumerable<object[]> SingleDayEdgeCasesData()
     {
         yield return new object[] { new List<WorkingTimeRecord>
         {
@@ -182,7 +228,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         }, 8};
     }
 
-    public static IEnumerable<object[]> HoursCalculationData()
+    public static IEnumerable<object[]> HoursCalculationEdgeCasesData()
     {
         yield return new object[] { new List<WorkingTimeRecord>
         {
@@ -221,7 +267,16 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         }, 6, 0, 0, 0, 6, 0};
     }
 
-    public static IEnumerable<object[]> NightHoursCalculationData()
+    public static IEnumerable<object[]> HoursCalculationRealExamplesData()
+    {
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 6, 9, 15, 49 ,10), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 6, 10, 2, 1 ,10), 0)
+        }, 10, 8, 2, 0, 0, 4};
+    }
+
+    public static IEnumerable<object[]> NightHoursCalculationEdgeCasesData()
     {
         yield return new object[] { new List<WorkingTimeRecord>
         {
@@ -260,7 +315,7 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         }, 10.5, 8, 2, 0.5, 0, 0.5};
     }
     
-    public static IEnumerable<object[]> TwoDaysData()
+    public static IEnumerable<object[]> TwoDaysEdgeCasesData()
     {
         yield return new object[] { new List<WorkingTimeRecord>
         {
@@ -286,5 +341,21 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
             new DateTime(2022, 1, 2),
             11, 
             8.5};
+    }
+    
+    public static IEnumerable<object[]> TwoDaysRealExamplesData()
+    {
+        yield return new object[] { new List<WorkingTimeRecord>
+            {
+                WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 6, 7, 15, 52 ,50), 0),
+                WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 6, 8, 2, 0 ,20), 0),
+                WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 6, 9, 2, 1 ,30), 0),
+                WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 6, 9, 15, 49 ,10), 0),
+                WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 6, 10, 2, 1 ,10), 0)
+            }, 
+            new DateTime(2022, 6, 7),
+            new DateTime(2022, 6, 9),
+            10, 
+            10};
     }
 }
