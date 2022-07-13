@@ -81,7 +81,7 @@ public class ParseWorkingTimeRecordsFileJob
 
     private static IEnumerable<RogerFileModel> ParseCsvToRogerFile(string fileLocation)
     {
-        using var reader = new StreamReader(fileLocation);
+        using var reader = new StreamReader(fileLocation, System.Text.Encoding.GetEncoding(1250));
         using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             Delimiter = ";",
