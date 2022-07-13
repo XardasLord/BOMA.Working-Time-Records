@@ -131,7 +131,6 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return new WorkingTimeRecordAggregatedViewModel
         {
             Date = startWorkDate.Date,
-            EventType = previousEventType,
             WorkedMinutes = aggregatedMinutesForDay,
             WorkedHoursRounded = allWorkedHoursRounded,
             BaseNormativeHours = GetBaseNormativeHours(),
