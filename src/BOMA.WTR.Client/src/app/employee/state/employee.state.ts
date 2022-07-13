@@ -60,7 +60,9 @@ export class EmployeeState {
 								lastName: action.employee.lastName,
 								baseSalary: action.employee.baseSalary,
 								salaryBonusPercentage: action.employee.salaryBonusPercentage,
-								rcpId: action.employee.rcpId
+								rcpId: action.employee.rcpId,
+								departmentId: action.employee.departmentId,
+								departmentName: action.employee.departmentName
 							}
 						])
 					})
@@ -88,7 +90,9 @@ export class EmployeeState {
 								lastName: action.employee.lastName,
 								baseSalary: action.employee.baseSalary,
 								salaryBonusPercentage: action.employee.salaryBonusPercentage,
-								rcpId: action.employee.rcpId
+								rcpId: action.employee.rcpId,
+								departmentId: action.employee.departmentId,
+								departmentName: action.employee.departmentName
 							})
 						)
 					})

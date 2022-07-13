@@ -28,6 +28,15 @@
 					<mat-label>RCP ID</mat-label>
 					<input type="number" matInput formControlName="rcpId" />
 				</mat-form-field>
+
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Dział</mat-label>
+					<mat-select formControlName="departmentId">
+						<mat-option *ngFor="let department of departments" [value]="department.value">{{ department.key }}</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<input type="hidden" formControlName="departmentName" />
 			</section>
 
 			<input type="hidden" formControlName="id" />

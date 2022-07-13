@@ -3,4 +3,4 @@
 namespace BOMA.WTR.Application.UseCases.Employees.Commands.Edit;
 
 public sealed record EditEmployeeCommand(
-    int Id, string FirstName, string LastName, decimal BaseSalary, double SalaryBonusPercentage, int RcpId) : ICommand;
+    int Id, string FirstName, string LastName, decimal BaseSalary, double SalaryBonusPercentage, int RcpId, int DepartmentId) : ICommand;

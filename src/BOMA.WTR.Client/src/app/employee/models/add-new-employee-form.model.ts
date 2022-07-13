@@ -4,4 +4,6 @@ export interface AddNewEmployeeFormModel {
 	baseSalary: number;
 	salaryBonusPercentage: number;
 	rcpId: number;
+	departmentId: number;
+	departmentName: string;
 }

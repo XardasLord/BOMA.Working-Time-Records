@@ -27,7 +27,7 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
         };
         var salaryBonusPercentage = new PercentageBonus(command.SalaryBonusPercentage);
         
-        employee.UpdateData(name, salary, salaryBonusPercentage, command.RcpId);
+        employee.UpdateData(name, salary, salaryBonusPercentage, command.RcpId, command.DepartmentId);
 
         await _employeeRepository.SaveChangesAsync();
         

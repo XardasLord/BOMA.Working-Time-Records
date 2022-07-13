@@ -46,12 +46,13 @@ public class Employee : Entity<int>, IAggregateRoot
         return new Employee(name, salary, percentageSalaryBonus, rcpId, departmentId);
     }
     
-    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, int rcpId)
+    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, int rcpId, int departmentId)
     {
         _name = name;
         _salary = salary;
         _salaryBonusPercentage = salaryPercentageBonus;
         _rcpId = rcpId;
+        _departmentId = departmentId;
     }
     
     public void AddWorkingTimeRecord(WorkingTimeRecord record)

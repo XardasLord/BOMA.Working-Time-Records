@@ -17,7 +17,7 @@ import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 export class EmployeeListComponent implements OnInit {
 	@Select(EmployeeState.getEmployees) employees$!: Observable<EmployeeModel[]>;
 
-	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'actions'];
+	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'department', 'actions'];
 
 	constructor(private store: Store) {}
 
