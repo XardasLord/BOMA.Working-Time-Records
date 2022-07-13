@@ -77,10 +77,16 @@ public static class InfrastructureDependencyInjection
         app.UseAuthorization();
 
         app.UseHangfireDashboard();
+        
         RecurringJob.AddOrUpdate<ParseWorkingTimeRecordsFileJob>(
             nameof(ParseWorkingTimeRecordsFileJob),
             job => job.Execute(null, CancellationToken.None),
             configuration["Hangfire:ParseWorkingTimeRecordsFileJobCron"]);
+        
+        RecurringJob.AddOrUpdate<AggregateWorkingTimeRecordHistoriesJob>(
+            nameof(AggregateWorkingTimeRecordHistoriesJob),
+            job => job.Execute(null, CancellationToken.None),
+            configuration["Hangfire:AggregateWorkingTimeRecordHistoriesJobCron"]);
 
         return app;
     }

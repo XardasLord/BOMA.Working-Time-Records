@@ -21,7 +21,9 @@ public class AutoMapperProfile : Profile
         CreateMap<WorkingTimeRecord, WorkingTimeRecordDetailsViewModel>()
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType))
             .ForMember(dest => dest.OccudedAt, opt => opt.MapFrom(src => src.OccuredAt))
-            .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.GroupId));
+            .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.DepartmentId));
+
+        CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>();
 
         CreateMap<EmployeeWorkingTimeRecordViewModel, EmployeeSalaryViewModel>()
             .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary))
