@@ -34,6 +34,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             // TODO: Add including AggregatedHistories
             // TODO: Need to add Group to the Employee directly and filter by it on the top level query
             databaseQuery = _dbContext.Employees
+                .Include(x => x.Department)
                 .Include(x => x.WorkingTimeRecords
                     .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
                     .Where(w => w.OccuredAt.Month == query.QueryModel.Month)

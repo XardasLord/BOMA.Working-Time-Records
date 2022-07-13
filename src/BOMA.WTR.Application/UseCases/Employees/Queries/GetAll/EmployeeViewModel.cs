@@ -8,4 +8,6 @@ public class EmployeeViewModel
     public decimal BaseSalary { get; set; }
     public decimal SalaryBonusPercentage { get; set; }
     public int RcpId { get; set; }
+    public string DepartmentName { get; set; }
+    public int DepartmentId { get; set; }
 }

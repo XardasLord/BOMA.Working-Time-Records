@@ -5,4 +5,6 @@ export interface EmployeeModel {
 	baseSalary: number;
 	salaryBonusPercentage: number;
 	rcpId: number;
+	departmentId: number;
+	departmentName: string;
 }
