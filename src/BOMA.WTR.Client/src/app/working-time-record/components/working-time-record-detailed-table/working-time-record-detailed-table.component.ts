@@ -35,6 +35,10 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 		return new Date(year, month, 0).getDate();
 	}
 
+	trackDetailedRecord(index: number, element: EmployeeWorkingTimeRecordDetailsModel): number {
+		return element.employee.id;
+	}
+
 	getWorkingHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
 		const recordsFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);
 

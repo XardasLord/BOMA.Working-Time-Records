@@ -1,4 +1,4 @@
-<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!">
+<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackDetailedRecord">
 	<ng-container matColumnDef="fullName">
 		<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
 		<td
