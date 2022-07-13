@@ -30,10 +30,10 @@ public class RogerFileModel
     public TimeSpan? Time { get; set; }
     
     [Index(8)]
-    public int? GroupId { get; set; }
+    public int? DepartmentId { get; set; }
     
     [Index(9)]
-    public string? GroupName { get; set; }
+    public string? DepartmentName { get; set; }
 
     public bool IsValid() => RogerEventType.HasValue && RogerEventType.Value is not RecordEventType.None && !string.IsNullOrEmpty(UserId);
 }

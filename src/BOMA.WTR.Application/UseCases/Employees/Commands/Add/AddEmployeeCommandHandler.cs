@@ -19,7 +19,7 @@ public sealed class AddEmployeeCommandHandler : ICommandHandler<AddEmployeeComma
         var name = new Name(command.FirstName, command.LastName);
         var salary = new Money(command.BaseSalary);
         var bonus = new PercentageBonus(command.PercentageSalaryBonus);
-        var employee = Employee.Add(name, salary, bonus, command.RcpId);
+        var employee = Employee.Add(name, salary, bonus, command.RcpId, command.DepartmentId);
 
         await _employeeRepository.AddAsync(employee);
         await _employeeRepository.SaveChangesAsync();

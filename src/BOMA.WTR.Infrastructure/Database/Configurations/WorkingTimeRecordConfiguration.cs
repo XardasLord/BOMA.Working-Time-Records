@@ -29,8 +29,13 @@ public class WorkingTimeRecordConfiguration : IEntityTypeConfiguration<WorkingTi
             .HasColumnName("OccuredAt")
             .IsRequired();
 
-        builder.Property(x => x.GroupId)
-            .HasColumnName("GroupId")
+        builder.Property(x => x.DepartmentId)
+            .HasColumnName("DepartmentId")
             .IsRequired();
+        
+        builder.HasOne(x => x.Department)
+            .WithMany()
+            .HasForeignKey(x => x.DepartmentId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

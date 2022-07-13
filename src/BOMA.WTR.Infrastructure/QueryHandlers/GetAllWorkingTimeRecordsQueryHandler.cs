@@ -37,11 +37,11 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
                 .Include(x => x.WorkingTimeRecords
                     .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
                     .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
-                    .Where(w => w.GroupId == query.QueryModel.GroupId))
+                    .Where(w => w.DepartmentId == query.QueryModel.GroupId))
                 .Where(x => x.WorkingTimeRecords
                     .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
                     .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
-                    .Any(w => w.GroupId == query.QueryModel.GroupId));
+                    .Any(w => w.DepartmentId == query.QueryModel.GroupId));
         }
         else
         {

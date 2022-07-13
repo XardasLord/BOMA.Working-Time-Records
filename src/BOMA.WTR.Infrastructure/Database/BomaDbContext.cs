@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
+using BOMA.WTR.Infrastructure.Database.SeedData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -30,5 +31,8 @@ public class BomaDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        var seedInitialData = new SeedInitialData();
+        seedInitialData.Seed(modelBuilder);
     }
 }

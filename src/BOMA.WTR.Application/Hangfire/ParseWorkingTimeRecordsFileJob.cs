@@ -56,7 +56,7 @@ public class ParseWorkingTimeRecordsFileJob
                         var salary = Money.Empty;
                         var bonus = PercentageBonus.Empty;
                         
-                        currentEmployee = Employee.Add(name, salary, bonus, rogerFileModel.UserRcpId.Value);
+                        currentEmployee = Employee.Add(name, salary, bonus, rogerFileModel.UserRcpId.Value, rogerFileModel.DepartmentId.Value);
                         await _employeeRepository.AddAsync(currentEmployee);
                     }
                     
@@ -72,7 +72,7 @@ public class ParseWorkingTimeRecordsFileJob
                         rogerFileModel.Time.Value.Hours, 
                         rogerFileModel.Time.Value.Minutes, 
                         rogerFileModel.Time.Value.Seconds),
-                    rogerFileModel.GroupId.Value));
+                    rogerFileModel.DepartmentId.Value));
             }
 
             await _employeeRepository.SaveChangesAsync();

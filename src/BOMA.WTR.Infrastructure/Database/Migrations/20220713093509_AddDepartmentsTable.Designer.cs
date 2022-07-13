@@ -4,16 +4,18 @@ using BOMA.WTR.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BOMA.WRT.Infrastructure.Database.Migrations
+namespace BOMA.WTR.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(BomaDbContext))]
-    partial class BomaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220713093509_AddDepartmentsTable")]
+    partial class AddDepartmentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,48 +64,6 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Magazyn"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Akcesoria"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Produkcja"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Pakowanie"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = ""
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "BOMA"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Zlecenia"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Agencja"
-                        });
                 });
 
             modelBuilder.Entity("BOMA.WTR.Domain.AggregateModels.Entities.WorkingTimeRecord", b =>

@@ -49,12 +49,20 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.HasMany(x => x.WorkingTimeRecords)
             .WithOne()
             .IsRequired()
-            .HasForeignKey("UserId");
+            .HasForeignKey("UserId")
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasMany(x => x.WorkingTimeRecordAggregatedHistories)
             .WithOne()
             .IsRequired()
-            .HasForeignKey("UserId");
+            .HasForeignKey("UserId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(x => x.Department)
+            .WithMany()
+            .IsRequired()
+            .HasForeignKey(x => x.DepartmentId)
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Metadata
             .FindNavigation(nameof(Employee.WorkingTimeRecords))
