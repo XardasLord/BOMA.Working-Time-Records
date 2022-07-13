@@ -2,6 +2,7 @@
 using BOMA.WTR.Application.Abstractions.Messaging;
 using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.GetRecords;
+using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
@@ -26,15 +27,32 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
     
     public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordsQuery query, CancellationToken cancellationToken)
     {
-        var databaseQuery = _dbContext.Employees
-            .Include(x => x.WorkingTimeRecords
-                .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
-                .Where(w => w.GroupId == query.QueryModel.GroupId))
-            .Where(x => x.WorkingTimeRecords
-                .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
-                .Any(w => w.GroupId == query.QueryModel.GroupId));
+        IQueryable<Employee> databaseQuery; 
+
+        if (query.QueryModel.GroupId is not null)
+        {
+            // TODO: Add including AggregatedHistories
+            // TODO: Need to add Group to the Employee directly and filter by it on the top level query
+            databaseQuery = _dbContext.Employees
+                .Include(x => x.WorkingTimeRecords
+                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
+                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
+                    .Where(w => w.GroupId == query.QueryModel.GroupId))
+                .Where(x => x.WorkingTimeRecords
+                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
+                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month)
+                    .Any(w => w.GroupId == query.QueryModel.GroupId));
+        }
+        else
+        {
+            databaseQuery = _dbContext.Employees
+                .Include(x => x.WorkingTimeRecords
+                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
+                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month))
+                .Where(x => x.WorkingTimeRecords
+                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
+                    .Any(w => w.OccuredAt.Month == query.QueryModel.Month));
+        }
 
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
@@ -42,7 +60,6 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         }
 
         var employeesWithWorkingTimeRecords = await databaseQuery.ToListAsync(cancellationToken);
-
 
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
