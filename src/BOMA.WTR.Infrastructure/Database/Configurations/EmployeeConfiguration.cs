@@ -51,8 +51,17 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .IsRequired()
             .HasForeignKey("UserId");
         
+        builder.HasMany(x => x.WorkingTimeRecordAggregatedHistories)
+            .WithOne()
+            .IsRequired()
+            .HasForeignKey("UserId");
+        
         builder.Metadata
             .FindNavigation(nameof(Employee.WorkingTimeRecords))
+            ?.SetPropertyAccessMode(PropertyAccessMode.Field);
+        
+        builder.Metadata
+            .FindNavigation(nameof(Employee.WorkingTimeRecordAggregatedHistories))
             ?.SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

@@ -12,10 +12,12 @@ public class Employee : Entity<int>, IAggregateRoot
     private PercentageBonus _salaryBonusPercentage;
     private int _rcpId;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
+    private readonly List<WorkingTimeRecordAggregatedHistory> _workingTimeRecordAggregatedHistories;
 
     private Employee()
     {
         _workingTimeRecords = new List<WorkingTimeRecord>();
+        _workingTimeRecordAggregatedHistories = new List<WorkingTimeRecordAggregatedHistory>();
     }
 
     private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, int rcpId) 
@@ -32,6 +34,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public PercentageBonus SalaryBonusPercentage => _salaryBonusPercentage;
     public int RcpId => _rcpId;
     public virtual IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
+    public virtual IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> WorkingTimeRecordAggregatedHistories => _workingTimeRecordAggregatedHistories;
 
     public static Employee Add(Name name, Money salary, PercentageBonus percentageSalaryBonus, int rcpId)
     {
@@ -57,5 +60,15 @@ public class Employee : Entity<int>, IAggregateRoot
         }
         
         _workingTimeRecords.Add(record);
+    }
+    
+    public void AddWorkingTimeRecordAggregatedHistory(WorkingTimeRecordAggregatedHistory record)
+    {
+        if (WorkingTimeRecordAggregatedHistories.Any(x => x.Date == record.Date))
+        {
+            return;
+        }
+        
+        _workingTimeRecordAggregatedHistories.Add(record);
     }
 }
