@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.GetRecords;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;

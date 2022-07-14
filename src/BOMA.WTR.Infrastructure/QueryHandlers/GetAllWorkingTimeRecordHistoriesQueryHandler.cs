@@ -4,19 +4,20 @@ using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
+using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace BOMA.WTR.Infrastructure.QueryHandlers;
 
-public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingTimeRecordsQuery, IEnumerable<EmployeeWorkingTimeRecordViewModel>>
+public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAllWorkingTimeRecordHistoriesQuery, IEnumerable<EmployeeWorkingTimeRecordViewModel>>
 {
     private readonly BomaDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly IEmployeeWorkingTimeRecordCalculationDomainService _employeeWorkingTimeRecordCalculationDomainService;
 
-    public GetAllWorkingTimeRecordsQueryHandler(
+    public GetAllWorkingTimeRecordHistoriesQueryHandler(
         BomaDbContext dbContext,
         IMapper mapper,
         IEmployeeWorkingTimeRecordCalculationDomainService employeeWorkingTimeRecordCalculationDomainService)
@@ -26,34 +27,18 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         _employeeWorkingTimeRecordCalculationDomainService = employeeWorkingTimeRecordCalculationDomainService;
     }
     
-    public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordsQuery query, CancellationToken cancellationToken)
+    public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordHistoriesQuery query, CancellationToken cancellationToken)
     {
-        IQueryable<Employee> databaseQuery;
-
-        if (query.QueryModel.GroupId is not null)
-        {
-            databaseQuery = _dbContext.Employees
-                .Include(x => x.Department)
-                .Include(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Any(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.DepartmentId == query.QueryModel.GroupId);
-        }
-        else
-        {
-            databaseQuery = _dbContext.Employees
-                .Include(x => x.Department)
-                .Include(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Any(w => w.OccuredAt.Month == query.QueryModel.Month));
-        }
-
+        var databaseQuery = _dbContext.Employees
+            .Include(x => x.Department)
+            .Include(x => x.WorkingTimeRecordAggregatedHistories
+                .Where(w => w.Date.Year == query.QueryModel.Year)
+                .Where(w => w.Date.Month == query.QueryModel.Month))
+            .Where(x => x.WorkingTimeRecordAggregatedHistories
+                .Where(w => w.Date.Year == query.QueryModel.Year)
+                .Any(w => w.Date.Month == query.QueryModel.Month))
+            .Where(x => x.DepartmentId == query.QueryModel.GroupId);
+        
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
             databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
@@ -64,7 +49,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
             Employee = _mapper.Map<EmployeeViewModel>(employee), 
-            WorkingTimeRecordsAggregated = _employeeWorkingTimeRecordCalculationDomainService.CalculateAggregatedWorkingTimeRecords(employee.WorkingTimeRecords)
+            WorkingTimeRecordsAggregated = _mapper.Map<IEnumerable<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories) 
         }).ToList();
 
         result.ForEach(x =>

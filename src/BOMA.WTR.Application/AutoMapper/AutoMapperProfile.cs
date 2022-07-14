@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
-using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.GetRecords;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 
@@ -26,6 +26,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.DepartmentId));
 
         CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>();
+        CreateMap<WorkingTimeRecordAggregatedHistory, WorkingTimeRecordAggregatedViewModel>();
 
         CreateMap<EmployeeWorkingTimeRecordViewModel, EmployeeSalaryViewModel>()
             .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary))

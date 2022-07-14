@@ -2,7 +2,7 @@
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.SharedKernel;
 
-namespace BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.GetRecords;
+namespace BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 
 public class EmployeeWorkingTimeRecordViewModel
 {
