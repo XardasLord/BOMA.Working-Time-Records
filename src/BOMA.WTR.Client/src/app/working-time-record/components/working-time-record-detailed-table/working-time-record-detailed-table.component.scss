@@ -83,6 +83,11 @@ tr.mat-row:nth-child(6n) > .mat-cell {
   background-color: $standard-cell-color;
 }
 
+.mat-header-cell.weekend-day,
+.mat-cell.weekend-day {
+  background-color: $weekend-day-color !important;
+}
+
 .mat-cell.none-value {
   background-color: $none-cell-color;
 }
