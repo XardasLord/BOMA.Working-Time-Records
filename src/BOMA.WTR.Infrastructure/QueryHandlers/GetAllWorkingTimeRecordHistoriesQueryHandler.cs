@@ -37,7 +37,7 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
             .Where(x => x.WorkingTimeRecordAggregatedHistories
                 .Where(w => w.Date.Year == query.QueryModel.Year)
                 .Any(w => w.Date.Month == query.QueryModel.Month))
-            .Where(x => x.DepartmentId == query.QueryModel.GroupId);
+            .Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
         
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {

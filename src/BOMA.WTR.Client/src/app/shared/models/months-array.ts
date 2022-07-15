@@ -1,6 +1,6 @@
 import { KeyValuePair } from '../../working-time-record/models/key-value-pair.model';
 
-export const MonthsArray: KeyValuePair[] = [
+export const MonthsArray: KeyValuePair<string, number>[] = [
 	{ key: 'Styczeń', value: 1 },
 	{ key: 'Luty', value: 2 },
 	{ key: 'Marzec', value: 3 },

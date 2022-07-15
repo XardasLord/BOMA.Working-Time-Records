@@ -12,7 +12,10 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 	}
 
 	getAll(queryModel: QueryModel): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		let queryParams = new HttpParams().set('year', queryModel.year).set('month', queryModel.month).set('groupId', queryModel.groupId);
+		let queryParams = new HttpParams()
+			.set('year', queryModel.year)
+			.set('month', queryModel.month)
+			.set('departmentId', queryModel.departmentId);
 
 		if (queryModel.searchText) {
 			queryParams = queryParams.set('searchText', queryModel.searchText);

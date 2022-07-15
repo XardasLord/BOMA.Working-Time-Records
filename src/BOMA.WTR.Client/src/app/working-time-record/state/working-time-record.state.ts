@@ -93,7 +93,7 @@ export class WorkingTimeRecordState {
 	@Action(ChangeGroup)
 	changeGroup(ctx: StateContext<WorkingTimeRecordStateModel>, action: ChangeGroup): Observable<void> {
 		const updatedQuery = { ...ctx.getState().query };
-		updatedQuery.groupId = action.groupId;
+		updatedQuery.departmentId = action.groupId;
 
 		ctx.patchState({
 			query: updatedQuery

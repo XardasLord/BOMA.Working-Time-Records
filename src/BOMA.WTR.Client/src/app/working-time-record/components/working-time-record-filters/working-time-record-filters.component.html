@@ -20,7 +20,7 @@
 
 	<mat-form-field appearance="fill">
 		<mat-label>Grupa</mat-label>
-		<mat-select (selectionChange)="groupChanged($event.value)" [value]="(queryModel$ | async)?.groupId">
+		<mat-select (selectionChange)="groupChanged($event.value)" [value]="(queryModel$ | async)?.departmentId">
 			<mat-option *ngFor="let department of departments" [value]="department.value">{{ department.key }}</mat-option>
 		</mat-select>
 	</mat-form-field>

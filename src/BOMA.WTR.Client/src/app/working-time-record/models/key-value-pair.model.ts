@@ -1,4 +1,4 @@
-export interface KeyValuePair {
-	key: string;
-	value: number;
+export interface KeyValuePair<K, V> {
+	key: K;
+	value: V;
 }

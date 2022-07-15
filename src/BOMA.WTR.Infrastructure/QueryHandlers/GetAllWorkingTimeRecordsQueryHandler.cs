@@ -30,7 +30,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
     {
         IQueryable<Employee> databaseQuery;
 
-        if (query.QueryModel.GroupId is not null)
+        if (query.QueryModel.DepartmentId is not null)
         {
             databaseQuery = _dbContext.Employees
                 .Include(x => x.Department)
@@ -40,7 +40,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
                 .Where(x => x.WorkingTimeRecords
                     .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
                     .Any(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.DepartmentId == query.QueryModel.GroupId);
+                .Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
         }
         else
         {

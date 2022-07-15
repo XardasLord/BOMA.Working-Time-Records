@@ -12,6 +12,7 @@ import ChangeDate = WorkingTimeRecord.ChangeDate;
 import ApplyFilter = WorkingTimeRecord.ApplyFilter;
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
 import { DepartmentsArray } from '../../../shared/models/departments-array';
+import { DepartmentsEnum } from '../../../shared/models/departments.enum';
 
 @Component({
 	selector: 'app-working-time-record-filters',
@@ -20,8 +21,8 @@ import { DepartmentsArray } from '../../../shared/models/departments-array';
 })
 export class WorkingTimeRecordFiltersComponent {
 	years: number[] = [];
-	months: KeyValuePair[] = MonthsArray;
-	departments: KeyValuePair[] = DepartmentsArray;
+	months: KeyValuePair<string, number>[] = MonthsArray;
+	departments: KeyValuePair<DepartmentsEnum, number>[] = DepartmentsArray;
 
 	@Select(WorkingTimeRecordState.getSearchQueryModel) queryModel$!: Observable<QueryModel>;
 
