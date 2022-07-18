@@ -6,7 +6,7 @@ namespace BOMA.WTR.Infrastructure.DomainService;
 
 public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkingTimeRecordCalculationDomainService
 {
-    public IEnumerable<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
+    public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
     {
         var result = new List<WorkingTimeRecordAggregatedViewModel>();
 

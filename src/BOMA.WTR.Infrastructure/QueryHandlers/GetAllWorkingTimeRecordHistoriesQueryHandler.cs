@@ -49,7 +49,7 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
             Employee = _mapper.Map<EmployeeViewModel>(employee), 
-            WorkingTimeRecordsAggregated = _mapper.Map<IEnumerable<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories) 
+            WorkingTimeRecordsAggregated = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories) 
         }).ToList();
 
         result.ForEach(x =>

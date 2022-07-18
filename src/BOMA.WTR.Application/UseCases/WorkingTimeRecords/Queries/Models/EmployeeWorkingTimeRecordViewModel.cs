@@ -8,7 +8,7 @@ public class EmployeeWorkingTimeRecordViewModel
 {
     public EmployeeViewModel Employee { get; set; }
     public EmployeeSalaryViewModel SalaryInformation { get; set; }
-    public IEnumerable<WorkingTimeRecordAggregatedViewModel> WorkingTimeRecordsAggregated { get; set; }
+    public List<WorkingTimeRecordAggregatedViewModel> WorkingTimeRecordsAggregated { get; set; }
 }
 
 public class WorkingTimeRecordDetailsViewModel

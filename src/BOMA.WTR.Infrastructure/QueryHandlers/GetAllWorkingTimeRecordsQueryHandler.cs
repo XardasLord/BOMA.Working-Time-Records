@@ -83,6 +83,23 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(x);
         });
         
+        // TODO: Here we should fill the whole month with WorkingTimeRecordsAggregated per day. So if there is no entry for some days we should add empty ones for those days
+        result.ForEach(entry =>
+        {
+            for (var day = 1; day <= DateTime.DaysInMonth(query.QueryModel.Year, query.QueryModel.Month); day++)
+            {
+                if (entry.WorkingTimeRecordsAggregated.Any(x => x.Date.Day == day))
+                    continue;
+                
+                // Entry for this day does not exist so we need to add empty one
+                entry.WorkingTimeRecordsAggregated.Add(
+                    WorkingTimeRecordAggregatedViewModel.EmptyForDay(
+                        new DateTime(query.QueryModel.Year, query.QueryModel.Month, day)));
+            }
+
+            entry.WorkingTimeRecordsAggregated.Sort((x, y) => x.Date.CompareTo(y.Date));
+        });
+        
         return result;
     }
 }

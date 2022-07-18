@@ -4,5 +4,5 @@ namespace BOMA.WTR.Domain.AggregateModels.Interfaces;
 
 public interface IEmployeeWorkingTimeRecordCalculationDomainService
 {
-    public IEnumerable<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords);
+    public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords);
 }
