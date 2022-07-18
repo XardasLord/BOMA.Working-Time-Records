@@ -36,6 +36,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         var historyEntries = (await _mediator.Send(new GetAllWorkingTimeRecordHistoriesQuery(query.QueryModel), cancellationToken)).ToList();
         if (historyEntries.Any())
         {
+            historyEntries.ForEach(x => x.IsEditable = true);
             return historyEntries;
         }
         

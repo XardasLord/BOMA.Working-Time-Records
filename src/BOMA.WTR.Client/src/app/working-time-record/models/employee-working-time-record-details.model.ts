@@ -6,4 +6,5 @@ export class EmployeeWorkingTimeRecordDetailsModel {
 	employee!: EmployeeModel;
 	salaryInformation!: SalaryInformationModel;
 	workingTimeRecordsAggregated!: WorkingTimeRecordDetailsAggregatedModel[];
+	isEditable!: boolean;
 }
