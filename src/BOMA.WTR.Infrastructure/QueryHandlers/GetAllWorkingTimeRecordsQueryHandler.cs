@@ -4,8 +4,10 @@ using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
+using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Infrastructure.Database;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace BOMA.WTR.Infrastructure.QueryHandlers;
@@ -14,20 +16,29 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
 {
     private readonly BomaDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
     private readonly IEmployeeWorkingTimeRecordCalculationDomainService _employeeWorkingTimeRecordCalculationDomainService;
 
     public GetAllWorkingTimeRecordsQueryHandler(
         BomaDbContext dbContext,
         IMapper mapper,
+        IMediator mediator,
         IEmployeeWorkingTimeRecordCalculationDomainService employeeWorkingTimeRecordCalculationDomainService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _mediator = mediator;
         _employeeWorkingTimeRecordCalculationDomainService = employeeWorkingTimeRecordCalculationDomainService;
     }
     
     public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordsQuery query, CancellationToken cancellationToken)
     {
+        var historyEntries = (await _mediator.Send(new GetAllWorkingTimeRecordHistoriesQuery(query.QueryModel), cancellationToken)).ToList();
+        if (historyEntries.Any())
+        {
+            return historyEntries;
+        }
+        
         IQueryable<Employee> databaseQuery;
 
         if (query.QueryModel.DepartmentId is not null)
