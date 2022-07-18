@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { Observable } from 'rxjs';
+import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
@@ -16,28 +16,23 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	@Select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable) detailedRecords$!: Observable<
 		EmployeeWorkingTimeRecordDetailsModel[]
 	>;
+	@Select(WorkingTimeRecordState.getDaysInMonth) numberOfDays$!: Observable<string[]>;
+	@Select(WorkingTimeRecordState.getColumnsToDisplay) columnsToDisplay$!: Observable<string[]>;
 
-	columnsToDisplay = ['fullName', 'rate', 'gross', 'bonus', 'sumValue', 'sumBonus', 'sumHours', 'emptyLabel'];
-	daysArray: string[] = [];
-
-	constructor(private store: Store) {
-		for (let i = 1; i <= this.daysInMonth(6, 2022); i++) {
-			this.columnsToDisplay.push(i.toString());
-			this.daysArray.push(i.toString());
-		}
-	}
+	constructor(private store: Store) {}
 
 	ngAfterViewInit() {
 		this.store.dispatch(new GetAll());
 	}
 
-	daysInMonth(month: number, year: number) {
-		return new Date(year, month, 0).getDate();
-	}
-
 	trackDetailedRecord(index: number, element: EmployeeWorkingTimeRecordDetailsModel): number {
 		return element.employee.id;
 	}
+
+	// isWeekendDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number): boolean {
+	// 	const recordFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);
+	// 	return recordFromDay[0]?.isWeekendDay ?? true;
+	// }
 
 	getWorkingHoursForDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number) {
 		const recordsFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);

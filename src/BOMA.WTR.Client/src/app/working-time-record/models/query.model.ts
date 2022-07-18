@@ -14,3 +14,27 @@ export const DefaultQueryModel: QueryModel = {
 	month: new Date().getMonth() + 1,
 	departmentId: DepartmentsArray.filter((x) => x.key === DepartmentsEnum.BomaDepartment)[0].value
 };
+
+export const DefaultColumnsToDisplayForDetailedTable: string[] = [
+	'fullName',
+	'rate',
+	'gross',
+	'bonus',
+	'sumValue',
+	'sumBonus',
+	'sumHours',
+	'emptyLabel'
+];
+
+export function DefaultInitialDayColumnsToDisplayForDetailedTable(year: number, month: number): string[] {
+	const daysArray: string[] = [];
+	for (let i = 1; i <= NumberOfDaysInMonth(year, month); i++) {
+		daysArray.push(i.toString());
+	}
+
+	return daysArray;
+}
+
+export function NumberOfDaysInMonth(year: number, month: number): number {
+	return new Date(year, month, 0).getDate();
+}

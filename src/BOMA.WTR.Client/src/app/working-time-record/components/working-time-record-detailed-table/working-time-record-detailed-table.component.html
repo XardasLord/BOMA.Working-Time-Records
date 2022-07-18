@@ -146,7 +146,7 @@
 		</td>
 	</ng-container>
 
-	<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of daysArray">
+	<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
 		<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
 		<td
 			mat-cell
@@ -183,6 +183,6 @@
 		</td>
 	</ng-container>
 
-	<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-	<tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+	<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async"></tr>
+	<tr mat-row *matRowDef="let row; columns: columnsToDisplay$ | async"></tr>
 </table>
