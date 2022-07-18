@@ -25,6 +25,13 @@ export class WorkingTimeRecordSummaryTableComponent {
 		'holiday',
 		'sickness',
 		'additional',
-		'sum'
+		'sum',
+		'actions'
 	];
+
+	editRecord(record: EmployeeWorkingTimeRecordDetailsModel) {
+		if (!record.isEditable) {
+			console.log('This record cannot be edited');
+		}
+	}
 }

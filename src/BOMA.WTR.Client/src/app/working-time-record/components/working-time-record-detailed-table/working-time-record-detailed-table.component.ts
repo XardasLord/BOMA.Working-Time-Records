@@ -29,6 +29,8 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 		return element.employee.id;
 	}
 
+	editRecord(record: EmployeeWorkingTimeRecordDetailsModel) {}
+
 	// isWeekendDay(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[], dayOfMonth: number): boolean {
 	// 	const recordFromDay = workingTimeRecordDetails.filter((x) => new Date(x.date).getDate() === dayOfMonth);
 	// 	return recordFromDay[0]?.isWeekendDay ?? true;

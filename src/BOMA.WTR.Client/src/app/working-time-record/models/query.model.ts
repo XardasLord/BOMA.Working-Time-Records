@@ -16,6 +16,7 @@ export const DefaultQueryModel: QueryModel = {
 };
 
 export const DefaultColumnsToDisplayForDetailedTable: string[] = [
+	'actions',
 	'fullName',
 	'rate',
 	'gross',
