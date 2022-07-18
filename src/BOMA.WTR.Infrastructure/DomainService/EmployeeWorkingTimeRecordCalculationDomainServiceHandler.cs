@@ -137,7 +137,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(),
             HundredPercentageBonusHours = GetHundredPercentageBonusHours(),
             SaturdayHours = GetSaturdayHours(),
-            NightHours = GetNightHours()
+            NightHours = GetNightHours(),
+            IsWeekendDay = startWorkDate.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday
         };
 
         double GetBaseNormativeHours()

@@ -7,4 +7,5 @@ export class WorkingTimeRecordDetailsAggregatedModel {
 	hundredPercentageBonusHours!: number;
 	saturdayHours!: number;
 	nightHours!: number;
+	isWeekendDay!: boolean;
 }
