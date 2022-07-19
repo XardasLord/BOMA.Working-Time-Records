@@ -1,5 +1,4 @@
 ﻿using BOMA.WTR.Domain.SeedWork;
-using BOMA.WTR.Domain.SharedKernel;
 
 namespace BOMA.WTR.Domain.AggregateModels.Entities;
 
@@ -47,4 +46,12 @@ public class EmployeeSalaryAggregatedHistory
     
     // Night
     public decimal NightBaseSalary { get; set; }
+    public double NightWorkedHours { get; set; }
+    
+    // Additional
+    public decimal HolidaySalary { get; set; }
+    public decimal SicknessSalary { get; set; }
+    public decimal AdditionalSalary { get; set; }
+
+    public decimal FinalSumSalary { get; set; }
 }

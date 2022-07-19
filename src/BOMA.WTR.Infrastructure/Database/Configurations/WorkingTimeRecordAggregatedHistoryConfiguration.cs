@@ -38,6 +38,11 @@ public class WorkingTimeRecordAggregatedHistoryConfiguration : IEntityTypeConfig
             salary.Property(x => x.GrossSumBaseSaturdaySalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.BonusSumSalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.NightBaseSalary).HasColumnType("decimal(10,2)");
+            salary.Property(x => x.NightBaseSalary).HasColumnType("decimal(10,2)");
+            salary.Property(x => x.HolidaySalary).HasColumnType("decimal(10,2)");
+            salary.Property(x => x.SicknessSalary).HasColumnType("decimal(10,2)");
+            salary.Property(x => x.AdditionalSalary).HasColumnType("decimal(10,2)");
+            salary.Property(x => x.FinalSumSalary).HasColumnType("decimal(10,2)");
         });
 
         builder.Property(x => x.WorkedMinutes).HasColumnType("decimal(10,2)");
