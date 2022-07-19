@@ -61,22 +61,30 @@
 
 	<ng-container matColumnDef="holiday">
 		<th mat-header-cell *matHeaderCellDef>Urlop</th>
-		<td mat-cell *matCellDef="let record; let i = index"></td>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.holidaySalary | currency: 'PLN' }}
+		</td>
 	</ng-container>
 
 	<ng-container matColumnDef="sickness">
 		<th mat-header-cell *matHeaderCellDef>Chorobowe</th>
-		<td mat-cell *matCellDef="let record; let i = index"></td>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.sicknessSalary | currency: 'PLN' }}
+		</td>
 	</ng-container>
 
 	<ng-container matColumnDef="additional">
 		<th mat-header-cell *matHeaderCellDef>Dodatkowe</th>
-		<td mat-cell *matCellDef="let record; let i = index"></td>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.additionalSalary | currency: 'PLN' }}
+		</td>
 	</ng-container>
 
 	<ng-container matColumnDef="sum">
 		<th mat-header-cell *matHeaderCellDef>Suma</th>
-		<td mat-cell *matCellDef="let record; let i = index"></td>
+		<td mat-cell *matCellDef="let record; let i = index">
+			{{ record?.salaryInformation?.finalSumSalary | currency: 'PLN' }}
+		</td>
 	</ng-container>
 
 	<ng-container matColumnDef="actions">

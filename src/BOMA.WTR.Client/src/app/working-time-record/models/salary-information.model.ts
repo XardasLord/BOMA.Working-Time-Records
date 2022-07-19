@@ -29,4 +29,11 @@ export interface SalaryInformationModel {
 	// Night
 	nightBaseSalary: number;
 	nightWorkedHours: number;
+
+	// Additional
+	holidaySalary: number;
+	sicknessSalary: number;
+	additionalSalary: number;
+
+	finalSumSalary: number;
 }

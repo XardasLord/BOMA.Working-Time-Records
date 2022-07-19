@@ -68,7 +68,10 @@ public class AutoMapperProfile : Profile
                 opt => opt.MapFrom(src => CalculateNightSumSalary(src)))
             
             .ForMember(dest => dest.NightWorkedHours,
-                opt => opt.MapFrom(src => CalculateAllNightWorkedHours(src)));
+                opt => opt.MapFrom(src => CalculateAllNightWorkedHours(src)))
+            
+            .ForMember(dest => dest.FinalSumSalary,
+                opt => opt.MapFrom(src => CalculateFinalSumSalary(src)));
     }
 
     private static decimal CalculateGrossBaseSalary(EmployeeWorkingTimeRecordViewModel src)
@@ -143,6 +146,18 @@ public class AutoMapperProfile : Profile
             return 0;
 
         return (src.Employee.BaseSalary + (decimal)(3010 / DateTime.DaysInMonth(period.Date.Year, period.Date.Month) * 0.2)) * (decimal)CalculateAllNightWorkedHours(src);
+    }
+
+    private static decimal CalculateFinalSumSalary(EmployeeWorkingTimeRecordViewModel src)
+    {
+        return CalculateGrossSumBaseSalary(src) +
+               CalculateGrossSumBase50PercentageSalary(src) +
+               CalculateGrossSumBase100PercentageSalary(src) +
+               CalculateGrossSumBaseSaturdaySalary(src) +
+               CalculateNightSumSalary(src);
+        // src.SalaryInformation.HolidaySalary +
+        // src.SalaryInformation.SicknessSalary +
+        // src.SalaryInformation.AdditionalSalary;
     }
 
     private static double CalculateAllNightWorkedHours(EmployeeWorkingTimeRecordViewModel src)
