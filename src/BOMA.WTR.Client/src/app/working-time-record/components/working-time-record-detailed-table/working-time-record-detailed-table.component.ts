@@ -1,6 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
@@ -13,11 +12,9 @@ import GetAll = WorkingTimeRecord.GetAll;
 	styleUrls: ['./working-time-record-detailed-table.component.scss']
 })
 export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
-	@Select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable) detailedRecords$!: Observable<
-		EmployeeWorkingTimeRecordDetailsModel[]
-	>;
-	@Select(WorkingTimeRecordState.getDaysInMonth) numberOfDays$!: Observable<string[]>;
-	@Select(WorkingTimeRecordState.getColumnsToDisplay) columnsToDisplay$!: Observable<string[]>;
+	detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable);
+	numberOfDays$ = this.store.select(WorkingTimeRecordState.getDaysInMonth);
+	columnsToDisplay$ = this.store.select(WorkingTimeRecordState.getColumnsToDisplay);
 
 	constructor(private store: Store) {}
 

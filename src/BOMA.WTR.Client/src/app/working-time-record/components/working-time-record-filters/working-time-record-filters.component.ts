@@ -1,18 +1,16 @@
 import { Component } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import * as moment from 'moment';
 
 import { MonthsArray } from '../../../shared/models/months-array';
+import { DepartmentsArray } from '../../../shared/models/departments-array';
+import { DepartmentsEnum } from '../../../shared/models/departments.enum';
 import { KeyValuePair } from '../../models/key-value-pair.model';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
-import { QueryModel } from '../../models/query.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import ChangeDate = WorkingTimeRecord.ChangeDate;
 import ApplyFilter = WorkingTimeRecord.ApplyFilter;
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
-import { DepartmentsArray } from '../../../shared/models/departments-array';
-import { DepartmentsEnum } from '../../../shared/models/departments.enum';
 
 @Component({
 	selector: 'app-working-time-record-filters',
@@ -24,7 +22,7 @@ export class WorkingTimeRecordFiltersComponent {
 	months: KeyValuePair<string, number>[] = MonthsArray;
 	departments: KeyValuePair<DepartmentsEnum, number>[] = DepartmentsArray;
 
-	@Select(WorkingTimeRecordState.getSearchQueryModel) queryModel$!: Observable<QueryModel>;
+	queryModel$ = this.store.select(WorkingTimeRecordState.getSearchQueryModel);
 
 	constructor(private store: Store) {
 		const currentYear = moment().year();

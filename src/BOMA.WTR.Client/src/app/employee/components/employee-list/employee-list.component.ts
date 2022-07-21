@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { Employee } from '../../state/employee.action';
 import { EmployeeState } from '../../state/employee.state';
 import { EmployeeModel } from '../../../shared/models/employee.model';
@@ -15,7 +14,7 @@ import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 	styleUrls: ['./employee-list.component.scss']
 })
 export class EmployeeListComponent implements OnInit {
-	@Select(EmployeeState.getEmployees) employees$!: Observable<EmployeeModel[]>;
+	employees$ = this.store.select(EmployeeState.getEmployees);
 
 	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'department', 'actions'];
 

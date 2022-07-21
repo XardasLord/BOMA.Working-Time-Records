@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 
@@ -10,7 +9,7 @@ import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-wor
 	styleUrls: ['./working-time-record-summary-table.component.scss']
 })
 export class WorkingTimeRecordSummaryTableComponent {
-	@Select(WorkingTimeRecordState.getDetailedRecords) detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
+	detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecords);
 
 	columnsToDisplay = [
 		'fullName',
@@ -28,6 +27,8 @@ export class WorkingTimeRecordSummaryTableComponent {
 		'sum',
 		'actions'
 	];
+
+	constructor(private store: Store) {}
 
 	editRecord(record: EmployeeWorkingTimeRecordDetailsModel) {
 		if (!record.isEditable) {
