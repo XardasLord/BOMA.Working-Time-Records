@@ -55,14 +55,19 @@ public class Employee : Entity<int>, IAggregateRoot
         _departmentId = departmentId;
     }
     
-    public void UpdateSummaryData(int year, int month, Money holidaySalary)
+    public void UpdateSummaryData(int year, int month, Money holidaySalary, Money sicknessSalary, Money additionalSalary)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
             .Where(x => x.Date.Year == year)
             .ToList();
         
-        recordsToUpdate.ForEach(record => record.SalaryInformation.HolidaySalary = holidaySalary.Amount);
+        recordsToUpdate.ForEach(record =>
+        {
+            record.SalaryInformation.HolidaySalary = holidaySalary.Amount;
+            record.SalaryInformation.SicknessSalary = sicknessSalary.Amount;
+            record.SalaryInformation.AdditionalSalary = additionalSalary.Amount;
+        });
     }
     
     public void AddWorkingTimeRecord(WorkingTimeRecord record)

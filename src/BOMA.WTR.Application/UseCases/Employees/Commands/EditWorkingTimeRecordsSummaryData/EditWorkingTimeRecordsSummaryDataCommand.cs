@@ -2,4 +2,10 @@
 
 namespace BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsSummaryData;
 
-public record EditWorkingTimeRecordsSummaryDataCommand(int EmployeeId, decimal HolidaySalary, int Year, int Month) : ICommand;
+public record EditWorkingTimeRecordsSummaryDataCommand(
+    int EmployeeId,
+    int Year, 
+    int Month,
+    decimal HolidaySalary,
+    decimal SicknessSalary,
+    decimal AdditionalSalary) : ICommand;

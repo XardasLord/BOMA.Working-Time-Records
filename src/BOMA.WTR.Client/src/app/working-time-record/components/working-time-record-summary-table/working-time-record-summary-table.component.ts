@@ -20,9 +20,11 @@ import { QueryModel } from '../../models/query.model';
 export class WorkingTimeRecordSummaryTableComponent {
 	detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecords);
 
+	salaryForm: FormGroup;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
 	holidaySalaryOriginalValue: FormControlOriginalValueValidationModel = {};
-	salaryForm: FormGroup;
+	sicknessSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
+	additionalSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 
 	columnsToDisplay = [
 		'fullName',
@@ -49,6 +51,16 @@ export class WorkingTimeRecordSummaryTableComponent {
 				Validators.min(0),
 				createValueChangedValidator(this.holidaySalaryOriginalValue)
 			]),
+			sicknessSalary: new FormControl<number>(0, [
+				Validators.required,
+				Validators.min(0),
+				createValueChangedValidator(this.sicknessSalaryOriginalValue)
+			]),
+			additionalSalary: new FormControl<number>(0, [
+				Validators.required,
+				Validators.min(0),
+				createValueChangedValidator(this.additionalSalaryOriginalValue)
+			]),
 			year: new FormControl<number>(0),
 			month: new FormControl<number>(0)
 		});
@@ -66,15 +78,30 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 		this.editingRow = record;
 		this.holidaySalaryOriginalValue.originalValue = record.salaryInformation.holidaySalary;
+		this.sicknessSalaryOriginalValue.originalValue = record.salaryInformation.sicknessSalary;
+		this.additionalSalaryOriginalValue.originalValue = record.salaryInformation.additionalSalary;
 
 		this.store.dispatch(
 			new UpdateFormValue({
 				path: 'workingTimeRecord.summaryForm',
-				value: record.salaryInformation.holidaySalary ?? 0,
+				value: record.salaryInformation.holidaySalary,
 				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('holidaySalary')
 			})
 		);
-		// TODO: Update rest of form values
+		this.store.dispatch(
+			new UpdateFormValue({
+				path: 'workingTimeRecord.summaryForm',
+				value: record.salaryInformation.sicknessSalary,
+				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('sicknessSalary')
+			})
+		);
+		this.store.dispatch(
+			new UpdateFormValue({
+				path: 'workingTimeRecord.summaryForm',
+				value: record.salaryInformation.additionalSalary,
+				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('additionalSalary')
+			})
+		);
 	}
 
 	cancelEditMode() {
@@ -112,7 +139,6 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 		const updateModel = this.salaryForm.getRawValue() as WorkingTimeRecordSummaryDataFormModel;
 
-		// TODO: Save changes
 		this.store.dispatch(new UpdateSummaryData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
 	}

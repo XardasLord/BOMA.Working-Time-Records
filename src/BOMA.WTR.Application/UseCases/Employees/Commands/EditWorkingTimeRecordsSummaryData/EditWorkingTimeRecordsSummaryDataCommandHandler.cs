@@ -24,8 +24,10 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
                        ?? throw new NotFoundException($"Employee with ID = {command.EmployeeId} was not found");
 
         var holidaySalary = new Money(command.HolidaySalary);
+        var sicknessSalary = new Money(command.SicknessSalary);
+        var additionalSalary = new Money(command.AdditionalSalary);
         
-        employee.UpdateSummaryData(command.Year, command.Month, holidaySalary);
+        employee.UpdateSummaryData(command.Year, command.Month, holidaySalary, sicknessSalary, additionalSalary);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
         
