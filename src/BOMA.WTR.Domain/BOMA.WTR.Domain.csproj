@@ -9,4 +9,11 @@
     <ItemGroup>
       <PackageReference Include="Ardalis.Specification" Version="6.1.0" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>BOMA.WTR.Domain.Tests.Unit</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
 </Project>

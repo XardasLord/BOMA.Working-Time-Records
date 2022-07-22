@@ -10,13 +10,13 @@ public class Employee : Entity<int>, IAggregateRoot
     private Name _name;
     private Money _salary;
     private PercentageBonus _salaryBonusPercentage;
-    private int _rcpId;
+    internal int _rcpId;
     private Department _department;
     private int _departmentId;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
     private readonly List<WorkingTimeRecordAggregatedHistory> _workingTimeRecordAggregatedHistories;
 
-    private Employee()
+    internal Employee()
     {
         _workingTimeRecords = new List<WorkingTimeRecord>();
         _workingTimeRecordAggregatedHistories = new List<WorkingTimeRecordAggregatedHistory>();
