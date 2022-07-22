@@ -1,5 +1,6 @@
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { Injectable } from '@angular/core';
+import { patch, updateItem } from '@ngxs/store/operators';
 import { catchError, Observable, take, tap, throwError } from 'rxjs';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
@@ -16,12 +17,16 @@ import GetAll = WorkingTimeRecord.GetAll;
 import ApplyFilter = WorkingTimeRecord.ApplyFilter;
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
 import ChangeDate = WorkingTimeRecord.ChangeDate;
+import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-states.model';
+import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-record-summary-data-form.model';
+import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
 	detailedRecords: EmployeeWorkingTimeRecordDetailsModel[];
 	numberOfDays: number;
 	columnsToDisplay: string[];
+	summaryForm: FormStateModel<WorkingTimeRecordSummaryDataFormModel>;
 }
 
 const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateModel>('workingTimeRecord');
@@ -34,7 +39,8 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 		columnsToDisplay: [
 			...DefaultColumnsToDisplayForDetailedTable,
 			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
-		]
+		],
+		summaryForm: DefaultFormStateValue
 	}
 })
 @Injectable()
@@ -72,10 +78,12 @@ export class WorkingTimeRecordState {
 
 		// For table binding with rowspan simplicity
 		state.detailedRecords.map((x) => {
-			const model = new EmployeeWorkingTimeRecordDetailsModel();
-			model.employee = x.employee;
-			model.salaryInformation = x.salaryInformation;
-			model.workingTimeRecordsAggregated = x.workingTimeRecordsAggregated;
+			const model: EmployeeWorkingTimeRecordDetailsModel = {
+				employee: x.employee,
+				salaryInformation: x.salaryInformation,
+				workingTimeRecordsAggregated: x.workingTimeRecordsAggregated,
+				isEditable: x.isEditable
+			};
 
 			for (let i = 0; i < 6; i++) {
 				result.push(model);
@@ -152,5 +160,34 @@ export class WorkingTimeRecordState {
 		}
 
 		return ctx.dispatch(new GetAll());
+	}
+
+	@Action(UpdateSummaryData)
+	updateSummaryData(ctx: StateContext<WorkingTimeRecordStateModel>, action: UpdateSummaryData): Observable<void> {
+		// TODO: Patch state
+		ctx.setState(
+			patch({
+				detailedRecords: updateItem<EmployeeWorkingTimeRecordDetailsModel>(
+					(record) => record?.employee.id === action.employeeId,
+					patch({
+						salaryInformation: patch({
+							holidaySalary: action.updateModel.holidaySalary
+						})
+					})
+				)
+			})
+		);
+
+		this.progressSpinnerService.showProgressSpinner();
+
+		return this.workingTimeRecordService.updateSummaryData(action.employeeId, action.updateModel).pipe(
+			tap(() => {
+				this.progressSpinnerService.hideProgressSpinner();
+			}),
+			catchError((e) => {
+				this.progressSpinnerService.hideProgressSpinner();
+				return throwError(e);
+			})
+		);
 	}
 }

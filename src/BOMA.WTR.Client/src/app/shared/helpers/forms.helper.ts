@@ -6,6 +6,7 @@ export function createValueChangedValidator(originalValueModel: FormControlOrigi
 		let value = control.value;
 		let originalValue = originalValueModel.originalValue;
 
-		return value === originalValue ? { valueNotChanged: true } : null;
+		return null;
+		// return value === originalValue ? { valueNotChanged: true } : null;
 	};
 }

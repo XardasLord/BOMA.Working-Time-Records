@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
+import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { SharedModule } from '../shared/shared.module';
 import { WorkingTimeRecordComponent } from './components/working-time-record/working-time-record.component';
 import { WorkingTimeRecordListComponent } from './components/working-time-record-list/working-time-record-list.component';
@@ -17,9 +18,9 @@ import { WorkingTimeRecordSummaryTableComponent } from './components/working-tim
 		WorkingTimeRecordListComponent,
 		WorkingTimeRecordFiltersComponent,
 		WorkingTimeRecordDetailedTableComponent,
-  WorkingTimeRecordSummaryTableComponent
+		WorkingTimeRecordSummaryTableComponent
 	],
-	imports: [SharedModule, WorkingTimeRecordRoutingModule, NgxsModule.forFeature([WorkingTimeRecordState])],
+	imports: [SharedModule, WorkingTimeRecordRoutingModule, NgxsModule.forFeature([WorkingTimeRecordState]), NgxsFormPluginModule],
 	providers: [{ provide: IWorkingTimeRecordService, useClass: WorkingTimeRecordService }]
 })
 export class WorkingTimeRecordModule {}
