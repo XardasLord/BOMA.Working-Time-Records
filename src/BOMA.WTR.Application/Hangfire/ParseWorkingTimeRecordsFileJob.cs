@@ -2,8 +2,9 @@
 using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
-using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.Specifications;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
+using BOMA.WTR.Domain.SharedKernel;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Hangfire.Console;
@@ -14,10 +15,10 @@ namespace BOMA.WTR.Application.Hangfire;
 
 public class ParseWorkingTimeRecordsFileJob
 {
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IAggregateRepository<Employee> _employeeRepository;
     private readonly RogerFileConfiguration _rogerFileOptions;
 
-    public ParseWorkingTimeRecordsFileJob(IOptions<RogerFileConfiguration> options, IEmployeeRepository employeeRepository)
+    public ParseWorkingTimeRecordsFileJob(IOptions<RogerFileConfiguration> options, IAggregateRepository<Employee> employeeRepository)
     {
         _employeeRepository = employeeRepository;
         _rogerFileOptions = options.Value;
@@ -48,7 +49,8 @@ public class ParseWorkingTimeRecordsFileJob
                 
                 if (currentEmployee is null)
                 {
-                    currentEmployee = await _employeeRepository.GetByRcpIdAsync(rogerFileModel.UserRcpId.Value);
+                    var spec = new EmployeeByRcpIdSpec(rogerFileModel.UserRcpId.Value);
+                    currentEmployee = await _employeeRepository.FirstOrDefaultAsync(spec, cancellationToken);
                     
                     if (currentEmployee is null)
                     {
@@ -75,7 +77,7 @@ public class ParseWorkingTimeRecordsFileJob
                     rogerFileModel.DepartmentId.Value));
             }
 
-            await _employeeRepository.SaveChangesAsync();
+            await _employeeRepository.SaveChangesAsync(cancellationToken);
         }
     }
 

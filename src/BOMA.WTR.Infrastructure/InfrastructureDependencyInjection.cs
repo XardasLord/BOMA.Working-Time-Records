@@ -2,6 +2,7 @@
 using BOMA.WTR.Application.Hangfire;
 using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.SharedKernel;
 using BOMA.WTR.Infrastructure.Database;
 using BOMA.WTR.Infrastructure.Database.Repositories;
 using BOMA.WTR.Infrastructure.DomainService;
@@ -31,7 +32,8 @@ public static class InfrastructureDependencyInjection
         services.AddSwaggerGen();
 
         services.AddDbContext<BomaDbContext>(x => x.UseSqlServer(configuration.GetConnectionString("Boma")));
-        services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+        services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
+        services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
         
         services.AddHangfire(config =>
         {

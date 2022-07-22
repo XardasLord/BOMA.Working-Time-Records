@@ -3,7 +3,8 @@ using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
-using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.Specifications;
+using BOMA.WTR.Domain.SharedKernel;
 using Hangfire.Server;
 using MediatR;
 
@@ -13,9 +14,9 @@ public class AggregateWorkingTimeRecordHistoriesJob
 {
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
-    private readonly IEmployeeRepository _employeeRepository;
+    private readonly IAggregateRepository<Employee> _employeeRepository;
 
-    public AggregateWorkingTimeRecordHistoriesJob(IMediator mediator, IMapper mapper, IEmployeeRepository employeeRepository)
+    public AggregateWorkingTimeRecordHistoriesJob(IMediator mediator, IMapper mapper, IAggregateRepository<Employee> employeeRepository)
     {
         _mediator = mediator;
         _mapper = mapper;
@@ -39,7 +40,8 @@ public class AggregateWorkingTimeRecordHistoriesJob
             
             if (currentEmployee is null)
             {
-                currentEmployee = await _employeeRepository.GetByRcpIdAsync(model.Employee.RcpId);
+                var spec = new EmployeeByRcpIdSpec(model.Employee.RcpId);
+                currentEmployee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken);
                     
                 employeesCache.Add(currentEmployee);
             }
@@ -61,6 +63,6 @@ public class AggregateWorkingTimeRecordHistoriesJob
             }
         }
         
-        await _employeeRepository.SaveChangesAsync();
+        await _employeeRepository.SaveChangesAsync(cancellationToken);
     }
 }
