@@ -42,12 +42,26 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
             Employee = _mapper.Map<EmployeeViewModel>(employee), 
-            WorkingTimeRecordsAggregated = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories) 
+            WorkingTimeRecordsAggregated = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories)
         }).ToList();
 
         result.ForEach(x =>
         {
             x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(x);
+        });
+        
+        // Extend AutoMapper logic
+        result.ForEach(x =>
+        {
+            var baseEmployeeHistoryRecord = employeesWithWorkingTimeRecords
+                .Single(employee => employee.Id == x.Employee.Id)
+                .WorkingTimeRecordAggregatedHistories
+                .First();
+            
+            x.SalaryInformation.HolidaySalary = baseEmployeeHistoryRecord.SalaryInformation.HolidaySalary;
+            x.SalaryInformation.SicknessSalary = baseEmployeeHistoryRecord.SalaryInformation.SicknessSalary;
+            x.SalaryInformation.AdditionalSalary = baseEmployeeHistoryRecord.SalaryInformation.AdditionalSalary;
+            x.SalaryInformation.FinalSumSalary += x.SalaryInformation.HolidaySalary + x.SalaryInformation.SicknessSalary + x.SalaryInformation.AdditionalSalary;
         });
         
         return result;

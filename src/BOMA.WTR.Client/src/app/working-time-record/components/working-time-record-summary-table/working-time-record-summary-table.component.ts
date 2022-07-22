@@ -10,6 +10,7 @@ import { nameof } from '../../../shared/helpers/name-of.helper';
 import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time-record-summary-data-form.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
+import { QueryModel } from '../../models/query.model';
 
 @Component({
 	selector: 'app-working-time-record-summary-table',
@@ -47,7 +48,9 @@ export class WorkingTimeRecordSummaryTableComponent {
 				Validators.required,
 				Validators.min(0),
 				createValueChangedValidator(this.holidaySalaryOriginalValue)
-			])
+			]),
+			year: new FormControl<number>(0),
+			month: new FormControl<number>(0)
 		});
 	}
 
@@ -88,6 +91,22 @@ export class WorkingTimeRecordSummaryTableComponent {
 				path: 'workingTimeRecord.summaryForm',
 				value: this.editingRow?.employee.id,
 				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('employeeId')
+			})
+		);
+
+		this.store.dispatch(
+			new UpdateFormValue({
+				path: 'workingTimeRecord.summaryForm',
+				value: this.store.selectSnapshot(WorkingTimeRecordState.getSearchQueryModel).year,
+				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('year')
+			})
+		);
+
+		this.store.dispatch(
+			new UpdateFormValue({
+				path: 'workingTimeRecord.summaryForm',
+				value: this.store.selectSnapshot(WorkingTimeRecordState.getSearchQueryModel).month,
+				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('month')
 			})
 		);
 

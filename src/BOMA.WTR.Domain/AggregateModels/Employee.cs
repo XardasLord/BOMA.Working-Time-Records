@@ -55,6 +55,16 @@ public class Employee : Entity<int>, IAggregateRoot
         _departmentId = departmentId;
     }
     
+    public void UpdateSummaryData(int year, int month, Money holidaySalary)
+    {
+        var recordsToUpdate = WorkingTimeRecordAggregatedHistories
+            .Where(x => x.Date.Month == month)
+            .Where(x => x.Date.Year == year)
+            .ToList();
+        
+        recordsToUpdate.ForEach(record => record.SalaryInformation.HolidaySalary = holidaySalary.Amount);
+    }
+    
     public void AddWorkingTimeRecord(WorkingTimeRecord record)
     {
         if (WorkingTimeRecords

@@ -164,25 +164,27 @@ export class WorkingTimeRecordState {
 
 	@Action(UpdateSummaryData)
 	updateSummaryData(ctx: StateContext<WorkingTimeRecordStateModel>, action: UpdateSummaryData): Observable<void> {
-		// TODO: Patch state
-		ctx.setState(
-			patch({
-				detailedRecords: updateItem<EmployeeWorkingTimeRecordDetailsModel>(
-					(record) => record?.employee.id === action.employeeId,
-					patch({
-						salaryInformation: patch({
-							holidaySalary: action.updateModel.holidaySalary
-						})
-					})
-				)
-			})
-		);
-
 		this.progressSpinnerService.showProgressSpinner();
 
 		return this.workingTimeRecordService.updateSummaryData(action.employeeId, action.updateModel).pipe(
 			tap(() => {
 				this.progressSpinnerService.hideProgressSpinner();
+
+				ctx.setState(
+					patch({
+						detailedRecords: updateItem<EmployeeWorkingTimeRecordDetailsModel>(
+							(record) => record?.employee.id === action.employeeId,
+							patch({
+								salaryInformation: patch({
+									holidaySalary: action.updateModel.holidaySalary
+									// finalSumSalary // TODO: update
+								})
+							})
+						)
+					})
+				);
+
+				ctx.dispatch(new GetAll());
 			}),
 			catchError((e) => {
 				this.progressSpinnerService.hideProgressSpinner();
