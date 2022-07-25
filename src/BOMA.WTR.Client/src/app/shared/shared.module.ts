@@ -8,9 +8,10 @@ import { DebounceDirective } from './directives/debounce.directive';
 import { YearFormatDirective } from './directives/date-picket-year-format.directive';
 import { MonthFormatDirective } from './directives/date-picker-month-format.directive';
 import { ProgressSpinnerDialogComponent } from './ui/components/progress-spinner/progress-spinner-dialog.component';
+import { EmptyIfZeroPipe } from './pipes/empty-if-zero.pipe';
 
 @NgModule({
-	declarations: [DebounceDirective, YearFormatDirective, MonthFormatDirective, ProgressSpinnerDialogComponent],
+	declarations: [DebounceDirective, YearFormatDirective, MonthFormatDirective, EmptyIfZeroPipe, ProgressSpinnerDialogComponent],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppMaterialModule, ToastrModule.forRoot()],
 	exports: [
 		CommonModule,
@@ -21,7 +22,8 @@ import { ProgressSpinnerDialogComponent } from './ui/components/progress-spinner
 		ToastrModule,
 		DebounceDirective,
 		YearFormatDirective,
-		MonthFormatDirective
+		MonthFormatDirective,
+		EmptyIfZeroPipe
 	],
 	providers: []
 })
