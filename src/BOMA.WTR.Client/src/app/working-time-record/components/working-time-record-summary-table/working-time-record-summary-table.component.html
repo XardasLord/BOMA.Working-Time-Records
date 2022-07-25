@@ -1,5 +1,5 @@
 <form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" ngxsForm="workingTimeRecord.summaryForm">
-	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!">
+	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
 		<ng-container matColumnDef="fullName">
 			<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
 			<td mat-cell *matCellDef="let record">{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}</td>
@@ -64,7 +64,6 @@
 			<th mat-header-cell *matHeaderCellDef>Urlop</th>
 			<td mat-cell *matCellDef="let record">
 				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
-					<input style="display: none" type="number" matInput formControlName="employeeId" />
 					<mat-form-field appearance="outline" class="number-input">
 						<input type="number" min="0" matInput formControlName="holidaySalary" />
 					</mat-form-field>
@@ -130,6 +129,10 @@
 		</ng-container>
 
 		<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-		<tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+		<tr mat-row *matRowDef="let record; columns: columnsToDisplay">
+			<ng-template [ngIf]="isRowEditing(record)">
+				<input style="display: none" type="number" matInput formControlName="employeeId" />
+			</ng-template>
+		</tr>
 	</table>
 </form>

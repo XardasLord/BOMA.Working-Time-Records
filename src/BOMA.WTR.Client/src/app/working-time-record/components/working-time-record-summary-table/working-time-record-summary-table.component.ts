@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { UpdateFormValue } from '@ngxs/form-plugin';
+import { ToastrService } from 'ngx-toastr';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -10,7 +11,6 @@ import { nameof } from '../../../shared/helpers/name-of.helper';
 import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time-record-summary-data-form.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
-import { QueryModel } from '../../models/query.model';
 
 @Component({
 	selector: 'app-working-time-record-summary-table',
@@ -43,7 +43,7 @@ export class WorkingTimeRecordSummaryTableComponent {
 		'actions'
 	];
 
-	constructor(private store: Store, private fb: FormBuilder) {
+	constructor(private store: Store, private fb: FormBuilder, private toastService: ToastrService) {
 		this.salaryForm = fb.group({
 			employeeId: new FormControl<number>(0),
 			holidaySalary: new FormControl<number>(0, [
@@ -66,13 +66,17 @@ export class WorkingTimeRecordSummaryTableComponent {
 		});
 	}
 
+	trackSummaryRecord(index: number, element: EmployeeWorkingTimeRecordDetailsModel): number {
+		return element.employee.id;
+	}
+
 	isRowEditing(row: EmployeeWorkingTimeRecordDetailsModel): boolean {
 		return row === this.editingRow;
 	}
 
 	enableEditMode(record: EmployeeWorkingTimeRecordDetailsModel) {
 		if (!record.isEditable) {
-			console.log('This record cannot be edited');
+			this.toastService.warning('Ten rekord nie jest edytowalny');
 			return;
 		}
 
@@ -110,6 +114,7 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 	onFormSubmit() {
 		if (!this.salaryForm.valid) {
+			this.toastService.warning('Formularz zawiera nieprawidłowe dane');
 			return;
 		}
 
@@ -141,5 +146,6 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 		this.store.dispatch(new UpdateSummaryData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
+		this.toastService.success('Dane zostały zapisane');
 	}
 }
