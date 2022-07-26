@@ -70,6 +70,35 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return result;
     }
 
+    public double GetBaseNormativeHours(DateTime date, double workedHoursRounded)
+    {
+        if (date.DayOfWeek == DayOfWeek.Saturday)
+            return 0;
+            
+        return workedHoursRounded > 8 ? workedHoursRounded + 8 - workedHoursRounded : workedHoursRounded;
+    }
+
+    public double GetFiftyPercentageBonusHours(DateTime date, double workedHoursRounded)
+    {
+        if (date.DayOfWeek == DayOfWeek.Saturday)
+            return 0;
+            
+        return workedHoursRounded > 8 ? (workedHoursRounded - 8 > 2 ? 2 : workedHoursRounded - 8) : 0;
+    }
+
+    public double GetHundredPercentageBonusHours(DateTime date, double workedHoursRounded)
+    {
+        if (date.DayOfWeek == DayOfWeek.Saturday)
+            return 0;
+            
+        return workedHoursRounded > 10 ? workedHoursRounded - 10 : 0;
+    }
+
+    public double GetSaturdayHours(DateTime date, double workedHoursRounded)
+    {
+        return date.DayOfWeek == DayOfWeek.Saturday ? workedHoursRounded : 0;
+    }
+
     private static DateTime NormalizeDateTime(RecordEventType recordEventType, DateTime dateTime)
     {
         switch (recordEventType)
@@ -123,7 +152,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         }
     }
 
-    private static WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, RecordEventType previousEventType)
+    private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, RecordEventType previousEventType)
     {
         var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
         var startWorkDate = endWorkDate.AddHours(-allWorkedHoursRounded);
@@ -133,42 +162,13 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             Date = startWorkDate.Date,
             WorkedMinutes = aggregatedMinutesForDay,
             WorkedHoursRounded = allWorkedHoursRounded,
-            BaseNormativeHours = GetBaseNormativeHours(),
-            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(),
-            HundredPercentageBonusHours = GetHundredPercentageBonusHours(),
-            SaturdayHours = GetSaturdayHours(),
+            BaseNormativeHours = GetBaseNormativeHours(endWorkDate, allWorkedHoursRounded),
+            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(endWorkDate, allWorkedHoursRounded),
+            HundredPercentageBonusHours = GetHundredPercentageBonusHours(endWorkDate, allWorkedHoursRounded),
+            SaturdayHours = GetSaturdayHours(endWorkDate, allWorkedHoursRounded),
             NightHours = GetNightHours(),
             IsWeekendDay = startWorkDate.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday
         };
-
-        double GetBaseNormativeHours()
-        {
-            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
-                return 0;
-            
-            return allWorkedHoursRounded > 8 ? allWorkedHoursRounded + 8 - allWorkedHoursRounded : allWorkedHoursRounded;
-        }
-
-        double GetFiftyPercentageBonusHours()
-        {
-            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
-                return 0;
-            
-            return allWorkedHoursRounded > 8 ? (allWorkedHoursRounded - 8 > 2 ? 2 : allWorkedHoursRounded - 8) : 0;
-        }
-
-        double GetHundredPercentageBonusHours()
-        {
-            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
-                return 0;
-            
-            return allWorkedHoursRounded > 10 ? allWorkedHoursRounded - 10 : 0;
-        }
-
-        double GetSaturdayHours()
-        {
-            return endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday ? allWorkedHoursRounded : 0;
-        }
 
         double GetNightHours()
         {
