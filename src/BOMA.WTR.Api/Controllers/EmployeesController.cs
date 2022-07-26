@@ -1,5 +1,6 @@
 ﻿using BOMA.WTR.Application.UseCases.Employees.Commands.Add;
 using BOMA.WTR.Application.UseCases.Employees.Commands.Edit;
+using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsDetailsData;
 using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsSummaryData;
 using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,20 @@ public class EmployeesController : ApiBaseController
     [HttpPatch]
     [Route("{id}/workingTimeRecordsSummary")]
     public async Task<IActionResult> EditWorkingTimeRecordsSummaryData(int id, EditWorkingTimeRecordsSummaryDataCommand command)
+    {
+        command = command with
+        {
+            EmployeeId = id
+        };
+
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpPatch]
+    [Route("{id}/workingTimeRecordsDetails")]
+    public async Task<IActionResult> EditWorkingTimeRecordsDetailsData(int id, EditWorkingTimeRecordsDetailsDataCommand command)
     {
         command = command with
         {

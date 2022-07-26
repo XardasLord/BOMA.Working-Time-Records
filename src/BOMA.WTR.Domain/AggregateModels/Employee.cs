@@ -1,4 +1,5 @@
 ﻿using BOMA.WTR.Domain.AggregateModels.Entities;
+using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SeedWork;
 using BOMA.WTR.Domain.SharedKernel;
@@ -67,6 +68,30 @@ public class Employee : Entity<int>, IAggregateRoot
             record.SalaryInformation.HolidaySalary = holidaySalary.Amount;
             record.SalaryInformation.SicknessSalary = sicknessSalary.Amount;
             record.SalaryInformation.AdditionalSalary = additionalSalary.Amount;
+        });
+    }
+
+    public void UpdateDetailsData(int year, int month, Dictionary<int, double?> dayHoursDictionary, IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
+    {
+        var recordsToUpdate = WorkingTimeRecordAggregatedHistories
+            .Where(x => x.Date.Month == month)
+            .Where(x => x.Date.Year == year)
+            .ToList();
+        
+        recordsToUpdate.ForEach(record =>
+        {
+            var workedHours = dayHoursDictionary[record.Date.Day];
+            
+            if (!workedHours.HasValue || Math.Abs(record.WorkedHoursRounded - workedHours.Value) < double.Epsilon)
+                return;
+
+            record.WorkedHoursRounded = workedHours.Value;
+
+            record.BaseNormativeHours = calculationDomainService.GetBaseNormativeHours(record.Date, workedHours.Value);
+            record.FiftyPercentageBonusHours = calculationDomainService.GetFiftyPercentageBonusHours(record.Date, workedHours.Value);
+            record.HundredPercentageBonusHours = calculationDomainService.GetHundredPercentageBonusHours(record.Date, workedHours.Value);
+            record.SaturdayHours = calculationDomainService.GetSaturdayHours(record.Date, workedHours.Value);
+            // record.NightHours = calculationDomainService.GetBaseNormativeHours();
         });
     }
     
