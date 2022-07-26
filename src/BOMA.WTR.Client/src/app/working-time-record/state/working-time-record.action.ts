@@ -1,4 +1,7 @@
-import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-record-summary-data-form.model';
+import {
+	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordSummaryDataFormModel
+} from '../models/working-time-record-summary-data-form.model';
 
 export namespace WorkingTimeRecord {
 	const prefix = '[WorkingTimeRecord]';
@@ -31,5 +34,11 @@ export namespace WorkingTimeRecord {
 		constructor(public employeeId: number, public updateModel: WorkingTimeRecordSummaryDataFormModel) {}
 
 		static readonly type = `${prefix} ${UpdateSummaryData.name}`;
+	}
+
+	export class UpdateDetailedData {
+		constructor(public employeeId: number, public updateModel: WorkingTimeRecordDetailedDataFormModel) {}
+
+		static readonly type = `${prefix} ${UpdateDetailedData.name}`;
 	}
 }

@@ -10,6 +10,8 @@ export interface WorkingTimeRecordSummaryDataFormModel {
 }
 
 export interface WorkingTimeRecordDetailedDataFormModel {
+	year: number;
+	month: number;
 	employeeId: number;
 	day1: number;
 	day2: number;
@@ -45,6 +47,8 @@ export interface WorkingTimeRecordDetailedDataFormModel {
 }
 
 export interface WorkingTimeRecordDetailedFormGroup {
+	year: FormControl<number>;
+	month: FormControl<number>;
 	employeeId: FormControl<number>;
 	day1: FormControl<number>;
 	day2: FormControl<number>;

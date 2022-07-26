@@ -1,7 +1,7 @@
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { patch, updateItem } from '@ngxs/store/operators';
 import { catchError, Observable, take, tap, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
 import { WorkingTimeRecord } from './working-time-record.action';
@@ -23,6 +23,8 @@ import {
 	WorkingTimeRecordSummaryDataFormModel
 } from '../models/working-time-record-summary-data-form.model';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
+import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -50,7 +52,11 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 })
 @Injectable()
 export class WorkingTimeRecordState {
-	constructor(private workingTimeRecordService: IWorkingTimeRecordService, private progressSpinnerService: IProgressSpinnerService) {}
+	constructor(
+		private workingTimeRecordService: IWorkingTimeRecordService,
+		private progressSpinnerService: IProgressSpinnerService,
+		private toastService: ToastrService
+	) {}
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getSearchQueryModel(state: WorkingTimeRecordStateModel): QueryModel {
@@ -175,25 +181,36 @@ export class WorkingTimeRecordState {
 			tap(() => {
 				this.progressSpinnerService.hideProgressSpinner();
 
-				ctx.setState(
-					patch({
-						detailedRecords: updateItem<EmployeeWorkingTimeRecordDetailsModel>(
-							(record) => record?.employee.id === action.employeeId,
-							patch({
-								salaryInformation: patch({
-									holidaySalary: action.updateModel.holidaySalary
-									// finalSumSalary // TODO: update
-								})
-							})
-						)
-					})
-				);
+				// This is not needed to update state, because we need to recalculate the sums that API does only
 
 				ctx.dispatch(new GetAll());
+				this.toastService.success('Dane zostały zapisane');
 			}),
-			catchError((e) => {
+			catchError((e: HttpErrorResponse) => {
 				this.progressSpinnerService.hideProgressSpinner();
-				return throwError(e);
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				return throwError(() => e);
+			})
+		);
+	}
+
+	@Action(UpdateDetailedData)
+	updateDetailedData(ctx: StateContext<WorkingTimeRecordStateModel>, action: UpdateDetailedData): Observable<void> {
+		this.progressSpinnerService.showProgressSpinner();
+
+		return this.workingTimeRecordService.updateDetailedData(action.employeeId, action.updateModel).pipe(
+			tap(() => {
+				this.progressSpinnerService.hideProgressSpinner();
+
+				// This is not needed to update state, because we need to recalculate the sums that API does only
+
+				ctx.dispatch(new GetAll());
+				this.toastService.success('Dane zostały zapisane');
+			}),
+			catchError((e: HttpErrorResponse) => {
+				this.progressSpinnerService.hideProgressSpinner();
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				return throwError(() => e);
 			})
 		);
 	}

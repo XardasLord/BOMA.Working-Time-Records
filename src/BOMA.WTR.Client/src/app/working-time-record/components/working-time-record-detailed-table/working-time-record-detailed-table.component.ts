@@ -2,17 +2,16 @@ import { AfterViewInit, Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import {
+	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordDetailedFormGroup
+} from '../../models/working-time-record-summary-data-form.model';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import GetAll = WorkingTimeRecord.GetAll;
-import { UpdateFormValue } from '@ngxs/form-plugin';
-import { nameof } from '../../../shared/helpers/name-of.helper';
-import {
-	WorkingTimeRecordDetailedDataFormModel,
-	WorkingTimeRecordDetailedFormGroup
-} from '../../models/working-time-record-summary-data-form.model';
+import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 
 @Component({
 	selector: 'app-working-time-record-detailed-table',
@@ -29,6 +28,8 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 
 	constructor(private store: Store, private fb: FormBuilder, private toastService: ToastrService) {
 		this.detailedHoursForm = fb.group<WorkingTimeRecordDetailedFormGroup>({
+			year: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
+			month: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			employeeId: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			day1: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			day2: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
@@ -113,12 +114,41 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 
 		this.editingRow = record;
 		// TODO: There is an issue with NGXS auto update form value - https://github.com/ngxs/store/issues/910
-		// TODO: Set initial value for all days
+		// Set initial value for all days
 		this.detailedHoursForm.patchValue({
-			employeeId: this.editingRow?.employee.id
+			employeeId: this.editingRow?.employee.id,
+			day1: this.editingRow?.workingTimeRecordsAggregated[0]?.workedHoursRounded,
+			day2: this.editingRow?.workingTimeRecordsAggregated[1]?.workedHoursRounded,
+			day3: this.editingRow?.workingTimeRecordsAggregated[2]?.workedHoursRounded,
+			day4: this.editingRow?.workingTimeRecordsAggregated[3]?.workedHoursRounded,
+			day5: this.editingRow?.workingTimeRecordsAggregated[4]?.workedHoursRounded,
+			day6: this.editingRow?.workingTimeRecordsAggregated[5]?.workedHoursRounded,
+			day7: this.editingRow?.workingTimeRecordsAggregated[6]?.workedHoursRounded,
+			day8: this.editingRow?.workingTimeRecordsAggregated[7]?.workedHoursRounded,
+			day9: this.editingRow?.workingTimeRecordsAggregated[8]?.workedHoursRounded,
+			day10: this.editingRow?.workingTimeRecordsAggregated[9]?.workedHoursRounded,
+			day11: this.editingRow?.workingTimeRecordsAggregated[10]?.workedHoursRounded,
+			day12: this.editingRow?.workingTimeRecordsAggregated[11]?.workedHoursRounded,
+			day13: this.editingRow?.workingTimeRecordsAggregated[12]?.workedHoursRounded,
+			day14: this.editingRow?.workingTimeRecordsAggregated[13]?.workedHoursRounded,
+			day15: this.editingRow?.workingTimeRecordsAggregated[14]?.workedHoursRounded,
+			day16: this.editingRow?.workingTimeRecordsAggregated[15]?.workedHoursRounded,
+			day17: this.editingRow?.workingTimeRecordsAggregated[16]?.workedHoursRounded,
+			day18: this.editingRow?.workingTimeRecordsAggregated[17]?.workedHoursRounded,
+			day19: this.editingRow?.workingTimeRecordsAggregated[18]?.workedHoursRounded,
+			day20: this.editingRow?.workingTimeRecordsAggregated[19]?.workedHoursRounded,
+			day21: this.editingRow?.workingTimeRecordsAggregated[20]?.workedHoursRounded,
+			day22: this.editingRow?.workingTimeRecordsAggregated[21]?.workedHoursRounded,
+			day23: this.editingRow?.workingTimeRecordsAggregated[22]?.workedHoursRounded,
+			day24: this.editingRow?.workingTimeRecordsAggregated[23]?.workedHoursRounded,
+			day25: this.editingRow?.workingTimeRecordsAggregated[24]?.workedHoursRounded,
+			day26: this.editingRow?.workingTimeRecordsAggregated[25]?.workedHoursRounded,
+			day27: this.editingRow?.workingTimeRecordsAggregated[26]?.workedHoursRounded,
+			day28: this.editingRow?.workingTimeRecordsAggregated[27]?.workedHoursRounded,
+			day29: this.editingRow?.workingTimeRecordsAggregated[28]?.workedHoursRounded,
+			day30: this.editingRow?.workingTimeRecordsAggregated[29]?.workedHoursRounded,
+			day31: this.editingRow?.workingTimeRecordsAggregated[30]?.workedHoursRounded
 		});
-
-		console.warn(this.detailedHoursForm.getRawValue());
 	}
 
 	cancelEditMode() {
@@ -126,14 +156,21 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	}
 
 	onFormSubmit() {
-		console.warn('SUBMIT');
 		if (!this.detailedHoursForm.valid) {
 			this.toastService.warning('Formularz zawiera nieprawidłowe dane');
 			return;
 		}
 
-		// TODO: Save
+		const query = this.store.selectSnapshot(WorkingTimeRecordState.getSearchQueryModel);
+
+		this.detailedHoursForm.patchValue({
+			year: query.year,
+			month: query.month
+		});
+
+		const updateModel = this.detailedHoursForm.getRawValue() as WorkingTimeRecordDetailedDataFormModel;
+
+		this.store.dispatch(new UpdateDetailedData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
-		this.toastService.success('Dane zostały zapisane');
 	}
 }

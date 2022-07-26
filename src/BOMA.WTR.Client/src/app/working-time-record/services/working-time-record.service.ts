@@ -4,7 +4,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
 import { Observable } from 'rxjs';
 import { QueryModel } from '../models/query.model';
-import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-record-summary-data-form.model';
+import {
+	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordSummaryDataFormModel
+} from '../models/working-time-record-summary-data-form.model';
 
 @Injectable()
 export class WorkingTimeRecordService extends IWorkingTimeRecordService {
@@ -29,5 +32,9 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 
 	updateSummaryData(employeeId: number, updateModel: WorkingTimeRecordSummaryDataFormModel): Observable<void> {
 		return this.httpClient.patch<void>(`${this.apiEndpoint}/employees/${employeeId}/workingTimeRecordsSummary`, updateModel);
+	}
+
+	updateDetailedData(employeeId: number, updateModel: WorkingTimeRecordDetailedDataFormModel): Observable<void> {
+		return this.httpClient.patch<void>(`${this.apiEndpoint}/employees/${employeeId}/workingTimeRecordsDetails`, updateModel);
 	}
 }

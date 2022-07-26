@@ -146,6 +146,5 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 		this.store.dispatch(new UpdateSummaryData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
-		this.toastService.success('Dane zostały zapisane');
 	}
 }
