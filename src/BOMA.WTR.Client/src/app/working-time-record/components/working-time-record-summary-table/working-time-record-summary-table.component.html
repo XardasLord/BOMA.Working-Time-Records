@@ -1,4 +1,4 @@
-<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" ngxsForm="workingTimeRecord.summaryForm">
+<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" [ngxsFormClearOnDestroy]="true" ngxsForm="workingTimeRecord.summaryForm">
 	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
 		<ng-container matColumnDef="fullName">
 			<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>

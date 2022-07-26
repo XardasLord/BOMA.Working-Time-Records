@@ -18,7 +18,10 @@ import ApplyFilter = WorkingTimeRecord.ApplyFilter;
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
 import ChangeDate = WorkingTimeRecord.ChangeDate;
 import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-states.model';
-import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-record-summary-data-form.model';
+import {
+	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordSummaryDataFormModel
+} from '../models/working-time-record-summary-data-form.model';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 
 export interface WorkingTimeRecordStateModel {
@@ -27,6 +30,7 @@ export interface WorkingTimeRecordStateModel {
 	numberOfDays: number;
 	columnsToDisplay: string[];
 	summaryForm: FormStateModel<WorkingTimeRecordSummaryDataFormModel>;
+	detailedHoursForm: FormStateModel<WorkingTimeRecordDetailedDataFormModel>;
 }
 
 const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateModel>('workingTimeRecord');
@@ -40,7 +44,8 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 			...DefaultColumnsToDisplayForDetailedTable,
 			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
 		],
-		summaryForm: DefaultFormStateValue
+		summaryForm: DefaultFormStateValue,
+		detailedHoursForm: DefaultFormStateValue
 	}
 })
 @Injectable()

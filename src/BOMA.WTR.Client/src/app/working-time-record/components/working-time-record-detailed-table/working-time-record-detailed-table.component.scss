@@ -1,21 +1,24 @@
 @import '../../../../assets/scss/variabless.scss';
 
-.mat-header-cell, .mat-cell {
-  text-align: center;
-  border-right: 1px solid black;
+.mat-header-cell,
+.mat-cell {
+	text-align: center;
+	border-right: 1px solid black;
 }
 
-th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-  padding-left: 0;
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+	padding-left: 0;
 }
 
 .mat-column-fullName.mat-cell {
-  width: 220px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-bottom: 2px solid black;
+	width: 220px;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	border-bottom: 2px solid black;
 }
 
 .mat-header-cell.mat-column-rate,
@@ -24,11 +27,11 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
 .mat-header-cell.mat-column-sumValue,
 .mat-header-cell.mat-column-sumBonus,
 .mat-header-cell.mat-column-sumHours {
-  width: 80px;
+	width: 80px;
 }
 
 .mat-header-cell.mat-column-emptyLabel {
-  width: 100px;
+	width: 100px;
 }
 
 .mat-header-cell.mat-column-actions,
@@ -63,73 +66,91 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
 .mat-header-cell.mat-column-29,
 .mat-header-cell.mat-column-30,
 .mat-header-cell.mat-column-31 {
-  width: 30px;
+	width: 30px;
 }
 
 .mat-cell > .zero-hours {
-  color: $red-color;
+	color: $red-color;
 }
 
 tr.mat-row {
-  height: 24px;
+	height: 24px;
 }
 
 tr.mat-row:nth-child(6n) > .mat-cell {
-  border-bottom: 2px solid black;
+	border-bottom: 2px solid black;
 }
 
 // Value (rate, gross, bonus, etc.) common columns
 .mat-cell.empty-value {
-  background-color: $empty-cell-color;
+	background-color: $empty-cell-color;
 }
 
 .mat-cell.default-value,
 .mat-cell.default-value-hours {
-  background-color: $standard-cell-color;
+	background-color: $standard-cell-color;
 }
 
 .mat-header-cell.weekend-day,
 .mat-cell.weekend-day {
-  background-color: $weekend-day-color !important;
+	background-color: $weekend-day-color !important;
 }
 
 .mat-cell.none-value {
-  background-color: $none-cell-color;
+	background-color: $none-cell-color;
 }
 
 // Rate column
 .mat-cell.base-rate {
-  background-color: $base-rate-color;
+	background-color: $base-rate-color;
 }
 
 // Gross column
 .mat-cell.base-gross {
-  background-color: $red-color;
+	background-color: $red-color;
 }
 
 // Bonus column
 .mat-cell.percentage-bonus {
-  background-color: $bonus-rate-color;
+	background-color: $bonus-rate-color;
 }
 
 .mat-cell.base-bonus {
-  background-color: $red-color;
+	background-color: $red-color;
 }
 
 // Gross sum column
 .mat-cell.fifty-percentage-gross-sum,
 .mat-cell.hundred-percentage-gross-sum,
 .mat-cell.saturday-gross-sum {
-  background-color: $red-color;
+	background-color: $red-color;
 }
 
 // Bonus sum column
 .mat-cell.fifty-percentage-bonus-sum,
 .mat-cell.hundred-percentage-bonus-sum,
 .mat-cell.saturday-bonus-sum {
-  background-color: $bonus-sum-color-background;
+	background-color: $bonus-sum-color-background;
 }
 
 // Hours column
 .mat-cell.default-value-hours {
+}
+
+// Inline form inputs
+.mat-form-field ::ng-deep {
+	text-align: center;
+
+	.mat-form-field-flex {
+		width: 60px;
+	}
+
+	.mat-form-field-flex > .mat-form-field-infix {
+		padding: 0.4em 0px !important;
+		border-top: 0.4em solid transparent;
+	}
+
+	.mat-form-field-wrapper {
+		padding: 0;
+	}
 }
