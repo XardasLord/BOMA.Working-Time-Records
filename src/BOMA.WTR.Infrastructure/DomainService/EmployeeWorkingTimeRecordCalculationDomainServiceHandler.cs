@@ -22,7 +22,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             var currentDay = timeRecord.OccuredAt.Day;
             var normalizedOccuredAt = NormalizeDateTime(timeRecord.EventType, timeRecord.OccuredAt);
 
-            if (currentDay > previousDay && previousDay != 0) // Is a next day
+            if (currentDay != previousDay && previousDay != 0) // Is a next day
             {
                 if (previousEventType == RecordEventType.Exit && timeRecord.EventType == RecordEventType.Entry)
                 {
@@ -187,21 +187,24 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 // Started before 10pm but finished in night hours
                 var nightWorkTimeSpan = endWorkDate.Subtract(new DateTime(startWorkDate.Year, startWorkDate.Month, startWorkDate.Day, 22, 0, 0));
-                return Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+                var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+                return result > 0 ? result : 0;
             }
             
             if (startWorkDate.Hour is >= 22 or <= 6 && endWorkDate.Hour <= 6)
             {
                 // Started work in night hours and finished in night hours
                 var nightWorkTimeSpan = endWorkDate.Subtract(startWorkDate);
-                return Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+                var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+                return result > 0 ? result : 0;
             }
             
             if (startWorkDate.Hour is >= 22 or < 6 && endWorkDate.Hour > 6)
             {
                 // Started work in night hours and finished after 6am
                 var nightWorkTimeSpan =  new DateTime(endWorkDate.Year, endWorkDate.Month, endWorkDate.Day, 6, 0, 0).Subtract(startWorkDate);
-                return Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+                var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+                return result > 0 ? result : 0;
             }
 
             return 0;
