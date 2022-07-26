@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { UpdateFormValue } from '@ngxs/form-plugin';
 import { ToastrService } from 'ngx-toastr';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { FormControlOriginalValueValidationModel } from '../../models/FormControlOriginalValueValidationModel';
+import { FormControlOriginalValueValidationModel } from '../../../shared/validators/form-control-original-value-validation.model';
 import { createValueChangedValidator } from '../../../shared/helpers/forms.helper';
 import { nameof } from '../../../shared/helpers/name-of.helper';
 import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time-record-summary-data-form.model';

@@ -1,5 +1,6 @@
-import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { catchError, Observable, take, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
@@ -18,13 +19,9 @@ import ApplyFilter = WorkingTimeRecord.ApplyFilter;
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
 import ChangeDate = WorkingTimeRecord.ChangeDate;
 import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-states.model';
-import {
-	WorkingTimeRecordDetailedDataFormModel,
-	WorkingTimeRecordSummaryDataFormModel
-} from '../models/working-time-record-summary-data-form.model';
+import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-record-summary-data-form.model';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
-import { HttpErrorResponse } from '@angular/common/http';
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -32,7 +29,6 @@ export interface WorkingTimeRecordStateModel {
 	numberOfDays: number;
 	columnsToDisplay: string[];
 	summaryForm: FormStateModel<WorkingTimeRecordSummaryDataFormModel>;
-	detailedHoursForm: FormStateModel<WorkingTimeRecordDetailedDataFormModel>;
 }
 
 const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateModel>('workingTimeRecord');
@@ -46,8 +42,7 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 			...DefaultColumnsToDisplayForDetailedTable,
 			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
 		],
-		summaryForm: DefaultFormStateValue,
-		detailedHoursForm: DefaultFormStateValue
+		summaryForm: DefaultFormStateValue
 	}
 })
 @Injectable()

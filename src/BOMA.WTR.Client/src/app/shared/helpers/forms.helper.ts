@@ -1,4 +1,4 @@
-import { FormControlOriginalValueValidationModel } from '../../working-time-record/models/FormControlOriginalValueValidationModel';
+import { FormControlOriginalValueValidationModel } from '../validators/form-control-original-value-validation.model';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function createValueChangedValidator(originalValueModel: FormControlOriginalValueValidationModel): ValidatorFn {
