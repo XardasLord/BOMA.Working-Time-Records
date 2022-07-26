@@ -14,6 +14,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         var aggregatedMinutesForDay = 0d;
         var previousDate = default(DateTime);
         var previousEventType = RecordEventType.None;
+
+        workingTimeRecords = workingTimeRecords.OrderBy(x => x.OccuredAt).ToList();
         
         foreach (var timeRecord in workingTimeRecords)
         {
