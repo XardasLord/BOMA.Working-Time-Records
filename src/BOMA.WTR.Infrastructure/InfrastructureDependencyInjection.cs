@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using AutoMapper;
+using BOMA.WTR.Application.AutoMapper;
 using BOMA.WTR.Application.Hangfire;
 using BOMA.WTR.Application.RogerFiles;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
@@ -53,7 +55,11 @@ public static class InfrastructureDependencyInjection
         services.AddHangfireServer();
         
         services.AddMediatR(Assembly.GetExecutingAssembly());
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+        services.AddSingleton(provider => new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new AutoMapperProfile(provider.CreateScope().ServiceProvider.GetService<IEmployeeWorkingTimeRecordCalculationDomainService>()));
+        }).CreateMapper());
         
         services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
 

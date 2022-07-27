@@ -1,5 +1,6 @@
 ﻿using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.Extensions;
 using BOMA.WTR.Domain.SharedKernel;
 
 namespace BOMA.WTR.Infrastructure.DomainService;
@@ -99,6 +100,14 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
     public double GetSaturdayHours(DateTime date, double workedHoursRounded)
     {
         return date.DayOfWeek == DayOfWeek.Saturday ? workedHoursRounded : 0;
+    }
+
+    public double GetNightFactorBonus(int year, int month)
+    {
+        var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonth();
+        var nightFactor = 3010 / workedHoursInMonth * 0.2;
+
+        return nightFactor;
     }
 
     private static DateTime NormalizeDateTime(RecordEventType recordEventType, DateTime dateTime)

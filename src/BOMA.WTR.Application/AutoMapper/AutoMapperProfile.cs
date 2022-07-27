@@ -3,13 +3,18 @@ using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
+using BOMA.WTR.Domain.AggregateModels.Interfaces;
 
 namespace BOMA.WTR.Application.AutoMapper;
 
 public class AutoMapperProfile : Profile
 {
-    public AutoMapperProfile()
+    private readonly IEmployeeWorkingTimeRecordCalculationDomainService _calculationDomainService;
+    
+    public AutoMapperProfile(IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
     {
+        _calculationDomainService = calculationDomainService;
+        
         CreateMap<Employee, EmployeeViewModel>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Name.FirstName))
@@ -139,16 +144,20 @@ public class AutoMapperProfile : Profile
         return CalculateGrossSumBase50PercentageSalary(src) + CalculateGrossSumBase100PercentageSalary(src) + CalculateGrossSumBaseSaturdaySalary(src);
     }
 
-    private static decimal CalculateNightSumSalary(EmployeeWorkingTimeRecordViewModel src)
+    private decimal CalculateNightSumSalary(EmployeeWorkingTimeRecordViewModel src)
     {
         var period = src.WorkingTimeRecordsAggregated.FirstOrDefault();
         if (period is null)
             return 0;
+        
+        var nightFactor = _calculationDomainService.GetNightFactorBonus(period.Date.Year, period.Date.Month);
+        var nightWorkedHours = (decimal)CalculateAllNightWorkedHours(src);
+        var nightSumSalary =  (decimal)nightFactor * nightWorkedHours;
 
-        return (src.Employee.BaseSalary + (decimal)(3010 / DateTime.DaysInMonth(period.Date.Year, period.Date.Month) * 0.2)) * (decimal)CalculateAllNightWorkedHours(src);
+        return nightSumSalary;
     }
 
-    private static decimal CalculateFinalSumSalary(EmployeeWorkingTimeRecordViewModel src)
+    private decimal CalculateFinalSumSalary(EmployeeWorkingTimeRecordViewModel src)
     {
         return CalculateGrossSumBaseSalary(src) +
                CalculateGrossSumBase50PercentageSalary(src) +
