@@ -33,6 +33,32 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
         result.Count.Should().Be(0);
     }
 
+    [Fact]
+    public void ProvidedWrongDateOrder_Should_ReturnCorrectResult()
+    {
+        // Arrange
+        var firstDay = new DateTime(2022, 7, 4);
+        var secondDay = new DateTime(2022, 7, 5);
+        _workingTimeRecords = new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 7, 5, 12, 0, 0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 7, 5, 20, 0, 0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 7, 4, 8, 0, 0), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 7, 4, 12, 0, 0), 0),
+        };
+        
+        // Act
+        var result = Act();
+        
+        // Assert
+        result.Count.Should().Be(2);
+        result.First().Date.Should().Be(firstDay);
+        result.First().WorkedHoursRounded.Should().Be(4);
+        
+        result.Last().Date.Should().Be(secondDay);
+        result.Last().WorkedHoursRounded.Should().Be(8);
+    }
+
     [Theory]
     [MemberData(nameof(SingleDayEdgeCasesData))]
     public void ProvidedWorkingTimeRecordsForSingleDay_Should_ReturnProperCalculatedWorkedHours(List<WorkingTimeRecord> records, double expectedHours)
