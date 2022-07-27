@@ -117,4 +117,10 @@ public class Employee : Entity<int>, IAggregateRoot
         
         _workingTimeRecordAggregatedHistories.Add(record);
     }
+
+    public void ClearAllWorkingTimeRecords()
+    {
+        _workingTimeRecords.Clear();
+        _workingTimeRecordAggregatedHistories.Clear();
+    }
 }

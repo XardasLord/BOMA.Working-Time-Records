@@ -22,14 +22,17 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
     
     public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordHistoriesQuery query, CancellationToken cancellationToken)
     {
+        var nextMonth = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Month;
+        var nextMonthYear = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Year;
+        
         var databaseQuery = _dbContext.Employees
             .Include(x => x.Department)
             .Include(x => x.WorkingTimeRecordAggregatedHistories
-                .Where(w => w.Date.Year == query.QueryModel.Year)
-                .Where(w => w.Date.Month == query.QueryModel.Month))
+                .Where(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
+                            w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1)) // We need to include also the first day of new month for last day of month calculations
             .Where(x => x.WorkingTimeRecordAggregatedHistories
-                .Where(w => w.Date.Year == query.QueryModel.Year)
-                .Any(w => w.Date.Month == query.QueryModel.Month))
+                .Any(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
+                          w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1))
             .Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
         
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
@@ -39,11 +42,20 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
 
         var employeesWithWorkingTimeRecords = await databaseQuery.ToListAsync(cancellationToken);
 
+        // We delete all records when there is no records for querying period of time
+        foreach (var employee in employeesWithWorkingTimeRecords.Where(employee => employee.WorkingTimeRecordAggregatedHistories.All(x => x.Date.Month != query.QueryModel.Month)))
+        {
+            employee.ClearAllWorkingTimeRecords();
+        }
+
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
             Employee = _mapper.Map<EmployeeViewModel>(employee), 
             WorkingTimeRecordsAggregated = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories)
         }).ToList();
+        
+        // Clear all records without any entry
+        result = result.Where(x => x.WorkingTimeRecordsAggregated.Any()).ToList();
 
         result.ForEach(x =>
         {
@@ -51,17 +63,19 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
         });
         
         // Extend AutoMapper logic
-        result.ForEach(x =>
+        result.ForEach(entry =>
         {
             var baseEmployeeHistoryRecord = employeesWithWorkingTimeRecords
-                .Single(employee => employee.Id == x.Employee.Id)
+                .Single(employee => employee.Id == entry.Employee.Id)
                 .WorkingTimeRecordAggregatedHistories
                 .First();
             
-            x.SalaryInformation.HolidaySalary = baseEmployeeHistoryRecord.SalaryInformation.HolidaySalary;
-            x.SalaryInformation.SicknessSalary = baseEmployeeHistoryRecord.SalaryInformation.SicknessSalary;
-            x.SalaryInformation.AdditionalSalary = baseEmployeeHistoryRecord.SalaryInformation.AdditionalSalary;
-            x.SalaryInformation.FinalSumSalary += x.SalaryInformation.HolidaySalary + x.SalaryInformation.SicknessSalary + x.SalaryInformation.AdditionalSalary;
+            entry.SalaryInformation.HolidaySalary = baseEmployeeHistoryRecord.SalaryInformation.HolidaySalary;
+            entry.SalaryInformation.SicknessSalary = baseEmployeeHistoryRecord.SalaryInformation.SicknessSalary;
+            entry.SalaryInformation.AdditionalSalary = baseEmployeeHistoryRecord.SalaryInformation.AdditionalSalary;
+            entry.SalaryInformation.FinalSumSalary += entry.SalaryInformation.HolidaySalary + entry.SalaryInformation.SicknessSalary + entry.SalaryInformation.AdditionalSalary;
+            
+            entry.WorkingTimeRecordsAggregated.RemoveAll(x => x.Date.Month != query.QueryModel.Month); // Remove all records from different months (the first day of the next month)
         });
         
         return result;

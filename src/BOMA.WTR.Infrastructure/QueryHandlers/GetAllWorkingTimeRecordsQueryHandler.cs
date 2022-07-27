@@ -3,7 +3,6 @@ using BOMA.WTR.Application.Abstractions.Messaging;
 using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
-using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Infrastructure.Database;
@@ -39,32 +38,20 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             historyEntries.ForEach(x => x.IsEditable = true);
             return historyEntries;
         }
-        
-        IQueryable<Employee> databaseQuery;
 
-        if (query.QueryModel.DepartmentId is not null)
-        {
-            databaseQuery = _dbContext.Employees
-                .Include(x => x.Department)
-                .Include(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Any(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
-        }
-        else
-        {
-            databaseQuery = _dbContext.Employees
-                .Include(x => x.Department)
-                .Include(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Where(w => w.OccuredAt.Month == query.QueryModel.Month))
-                .Where(x => x.WorkingTimeRecords
-                    .Where(w => w.OccuredAt.Year == query.QueryModel.Year)
-                    .Any(w => w.OccuredAt.Month == query.QueryModel.Month));
-        }
+        var nextMonth = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Month;
+        var nextMonthYear = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Year;
+
+        var databaseQuery = _dbContext.Employees
+            .Include(x => x.Department)
+            .Include(x => x.WorkingTimeRecords
+                .Where(w => (w.OccuredAt.Year == query.QueryModel.Year && w.OccuredAt.Month == query.QueryModel.Month) ||
+                       w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1)) // We need to include also the first day of new month for last day of month calculations
+            .Where(x => x.WorkingTimeRecords
+                .Any(w => (w.OccuredAt.Year == query.QueryModel.Year && w.OccuredAt.Month == query.QueryModel.Month) ||
+                     w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1))
+            .Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+
 
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
@@ -73,11 +60,20 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
 
         var employeesWithWorkingTimeRecords = await databaseQuery.ToListAsync(cancellationToken);
 
+        // We delete all records when there is no records for querying period of time
+        foreach (var employee in employeesWithWorkingTimeRecords.Where(employee => employee.WorkingTimeRecords.All(x => x.OccuredAt.Month != query.QueryModel.Month)))
+        {
+            employee.ClearAllWorkingTimeRecords();
+        }
+
         var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
         {
             Employee = _mapper.Map<EmployeeViewModel>(employee), 
             WorkingTimeRecordsAggregated = _employeeWorkingTimeRecordCalculationDomainService.CalculateAggregatedWorkingTimeRecords(employee.WorkingTimeRecords)
         }).ToList();
+        
+        // Clear all records without any entry
+        result = result.Where(x => x.WorkingTimeRecordsAggregated.Any()).ToList();
 
         result.ForEach(x =>
         {
@@ -97,9 +93,10 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
                         new DateTime(query.QueryModel.Year, query.QueryModel.Month, day)));
             }
 
+            entry.WorkingTimeRecordsAggregated.RemoveAll(x => x.Date.Month != query.QueryModel.Month); // Remove all records from different months (the first day of the next month)
             entry.WorkingTimeRecordsAggregated.Sort((x, y) => x.Date.CompareTo(y.Date));
         });
-        
+
         return result;
     }
 }

@@ -25,6 +25,7 @@ public class AggregateWorkingTimeRecordHistoriesJob
     
     public async Task Execute(PerformContext? context, CancellationToken cancellationToken)
     {
+        // We could base here on the last year & month history in DB
         var previousMonthDate = DateTime.Now.AddMonths(-1).Date;
 
         var queryRecordModel = new GetRecordsQueryModel(previousMonthDate.Month, previousMonthDate.Year);
