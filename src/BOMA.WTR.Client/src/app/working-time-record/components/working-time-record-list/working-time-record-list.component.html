@@ -5,6 +5,8 @@
 		<app-working-time-record-detailed-table></app-working-time-record-detailed-table>
 	</mat-tab>
 	<mat-tab label="Podsumowanie">
-		<app-working-time-record-summary-table></app-working-time-record-summary-table>
+		<ng-template matTabContent>
+			<app-working-time-record-summary-table></app-working-time-record-summary-table>
+		</ng-template>
 	</mat-tab>
 </mat-tab-group>
