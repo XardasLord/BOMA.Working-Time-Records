@@ -21,7 +21,7 @@ public sealed class GetAllEmployeesQueryHandler : IQueryHandler<GetAllEmployeesQ
     {
         var employees = await _dbContext.Employees
             .Include(x => x.Department)
-            .OrderByDescending(x => x.Name.LastName)
+            .OrderBy(x => x.Name.LastName)
             .ToListAsync(cancellationToken);
 
         return _mapper.Map<IEnumerable<EmployeeViewModel>>(employees);

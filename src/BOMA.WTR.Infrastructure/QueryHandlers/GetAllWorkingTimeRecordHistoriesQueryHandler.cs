@@ -40,7 +40,9 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
             databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
         }
 
-        var employeesWithWorkingTimeRecords = await databaseQuery.ToListAsync(cancellationToken);
+        var employeesWithWorkingTimeRecords = await databaseQuery
+            .OrderBy(x => x.Name.LastName)
+            .ToListAsync(cancellationToken);
 
         // We delete all records when there is no records for querying period of time
         foreach (var employee in employeesWithWorkingTimeRecords.Where(employee => employee.WorkingTimeRecordAggregatedHistories.All(x => x.Date.Month != query.QueryModel.Month)))
