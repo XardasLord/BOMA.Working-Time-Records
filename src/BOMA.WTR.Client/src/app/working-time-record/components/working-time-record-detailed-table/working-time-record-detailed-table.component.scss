@@ -73,6 +73,10 @@ td.mat-footer-cell:first-of-type {
 	color: $red-color;
 }
 
+.mat-cell > .missing-record-type .mat-icon {
+	color: $warning-color;
+}
+
 tr.mat-row {
 	height: 24px;
 }

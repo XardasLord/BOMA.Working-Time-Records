@@ -8,4 +8,5 @@ export class WorkingTimeRecordDetailsAggregatedModel {
 	saturdayHours!: number;
 	nightHours!: number;
 	isWeekendDay!: boolean;
+	missingRecordEventType?: number;
 }

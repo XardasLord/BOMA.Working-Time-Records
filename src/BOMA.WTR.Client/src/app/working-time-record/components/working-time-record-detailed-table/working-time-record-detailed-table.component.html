@@ -213,8 +213,16 @@
 				</ng-template>
 
 				<ng-template #readOnlyMode>
-					<span *ngIf="i % 6 == 0">
+					<span
+						*ngIf="i % 6 == 0"
+						[ngClass]="{
+							'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType
+						}"
+					>
 						{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded | emptyIfZero }}
+						<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
+						<!--							<mat-icon>error</mat-icon>-->
+						<!--						</span>-->
 					</span>
 					<span
 						*ngIf="i % 6 == 1"
