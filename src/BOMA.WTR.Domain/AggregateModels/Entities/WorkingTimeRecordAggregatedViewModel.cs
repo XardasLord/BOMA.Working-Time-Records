@@ -27,4 +27,5 @@ public class WorkingTimeRecordAggregatedViewModel
     public double SaturdayHours { get; set; }
     public double NightHours { get; set; }
     public bool IsWeekendDay { get; set; }
+    public MissingRecordEventType? MissingRecordEventType { get; set; }
 }

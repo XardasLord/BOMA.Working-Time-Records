@@ -1,4 +1,5 @@
 ﻿using BOMA.WTR.Domain.SeedWork;
+using BOMA.WTR.Domain.SharedKernel;
 
 namespace BOMA.WTR.Domain.AggregateModels.Entities;
 
@@ -13,6 +14,7 @@ public class WorkingTimeRecordAggregatedHistory : Entity<int>
     public double SaturdayHours { get; set; }
     public double NightHours { get; set; }
     public EmployeeSalaryAggregatedHistory SalaryInformation { get; set; }
+    public MissingRecordEventType? MissingRecordEventType { get; set; }
 }
 
 public class EmployeeSalaryAggregatedHistory

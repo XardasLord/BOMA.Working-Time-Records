@@ -15,6 +15,7 @@ public class EmployeeWorkingTimeRecordViewModel
 public class WorkingTimeRecordDetailsViewModel
 {
     public RecordEventType EventType { get; set; }
+    public MissingRecordEventType? MissingRecordEventType { get; set; }
     public DateTime OccudedAt { get; set; }
     public int GroupId { get; set; }
 }

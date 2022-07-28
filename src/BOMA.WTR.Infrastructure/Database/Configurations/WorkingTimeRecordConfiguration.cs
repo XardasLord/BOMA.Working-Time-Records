@@ -25,6 +25,12 @@ public class WorkingTimeRecordConfiguration : IEntityTypeConfiguration<WorkingTi
             .IsRequired();
 
         builder
+            .Property(x => x.MissingRecordEventType)
+            .HasColumnName("MissingRecordEventType")
+            .HasConversion(new EnumToNumberConverter<MissingRecordEventType, byte>())
+            .HasDefaultValue(null);
+
+        builder
             .Property(x => x.OccuredAt)
             .HasColumnName("OccuredAt")
             .IsRequired();

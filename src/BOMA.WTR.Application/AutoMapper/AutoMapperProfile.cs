@@ -28,7 +28,8 @@ public class AutoMapperProfile : Profile
         CreateMap<WorkingTimeRecord, WorkingTimeRecordDetailsViewModel>()
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType))
             .ForMember(dest => dest.OccudedAt, opt => opt.MapFrom(src => src.OccuredAt))
-            .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.DepartmentId));
+            .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.DepartmentId))
+            .ForMember(dest => dest.MissingRecordEventType, opt => opt.MapFrom(src => src.MissingRecordEventType));
 
         CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>();
         CreateMap<WorkingTimeRecordAggregatedHistory, WorkingTimeRecordAggregatedViewModel>();

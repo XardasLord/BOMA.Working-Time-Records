@@ -18,6 +18,12 @@ public class WorkingTimeRecordAggregatedHistoryConfiguration : IEntityTypeConfig
             .HasColumnName("Id")
             .ValueGeneratedOnAdd();
 
+        builder
+            .Property(x => x.MissingRecordEventType)
+            .HasColumnName("MissingRecordEventType")
+            .HasConversion(new EnumToNumberConverter<MissingRecordEventType, byte>())
+            .HasDefaultValue(null);
+
         builder.OwnsOne(x => x.SalaryInformation, salary =>
         {
             salary.Property(x => x.BaseSalary).HasColumnType("decimal(10,2)");
