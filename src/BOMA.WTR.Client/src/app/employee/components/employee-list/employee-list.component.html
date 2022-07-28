@@ -19,6 +19,16 @@
 		<td mat-cell *matCellDef="let employee">{{ employee?.departmentName }}</td>
 	</ng-container>
 
+	<ng-container matColumnDef="baseSalary">
+		<th mat-header-cell *matHeaderCellDef>Stawka</th>
+		<td mat-cell *matCellDef="let employee">{{ employee?.baseSalary | currency: 'PLN' }}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="percentageBonus">
+		<th mat-header-cell *matHeaderCellDef>Premia</th>
+		<td mat-cell *matCellDef="let employee">{{ employee?.salaryBonusPercentage / 100 | percent }}</td>
+	</ng-container>
+
 	<ng-container matColumnDef="actions">
 		<th mat-header-cell *matHeaderCellDef>Akcje</th>
 		<td mat-cell *matCellDef="let employee">

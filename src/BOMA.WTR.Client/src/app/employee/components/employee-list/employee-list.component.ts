@@ -16,7 +16,7 @@ import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 export class EmployeeListComponent implements OnInit {
 	employees$ = this.store.select(EmployeeState.getEmployees);
 
-	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'department', 'actions'];
+	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'department', 'baseSalary', 'percentageBonus', 'actions'];
 
 	constructor(private store: Store) {}
 
