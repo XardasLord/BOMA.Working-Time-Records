@@ -9,7 +9,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 {
     public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
     {
-        var result = new List<WorkingTimeRecordAggregatedViewModel>();
+        var results = new List<WorkingTimeRecordAggregatedViewModel>();
+        var resultWithMissingRecords = new List<WorkingTimeRecordAggregatedViewModel>();
 
         var previousDay = 0;
         var aggregatedMinutesForDay = 0d;
@@ -18,6 +19,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         workingTimeRecords = workingTimeRecords.OrderBy(x => x.OccuredAt).ToList();
         
+        // TODO: Need a refactor to make it much simplier to understand
         foreach (var timeRecord in workingTimeRecords)
         {
             var currentDay = timeRecord.OccuredAt.Day;
@@ -27,14 +29,14 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 if (previousEventType == RecordEventType.Exit && timeRecord.EventType == RecordEventType.Entry)
                 {
-                    result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, previousEventType));
+                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate));
                     
                     aggregatedMinutesForDay = 0;
                 } else if (previousEventType == RecordEventType.Entry && timeRecord.EventType == RecordEventType.Exit)
                 {
                     aggregatedMinutesForDay += (int)(normalizedOccuredAt - previousDate).TotalMinutes;
                     
-                    result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, normalizedOccuredAt, previousEventType));
+                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, normalizedOccuredAt));
                     
                     aggregatedMinutesForDay = 0;
                     previousEventType = timeRecord.EventType;
@@ -49,8 +51,16 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 if (previousEventType == timeRecord.EventType)
                 {
-                    // This should never happen for valid entries
-                    continue;
+                    // This should never happen for valid entries but we have to handle such scenario anyway
+                    if (timeRecord.EventType == RecordEventType.Exit)
+                    {
+                        continue;
+                    }
+                    
+                    aggregatedMinutesForDay = 0;
+                    var missingRecordType = timeRecord.EventType == RecordEventType.Entry ? MissingRecordEventType.MissingExit : MissingRecordEventType.MissingEntry;
+
+                    resultWithMissingRecords.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, missingRecordType));
                 }
                 
                 if (timeRecord.EventType == RecordEventType.Exit)
@@ -67,10 +77,26 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         if (aggregatedMinutesForDay > 0)
         {
-            result.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, previousEventType));
+            results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate));
         }
         
-        return result;
+        // TODO: Merge entries with missing record type data
+        foreach (var entryWithMissingRecord in resultWithMissingRecords)
+        {
+            var existingEntry = results.FirstOrDefault(x => x.Date == entryWithMissingRecord.Date);
+            if (existingEntry is null)
+            {
+                results.Add(entryWithMissingRecord);
+            }
+            else
+            {
+                existingEntry.MissingRecordEventType = entryWithMissingRecord.MissingRecordEventType;
+            }
+        }
+        
+        // Sort to keep dates in order
+        results.Sort((x, y) => x.Date.CompareTo(y.Date));
+        return results;
     }
 
     public double GetBaseNormativeHours(DateTime date, double workedHoursRounded)
@@ -163,7 +189,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         }
     }
 
-    private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, RecordEventType previousEventType)
+    private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, MissingRecordEventType? incorrectRecordEventTypeOrder = null)
     {
         var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
         var startWorkDate = endWorkDate.AddHours(-allWorkedHoursRounded);
@@ -172,15 +198,17 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         {
             Date = startWorkDate.Date,
             WorkedMinutes = aggregatedMinutesForDay,
-            WorkedHoursRounded = allWorkedHoursRounded,
+            WorkedHoursRounded = endWorkDate.DayOfWeek == DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
             BaseNormativeHours = GetBaseNormativeHours(endWorkDate, allWorkedHoursRounded),
             FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(endWorkDate, allWorkedHoursRounded),
             HundredPercentageBonusHours = GetHundredPercentageBonusHours(endWorkDate, allWorkedHoursRounded),
             SaturdayHours = GetSaturdayHours(endWorkDate, allWorkedHoursRounded),
             NightHours = GetNightHours(),
-            IsWeekendDay = startWorkDate.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday
+            IsWeekendDay = startWorkDate.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
+            MissingRecordEventType = incorrectRecordEventTypeOrder
         };
 
+        // TODO: Move this logic to domain service
         double GetNightHours()
         {
             if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
