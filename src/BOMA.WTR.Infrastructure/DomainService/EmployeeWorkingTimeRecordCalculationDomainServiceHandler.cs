@@ -65,7 +65,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                 
                 if (timeRecord.EventType == RecordEventType.Exit)
                 {
-                    aggregatedMinutesForDay += (int)(NormalizeDateTime(timeRecord.EventType, normalizedOccuredAt) - previousDate).TotalMinutes;
+                    var minutes = (int)(NormalizeDateTime(timeRecord.EventType, normalizedOccuredAt) - previousDate).TotalMinutes;
+                    aggregatedMinutesForDay += minutes > 0 ? minutes : 0;
                 }
             }
 
@@ -97,6 +98,148 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         // Sort to keep dates in order
         results.Sort((x, y) => x.Date.CompareTo(y.Date));
         return results;
+    }
+
+    // TODO: Need a refactor to make it much simplier to understand
+    public DateTime NormalizeDateTime(RecordEventType recordEventType, DateTime dateTime)
+    {
+        switch (recordEventType)
+        {
+            case RecordEventType.Entry:
+                
+                // First shift (06:00 - 16:00)
+                if (dateTime.Hour < 6 ||
+                    dateTime.Hour == 6 && dateTime.Minute <= 5)
+                {
+                    // Entries to work at X:40-6:05 then system records it as 6:00
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        6,
+                        0,
+                        0);
+                }
+
+                if (dateTime.Hour is >= 6 and <= 12)
+                {
+                    if (dateTime.Minute is >= 40 or <= 5)
+                    {
+                        return new DateTime(
+                            dateTime.Year,
+                            dateTime.Month,
+                            dateTime.Day,
+                            dateTime.Minute is >= 0 and <= 5 ? dateTime.Hour : dateTime.AddHours(1).Hour,
+                            0,
+                            0);
+                    }
+
+                    // Entries to work at X:06-X:39 then system records it as X:30
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        dateTime.Hour,
+                        30,
+                        0);
+                }
+                
+                // Third shift (14:00 - 22:00)
+                if (dateTime.Hour == 13 ||
+                    dateTime.Hour == 14 && dateTime.Minute <= 5)
+                {
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        14,
+                        0,
+                        0);
+                }
+
+                if (dateTime.Hour == 14)
+                {
+                    if (dateTime.Minute is > 5 and <= 39)
+                    {
+                        return new DateTime(
+                            dateTime.Year,
+                            dateTime.Month,
+                            dateTime.Day,
+                            14,
+                            30,
+                            0);
+                    }
+
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        15,
+                        0,
+                        0);
+                }
+
+                // Second shift (16:00 - 02:00)
+                if (dateTime.Hour < 16 ||
+                    dateTime.Hour == 16 && dateTime.Minute <= 5)
+                {
+                    // Entries to work at X:40-16:05 then system records it as 16:00
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        16,
+                        0,
+                        0);
+                }
+
+                // Hours > 16
+                if (dateTime.Minute is >= 40 or <= 5)
+                {
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        dateTime.Minute is >= 0 and <= 5 ? dateTime.Hour : dateTime.AddHours(1).Hour,
+                        0,
+                        0);
+                }
+
+                // Entries to work at X:06-X:39 then system records it as X:30
+                return new DateTime(
+                    dateTime.Year,
+                    dateTime.Month,
+                    dateTime.Day,
+                    dateTime.Hour,
+                    30,
+                    0);
+
+            case RecordEventType.Exit:
+                // Exists work at 13:55-14:24 then system records it as 14:00
+                if (dateTime.Minute is >= 55 or <= 24)
+                {
+                    return new DateTime(
+                        dateTime.Year,
+                        dateTime.Month,
+                        dateTime.Day,
+                        dateTime.Minute is >= 55 and <= 59 ? dateTime.AddHours(1).Hour : dateTime.Hour,
+                        0,
+                        0);
+                }
+                
+                // Exists work at 14:25-14:54 then system records it as 14:30
+                return new DateTime(
+                    dateTime.Year,
+                    dateTime.Month,
+                    dateTime.Day,
+                    dateTime.Hour,
+                    30,
+                    0);
+            case RecordEventType.None:
+                return dateTime;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(recordEventType), recordEventType, null);
+        }
     }
 
     public double GetBaseNormativeHours(DateTime date, double workedHoursRounded)
@@ -134,59 +277,6 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         var nightFactor = 3010 / workedHoursInMonth * 0.2;
 
         return nightFactor;
-    }
-
-    private static DateTime NormalizeDateTime(RecordEventType recordEventType, DateTime dateTime)
-    {
-        switch (recordEventType)
-        {
-            case RecordEventType.Entry:
-                // Entries to work at 5:40-6:05 then system records it as 6:00
-                if (dateTime.Minute is >= 40 or <= 5)
-                {
-                    return new DateTime(
-                        dateTime.Year,
-                        dateTime.Month,
-                        dateTime.Day,
-                        dateTime.Minute is >= 0 and <= 5 ? dateTime.Hour : dateTime.AddHours(1).Hour,
-                        0,
-                        0);
-                }
-                
-                // Entries to work at 6:06-6:39 then system records it as 6:30
-                return new DateTime(
-                    dateTime.Year,
-                    dateTime.Month,
-                    dateTime.Day,
-                    dateTime.Hour,
-                    30,
-                    0);
-            case RecordEventType.Exit:
-                // Exists work at 13:55-14:24 then system records it as 14:00
-                if (dateTime.Minute is >= 55 or <= 24)
-                {
-                    return new DateTime(
-                        dateTime.Year,
-                        dateTime.Month,
-                        dateTime.Day,
-                        dateTime.Minute is >= 55 and <= 59 ? dateTime.AddHours(1).Hour : dateTime.Hour,
-                        0,
-                        0);
-                }
-                
-                // Exists work at 14:25-14:54 then system records it as 14:30
-                return new DateTime(
-                    dateTime.Year,
-                    dateTime.Month,
-                    dateTime.Day,
-                    dateTime.Hour,
-                    30,
-                    0);
-            case RecordEventType.None:
-                return dateTime;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(recordEventType), recordEventType, null);
-        }
     }
 
     private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, MissingRecordEventType? incorrectRecordEventTypeOrder = null)
