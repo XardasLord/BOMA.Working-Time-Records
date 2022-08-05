@@ -1,38 +1,33 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>BOMA</mat-toolbar>
-    <mat-nav-list>
-      <mat-list-item routerLink="/employees" routerLinkActive="active-route">
-        <mat-icon class="material-icons-outlined" matListIcon>person</mat-icon>
-        <span matLine>Pracownicy</span>
-      </mat-list-item>
-      <mat-list-item routerLink="/groups" routerLinkActive="active-route">
-        <mat-icon class="material-icons-outlined" matListIcon>group</mat-icon>
-        <span matLine>Grupy</span>
-      </mat-list-item>
-      <mat-list-item routerLink="/working-time-records" routerLinkActive="active-route">
-        <mat-icon class="material-icons-outlined" matListIcon>work_history</mat-icon>
-        <span matLine>ECP</span>
-      </mat-list-item>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <span>BOMA - System Ewidencji Czasu Pracy</span>
-    </mat-toolbar>
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
+	<mat-sidenav
+		#drawer
+		class="sidenav"
+		fixedInViewport
+		[attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+		[mode]="(isHandset$ | async) ? 'over' : 'side'"
+		[opened]="(isHandset$ | async) === false"
+	>
+		<mat-toolbar>BOMA</mat-toolbar>
+		<mat-nav-list>
+			<mat-list-item routerLink="/employees" routerLinkActive="active-route">
+				<mat-icon class="material-icons-outlined" matListIcon>person</mat-icon>
+				<span matLine>Pracownicy</span>
+			</mat-list-item>
+			<mat-list-item routerLink="/working-time-records" routerLinkActive="active-route">
+				<mat-icon class="material-icons-outlined" matListIcon>work_history</mat-icon>
+				<span matLine>ECP</span>
+			</mat-list-item>
+		</mat-nav-list>
+	</mat-sidenav>
+	<mat-sidenav-content>
+		<mat-toolbar color="primary">
+			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+			</button>
+			<span>BOMA - System Ewidencji Czasu Pracy</span>
+		</mat-toolbar>
+		<div class="content">
+			<router-outlet></router-outlet>
+		</div>
+	</mat-sidenav-content>
 </mat-sidenav-container>
