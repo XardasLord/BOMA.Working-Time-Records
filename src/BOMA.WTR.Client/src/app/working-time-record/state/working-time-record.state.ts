@@ -101,11 +101,9 @@ export class WorkingTimeRecordState {
 
 	@Action(GetAll)
 	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, _: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		const state = ctx.getState();
-
 		this.progressSpinnerService.showProgressSpinner();
 
-		return this.workingTimeRecordService.getAll(state.query).pipe(
+		return this.workingTimeRecordService.getAll(ctx.getState().query).pipe(
 			take(1),
 			tap((response) => {
 				ctx.patchState({
