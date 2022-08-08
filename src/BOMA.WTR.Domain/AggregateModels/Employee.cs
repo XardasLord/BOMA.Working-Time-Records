@@ -71,7 +71,13 @@ public class Employee : Entity<int>, IAggregateRoot
         });
     }
 
-    public void UpdateDetailsData(int year, int month, Dictionary<int, double?> dayHoursDictionary, IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
+    public void UpdateDetailsData(
+        int year, 
+        int month, 
+        IDictionary<int, double?> dayHoursDictionary,
+        IDictionary<int, double?> saturdayHoursDictionary,
+        IDictionary<int, double?> nightHoursDictionary,
+        IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
@@ -80,18 +86,22 @@ public class Employee : Entity<int>, IAggregateRoot
         
         recordsToUpdate.ForEach(record =>
         {
-            var workedHours = dayHoursDictionary[record.Date.Day];
+            var workedHours = dayHoursDictionary[record.Date.Day] ?? 0;
+            var saturdayHours = saturdayHoursDictionary[record.Date.Day] ?? 0;
+            var nightHours = nightHoursDictionary[record.Date.Day] ?? 0;
             
-            if (!workedHours.HasValue || Math.Abs(record.WorkedHoursRounded - workedHours.Value) < double.Epsilon)
-                return;
+            if (Math.Abs(record.WorkedHoursRounded - workedHours) < double.Epsilon &&
+                Math.Abs(record.SaturdayHours - saturdayHours) < double.Epsilon &&
+                Math.Abs(record.NightHours - nightHours) < double.Epsilon)
+                return; // Nothing has changed
 
-            record.WorkedHoursRounded = workedHours.Value;
+            record.WorkedHoursRounded = workedHours;
 
-            record.BaseNormativeHours = calculationDomainService.GetBaseNormativeHours(record.Date, workedHours.Value);
-            record.FiftyPercentageBonusHours = calculationDomainService.GetFiftyPercentageBonusHours(record.Date, workedHours.Value);
-            record.HundredPercentageBonusHours = calculationDomainService.GetHundredPercentageBonusHours(record.Date, workedHours.Value);
-            record.SaturdayHours = calculationDomainService.GetSaturdayHours(record.Date, workedHours.Value);
-            // record.NightHours = calculationDomainService.GetBaseNormativeHours();
+            record.BaseNormativeHours = calculationDomainService.GetBaseNormativeHours(record.Date, workedHours);
+            record.FiftyPercentageBonusHours = calculationDomainService.GetFiftyPercentageBonusHours(record.Date, workedHours);
+            record.HundredPercentageBonusHours = calculationDomainService.GetHundredPercentageBonusHours(record.Date, workedHours);
+            record.SaturdayHours = saturdayHours;
+            record.NightHours = nightHours;
         });
     }
     

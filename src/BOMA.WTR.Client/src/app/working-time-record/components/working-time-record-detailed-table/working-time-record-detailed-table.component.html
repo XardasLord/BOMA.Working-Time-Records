@@ -208,8 +208,16 @@
 						}"
 						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours }}</span
 					>
-					<span *ngIf="i % 6 == 4">{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero }}</span>
-					<span *ngIf="i % 6 == 5">{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.nightHours | emptyIfZero }}</span>
+					<span *ngIf="i % 6 == 4">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}saturday" />
+						</mat-form-field>
+					</span>
+					<span *ngIf="i % 6 == 5">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}night" />
+						</mat-form-field>
+					</span>
 				</ng-template>
 
 				<ng-template #readOnlyMode>
