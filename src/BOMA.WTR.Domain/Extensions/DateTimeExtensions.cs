@@ -39,6 +39,19 @@ public static class DateTimeExtensions
         { new DateTime(2024, 11, 11), false },
         { new DateTime(2024, 12, 25), false },
         { new DateTime(2024, 12, 26), false },
+        
+        { new DateTime(2025, 1, 1), false },
+        { new DateTime(2025, 1, 6), false },
+        { new DateTime(2025, 4, 21), false },
+        { new DateTime(2025, 5, 1), false },
+        { new DateTime(2025, 5, 3), true },
+        { new DateTime(2025, 6, 8), false },
+        { new DateTime(2025, 6, 19), false },
+        { new DateTime(2025, 8, 15), false },
+        { new DateTime(2025, 11, 1), true },
+        { new DateTime(2025, 11, 11), false },
+        { new DateTime(2025, 12, 25), false },
+        { new DateTime(2025, 12, 26), false }
     };
     
     public static int WeekDaysInMonth(this DateTime dateTime)

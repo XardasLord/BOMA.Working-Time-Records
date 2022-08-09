@@ -15,6 +15,7 @@ public class WorkingDaysInMonthTests : TestBase
     [MemberData(nameof(Test2022Data))]
     [MemberData(nameof(Test2023Data))]
     [MemberData(nameof(Test2024Data))]
+    [MemberData(nameof(Test2025Data))]
     public void GivenDateTime_Returns_NumberOfWorkingDaysExcludingBankHolidays(DateTime date, int expectedNumberOfWorkingDays)
     {
         // Arrange
@@ -68,5 +69,21 @@ public class WorkingDaysInMonthTests : TestBase
         yield return new object[] { new DateTime(2024, 10, 1), 23 };
         yield return new object[] { new DateTime(2024, 11, 1), 19 };
         yield return new object[] { new DateTime(2024, 12, 1), 20 };
+    }
+
+    public static IEnumerable<object[]> Test2025Data()
+    {
+        yield return new object[] { new DateTime(2025, 1, 1), 21 };
+        yield return new object[] { new DateTime(2025, 2, 1), 20 };
+        yield return new object[] { new DateTime(2025, 3, 1), 21 };
+        yield return new object[] { new DateTime(2025, 4, 1), 21 };
+        yield return new object[] { new DateTime(2025, 5, 1), 20 };
+        yield return new object[] { new DateTime(2025, 6, 1), 20 };
+        yield return new object[] { new DateTime(2025, 7, 1), 23 };
+        yield return new object[] { new DateTime(2025, 8, 1), 20 };
+        yield return new object[] { new DateTime(2025, 9, 1), 22 };
+        yield return new object[] { new DateTime(2025, 10, 1), 23 };
+        yield return new object[] { new DateTime(2025, 11, 1), 18 };
+        yield return new object[] { new DateTime(2025, 12, 1), 21 };
     }
 }
