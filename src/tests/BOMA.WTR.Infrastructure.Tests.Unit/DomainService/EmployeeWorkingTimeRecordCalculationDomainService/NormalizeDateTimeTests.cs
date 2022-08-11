@@ -63,6 +63,35 @@ public class NormalizeDateTimeTests : TestBase
         result.Should().Be(expectedEntry);
     }
 
+    [Fact]
+    public void EntryWithNoneSpecifiedEntryType_Should_ReturnTheSameEntryDateTime()
+    {
+        // Arrange
+        _recordEventType = RecordEventType.None;
+        _date = new DateTime(2022, 8, 1, 6, 45, 20);
+        
+        // Act
+        var result = Act();
+        
+        // Assert
+        result.Should().Be(_date);
+    }
+
+    [Fact]
+    public void EntryWithInvalidEntryType_Should_ThrowsException()
+    {
+        // Arrange
+        _recordEventType = (RecordEventType)999;
+        _date = new DateTime(2022, 8, 1, 6, 45, 20);
+        
+        // Act
+        var result = Record.Exception(() => Act());
+        
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ArgumentOutOfRangeException>();
+    }
+
     public static IEnumerable<object[]> FirstShiftEntryData()
     {
         yield return new object[] { 
@@ -216,6 +245,14 @@ public class NormalizeDateTimeTests : TestBase
         yield return new object[] { 
             new DateTime(2022, 8, 1, 14, 6, 0),
             new DateTime(2022, 8, 1, 14, 30, 0)
+        };
+        yield return new object[] { 
+            new DateTime(2022, 8, 1, 14, 39, 0),
+            new DateTime(2022, 8, 1, 14, 30, 0)
+        };
+        yield return new object[] { 
+            new DateTime(2022, 8, 1, 14, 40, 0),
+            new DateTime(2022, 8, 1, 15, 0, 0)
         };
     }
 }
