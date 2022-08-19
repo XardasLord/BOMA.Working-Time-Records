@@ -1,6 +1,9 @@
 ﻿using BOMA.WTR.Domain.AggregateModels;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
+using BOMA.WTR.Domain.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BOMA.WTR.Infrastructure.Database.Configurations;
 
@@ -40,6 +43,22 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                 .HasColumnName("PercentageBonusSalary")
                 .HasDefaultValue(0)
                 .HasColumnType("money");
+        });
+
+        builder.OwnsOne(x => x.JobInformation, information =>
+        {
+            information.OwnsOne(i => i.Position, pos =>
+            {
+                pos.Property(p => p.Name)
+                    .HasColumnName("Position")
+                    .HasMaxLength(64)
+                    .IsRequired(false);
+            });
+
+            information.Property(i => i.ShiftType)
+                .HasColumnName("ShiftType")
+                .HasConversion(new EnumToNumberConverter<ShiftType, byte>())
+                .IsRequired(false);
         });
 
         builder.Property(x => x.RcpId)

@@ -14,6 +14,7 @@ public class Employee : Entity<int>, IAggregateRoot
     internal int _rcpId;
     private Department _department;
     private int _departmentId;
+    private JobInformation _jobInformation;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
     private readonly List<WorkingTimeRecordAggregatedHistory> _workingTimeRecordAggregatedHistories;
 
@@ -39,6 +40,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public int RcpId => _rcpId;
     public Department Department => _department;
     public int DepartmentId => _departmentId;
+    public JobInformation JobInformation => _jobInformation;
     public virtual IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
     public virtual IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> WorkingTimeRecordAggregatedHistories => _workingTimeRecordAggregatedHistories;
 
