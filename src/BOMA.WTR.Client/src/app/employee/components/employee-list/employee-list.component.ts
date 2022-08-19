@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { nameof } from '../../../shared/helpers/name-of.helper';
 import { Employee } from '../../state/employee.action';
 import { EmployeeState } from '../../state/employee.state';
 import { EmployeeModel } from '../../../shared/models/employee.model';
@@ -16,7 +17,17 @@ import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 export class EmployeeListComponent implements OnInit {
 	employees$ = this.store.select(EmployeeState.getEmployees);
 
-	columnsToDisplay: string[] = ['rcpId', 'firstName', 'lastName', 'department', 'baseSalary', 'percentageBonus', 'actions'];
+	columnsToDisplay: string[] = [
+		nameof<EmployeeModel>('rcpId'),
+		nameof<EmployeeModel>('firstName'),
+		nameof<EmployeeModel>('lastName'),
+		nameof<EmployeeModel>('departmentName'),
+		nameof<EmployeeModel>('shiftTypeName'),
+		nameof<EmployeeModel>('position'),
+		nameof<EmployeeModel>('baseSalary'),
+		nameof<EmployeeModel>('salaryBonusPercentage'),
+		'actions'
+	];
 
 	constructor(private store: Store) {}
 

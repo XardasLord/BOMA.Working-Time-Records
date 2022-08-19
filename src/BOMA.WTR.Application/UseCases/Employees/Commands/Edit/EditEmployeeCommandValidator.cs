@@ -1,11 +1,11 @@
 ﻿using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using FluentValidation;
 
-namespace BOMA.WTR.Application.UseCases.Employees.Commands.Add;
+namespace BOMA.WTR.Application.UseCases.Employees.Commands.Edit;
 
-public sealed class AddEmployeeCommandValidator : AbstractValidator<AddEmployeeCommand>
+public sealed class EditEmployeeCommandValidator : AbstractValidator<EditEmployeeCommand>
 {
-    public AddEmployeeCommandValidator()
+    public EditEmployeeCommandValidator()
     {
         RuleFor(x => x.FirstName).NotEmpty().MaximumLength(64);
         RuleFor(x => x.LastName).NotEmpty().MaximumLength(64);

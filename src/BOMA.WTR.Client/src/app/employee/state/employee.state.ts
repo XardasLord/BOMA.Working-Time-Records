@@ -9,6 +9,7 @@ import { EmployeeModel } from '../../shared/models/employee.model';
 import { IEmployeeService } from '../services/employee.service.base';
 import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-states.model';
 import { AddNewEmployeeFormModel } from '../models/add-new-employee-form.model';
+import { EditEmployeeFormModel } from '../models/edit-employee-form.model';
 import { Employee } from './employee.action';
 import GetAll = Employee.GetAll;
 import Add = Employee.Add;
@@ -17,7 +18,7 @@ import Edit = Employee.Edit;
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
 	addNewEmployeeForm: FormStateModel<AddNewEmployeeFormModel>;
-	editEmployeeForm: FormStateModel<AddNewEmployeeFormModel>;
+	editEmployeeForm: FormStateModel<EditEmployeeFormModel>;
 }
 
 const EMPLOYEE_STATE_TOKEN = new StateToken<EmployeeStateModel>('employee');
@@ -77,7 +78,10 @@ export class EmployeeState {
 								salaryBonusPercentage: action.employee.salaryBonusPercentage,
 								rcpId: action.employee.rcpId,
 								departmentId: action.employee.departmentId,
-								departmentName: action.employee.departmentName
+								departmentName: action.employee.departmentName,
+								shiftTypeId: action.employee.shiftTypeId,
+								shiftTypeName: action.employee.shiftTypeName,
+								position: action.employee.position
 							}
 						])
 					})
@@ -108,7 +112,10 @@ export class EmployeeState {
 								salaryBonusPercentage: action.employee.salaryBonusPercentage,
 								rcpId: action.employee.rcpId,
 								departmentId: action.employee.departmentId,
-								departmentName: action.employee.departmentName
+								departmentName: action.employee.departmentName,
+								shiftTypeId: action.employee.shiftTypeId,
+								shiftTypeName: action.employee.shiftTypeName,
+								position: action.employee.position
 							})
 						)
 					})

@@ -22,13 +22,15 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
             ?? throw new NotFoundException($"Employee with ID = {command.Id} was not found");
 
         var name = new Name(command.FirstName, command.LastName);
+        var jobInformation = new JobInformation(new Position(command.Position), (ShiftType)command.ShiftTypeId);
+        var salaryBonusPercentage = new PercentageBonus(command.SalaryBonusPercentage);
+        
         var salary = employee.Salary with
         {
             Amount = command.BaseSalary
         };
-        var salaryBonusPercentage = new PercentageBonus(command.SalaryBonusPercentage);
         
-        employee.UpdateData(name, salary, salaryBonusPercentage, command.RcpId, command.DepartmentId);
+        employee.UpdateData(name, salary, salaryBonusPercentage, jobInformation, command.RcpId, command.DepartmentId);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
         

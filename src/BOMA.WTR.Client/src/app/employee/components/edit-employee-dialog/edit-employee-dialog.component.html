@@ -36,7 +36,20 @@
 					</mat-select>
 				</mat-form-field>
 
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Zmiana</mat-label>
+					<mat-select formControlName="shiftTypeId">
+						<mat-option *ngFor="let shiftType of shiftTypes" [value]="shiftType.value">{{ shiftType.key }}</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field appearance="fill" class="input">
+					<mat-label>Stanowisko</mat-label>
+					<input type="text" matInput formControlName="position" />
+				</mat-form-field>
+
 				<input type="hidden" formControlName="departmentName" />
+				<input type="hidden" formControlName="shiftTypeName" />
 			</section>
 
 			<input type="hidden" formControlName="id" />

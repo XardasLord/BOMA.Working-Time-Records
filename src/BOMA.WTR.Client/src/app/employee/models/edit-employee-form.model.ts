@@ -7,4 +7,7 @@ export interface EditEmployeeFormModel {
 	rcpId: number;
 	departmentId: number;
 	departmentName: string;
+	shiftTypeId: number | null;
+	shiftTypeName: string;
+	position: string;
 }

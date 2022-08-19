@@ -14,9 +14,19 @@
 		<td mat-cell *matCellDef="let employee">{{ employee?.lastName }}</td>
 	</ng-container>
 
-	<ng-container matColumnDef="department">
+	<ng-container matColumnDef="departmentName">
 		<th mat-header-cell *matHeaderCellDef>Dział</th>
 		<td mat-cell *matCellDef="let employee">{{ employee?.departmentName }}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="shiftTypeName">
+		<th mat-header-cell *matHeaderCellDef>Zmiana</th>
+		<td mat-cell *matCellDef="let employee">{{ employee?.shiftTypeName }}</td>
+	</ng-container>
+
+	<ng-container matColumnDef="position">
+		<th mat-header-cell *matHeaderCellDef>Stanowisko</th>
+		<td mat-cell *matCellDef="let employee">{{ employee?.position }}</td>
 	</ng-container>
 
 	<ng-container matColumnDef="baseSalary">
@@ -24,7 +34,7 @@
 		<td mat-cell *matCellDef="let employee">{{ employee?.baseSalary | currency: 'PLN' }}</td>
 	</ng-container>
 
-	<ng-container matColumnDef="percentageBonus">
+	<ng-container matColumnDef="salaryBonusPercentage">
 		<th mat-header-cell *matHeaderCellDef>Premia</th>
 		<td mat-cell *matCellDef="let employee">{{ employee?.salaryBonusPercentage / 100 | percent }}</td>
 	</ng-container>

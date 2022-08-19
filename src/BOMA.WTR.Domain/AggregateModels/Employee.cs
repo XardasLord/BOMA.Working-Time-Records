@@ -24,12 +24,13 @@ public class Employee : Entity<int>, IAggregateRoot
         _workingTimeRecordAggregatedHistories = new List<WorkingTimeRecordAggregatedHistory>();
     }
 
-    private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, int rcpId, int departmentId) 
+    private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, JobInformation jobInformation, int rcpId, int departmentId) 
         : this()
     {
         _name = name;
         _salary = salary;
         _salaryBonusPercentage = salaryBonusPercentage;
+        _jobInformation = jobInformation;
         _rcpId = rcpId;
         _departmentId = departmentId;
     }
@@ -44,16 +45,17 @@ public class Employee : Entity<int>, IAggregateRoot
     public virtual IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
     public virtual IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> WorkingTimeRecordAggregatedHistories => _workingTimeRecordAggregatedHistories;
 
-    public static Employee Add(Name name, Money salary, PercentageBonus percentageSalaryBonus, int rcpId, int departmentId)
+    public static Employee Add(Name name, Money salary, PercentageBonus percentageSalaryBonus, JobInformation jobInformation, int rcpId, int departmentId)
     {
-        return new Employee(name, salary, percentageSalaryBonus, rcpId, departmentId);
+        return new Employee(name, salary, percentageSalaryBonus, jobInformation, rcpId, departmentId);
     }
     
-    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, int rcpId, int departmentId)
+    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, JobInformation jobInformation, int rcpId, int departmentId)
     {
         _name = name;
         _salary = salary;
         _salaryBonusPercentage = salaryPercentageBonus;
+        _jobInformation = jobInformation;
         _rcpId = rcpId;
         _departmentId = departmentId;
     }

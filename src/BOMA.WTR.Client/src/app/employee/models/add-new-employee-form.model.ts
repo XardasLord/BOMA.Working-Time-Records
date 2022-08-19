@@ -6,4 +6,7 @@ export interface AddNewEmployeeFormModel {
 	rcpId: number;
 	departmentId: number;
 	departmentName: string;
+	shiftTypeId: number;
+	shiftTypeName: string;
+	position: string;
 }
