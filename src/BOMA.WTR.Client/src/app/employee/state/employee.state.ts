@@ -1,18 +1,18 @@
-import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
+import { append, patch, updateItem } from '@ngxs/store/operators';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { Employee } from './employee.action';
+import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeModel } from '../../shared/models/employee.model';
 import { IEmployeeService } from '../services/employee.service.base';
 import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-states.model';
 import { AddNewEmployeeFormModel } from '../models/add-new-employee-form.model';
+import { Employee } from './employee.action';
 import GetAll = Employee.GetAll;
 import Add = Employee.Add;
-import { append, patch, updateItem } from '@ngxs/store/operators';
 import Edit = Employee.Edit;
-import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
-import { MatDialog } from '@angular/material/dialog';
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
