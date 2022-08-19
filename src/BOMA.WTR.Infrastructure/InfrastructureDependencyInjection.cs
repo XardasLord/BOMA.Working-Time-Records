@@ -9,6 +9,7 @@ using BOMA.WTR.Infrastructure.Database;
 using BOMA.WTR.Infrastructure.Database.Repositories;
 using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
+using BOMA.WTR.Infrastructure.GraphQL;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
@@ -36,6 +37,9 @@ public static class InfrastructureDependencyInjection
         services.AddDbContext<BomaDbContext>(x => x.UseSqlServer(configuration.GetConnectionString("Boma")));
         services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
         services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
+        services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
+
+        services.AddGraphQL();
         
         services.AddHangfire(config =>
         {
@@ -60,8 +64,6 @@ public static class InfrastructureDependencyInjection
         {
             cfg.AddProfile(new AutoMapperProfile(provider.CreateScope().ServiceProvider.GetService<IEmployeeWorkingTimeRecordCalculationDomainService>()));
         }).CreateMapper());
-        
-        services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
 
         return services;
     }
@@ -75,6 +77,8 @@ public static class InfrastructureDependencyInjection
         }
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+        app.UseRouting();
         
         app.UseCors(x => x
             .AllowAnyOrigin()
@@ -83,6 +87,8 @@ public static class InfrastructureDependencyInjection
         
         app.UseHttpsRedirection();
         app.UseAuthorization();
+
+        app.UseGraphQL(configuration.GetSection("GraphQL"), env);
 
         app.UseHangfireDashboard();
         
