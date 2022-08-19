@@ -1,6 +1,6 @@
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Employee } from './employee.action';
 import { EmployeeModel } from '../../shared/models/employee.model';
@@ -11,6 +11,8 @@ import GetAll = Employee.GetAll;
 import Add = Employee.Add;
 import { append, patch, updateItem } from '@ngxs/store/operators';
 import Edit = Employee.Edit;
+import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
+import { MatDialog } from '@angular/material/dialog';
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
@@ -29,7 +31,12 @@ const EMPLOYEE_STATE_TOKEN = new StateToken<EmployeeStateModel>('employee');
 })
 @Injectable()
 export class EmployeeState {
-	constructor(private employeeService: IEmployeeService, private toastService: ToastrService) {}
+	constructor(
+		private employeeService: IEmployeeService,
+		private toastService: ToastrService,
+		private progressSpinnerService: IProgressSpinnerService,
+		private dialogRef: MatDialog
+	) {}
 
 	@Selector([EMPLOYEE_STATE_TOKEN])
 	static getEmployees(state: EmployeeStateModel): EmployeeModel[] {
@@ -38,11 +45,19 @@ export class EmployeeState {
 
 	@Action(GetAll)
 	getAll(ctx: StateContext<EmployeeStateModel>, _: GetAll): Observable<EmployeeModel[]> {
+		this.progressSpinnerService.showProgressSpinner();
+
 		return this.employeeService.getAll().pipe(
 			tap((response) => {
+				this.progressSpinnerService.hideProgressSpinner();
+
 				ctx.patchState({
 					employees: response
 				});
+			}),
+			catchError((e) => {
+				this.progressSpinnerService.hideProgressSpinner();
+				return throwError(e);
 			})
 		);
 	}
@@ -72,6 +87,7 @@ export class EmployeeState {
 					`Nowy pracownik został dodany - ${action.employee.firstName} ${action.employee.lastName}`,
 					'Sukces'
 				);
+				this.dialogRef.closeAll();
 			})
 		);
 	}
@@ -99,6 +115,7 @@ export class EmployeeState {
 				);
 
 				this.toastService.success(`Pracownik został edytowany`, 'Sukces');
+				this.dialogRef.closeAll();
 			})
 		);
 	}
