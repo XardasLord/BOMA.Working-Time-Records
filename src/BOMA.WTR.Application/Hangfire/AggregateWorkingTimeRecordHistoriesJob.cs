@@ -52,6 +52,10 @@ public class AggregateWorkingTimeRecordHistoriesJob
                 currentEmployee.AddWorkingTimeRecordAggregatedHistory(new WorkingTimeRecordAggregatedHistory
                 {
                     Date = wtr.Date,
+                    StartNormalizedAt = wtr.StartNormalizedAt,
+                    StartOriginalAt = wtr.StartOriginalAt,
+                    FinishNormalizedAt = wtr.FinishNormalizedAt,
+                    FinishOriginalAt = wtr.FinishOriginalAt,
                     WorkedHoursRounded = wtr.WorkedHoursRounded,
                     WorkedMinutes = wtr.WorkedMinutes,
                     BaseNormativeHours = wtr.BaseNormativeHours,

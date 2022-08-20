@@ -9,6 +9,7 @@ import { WorkingTimeRecord } from './working-time-record.action';
 import { IWorkingTimeRecordService } from '../services/working-time-record.service.base';
 import {
 	DefaultColumnsToDisplayForDetailedTable,
+	DefaultColumnsToDisplayForReportHoursTable,
 	DefaultInitialDayColumnsToDisplayForDetailedTable,
 	DefaultQueryModel,
 	NumberOfDaysInMonth,
@@ -28,6 +29,7 @@ export interface WorkingTimeRecordStateModel {
 	detailedRecords: EmployeeWorkingTimeRecordDetailsModel[];
 	numberOfDays: number;
 	columnsToDisplay: string[];
+	columnsToDisplayForReportHours: string[];
 	summaryForm: FormStateModel<WorkingTimeRecordSummaryDataFormModel>;
 }
 
@@ -40,6 +42,10 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 		numberOfDays: NumberOfDaysInMonth(DefaultQueryModel.year, DefaultQueryModel.month),
 		columnsToDisplay: [
 			...DefaultColumnsToDisplayForDetailedTable,
+			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
+		],
+		columnsToDisplayForReportHours: [
+			...DefaultColumnsToDisplayForReportHoursTable,
 			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
 		],
 		summaryForm: DefaultFormStateValue
@@ -79,6 +85,11 @@ export class WorkingTimeRecordState {
 	}
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
+	static getColumnsToDisplayForReportHours(state: WorkingTimeRecordStateModel): string[] {
+		return state.columnsToDisplayForReportHours;
+	}
+
+	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getDetailedRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
 		const result: any = [];
 
@@ -92,6 +103,27 @@ export class WorkingTimeRecordState {
 			};
 
 			for (let i = 0; i < 6; i++) {
+				result.push(model);
+			}
+		});
+
+		return result;
+	}
+
+	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
+	static getReportHourRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
+		const result: any = [];
+
+		// For table binding with rowspan simplicity
+		state.detailedRecords.map((x) => {
+			const model: EmployeeWorkingTimeRecordDetailsModel = {
+				employee: x.employee,
+				salaryInformation: x.salaryInformation,
+				workingTimeRecordsAggregated: x.workingTimeRecordsAggregated,
+				isEditable: x.isEditable
+			};
+
+			for (let i = 0; i < 3; i++) {
 				result.push(model);
 			}
 		});
@@ -154,12 +186,14 @@ export class WorkingTimeRecordState {
 		ctx.patchState({
 			query: updatedQuery,
 			numberOfDays: numberOfDays,
-			columnsToDisplay: DefaultColumnsToDisplayForDetailedTable
+			columnsToDisplay: DefaultColumnsToDisplayForDetailedTable,
+			columnsToDisplayForReportHours: DefaultColumnsToDisplayForReportHoursTable
 		});
 
 		for (let i = 1; i <= numberOfDays; i++) {
 			ctx.patchState({
-				columnsToDisplay: [...ctx.getState().columnsToDisplay, i.toString()]
+				columnsToDisplay: [...ctx.getState().columnsToDisplay, i.toString()],
+				columnsToDisplayForReportHours: [...ctx.getState().columnsToDisplayForReportHours, i.toString()]
 			});
 		}
 

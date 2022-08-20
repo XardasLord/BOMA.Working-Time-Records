@@ -7,6 +7,10 @@ public class WorkingTimeRecordAggregatedViewModel
     public static WorkingTimeRecordAggregatedViewModel EmptyForDay(DateTime date) => new()
     {
         Date = date,
+        StartNormalizedAt = date,
+        FinishNormalizedAt = date,
+        StartOriginalAt = date,
+        FinishOriginalAt = date,
         WorkedMinutes = 0,
         WorkedHoursRounded = 0,
         BaseNormativeHours = 0,
@@ -19,6 +23,10 @@ public class WorkingTimeRecordAggregatedViewModel
     
     public RecordEventType EventType { get; set; }
     public DateTime Date { get; set; }
+    public DateTime StartNormalizedAt { get; set; }
+    public DateTime FinishNormalizedAt { get; set; }
+    public DateTime StartOriginalAt { get; set; }
+    public DateTime FinishOriginalAt { get; set; }
     public double WorkedMinutes { get; set; }
     public double WorkedHoursRounded { get; set; }
     public double BaseNormativeHours { get; set; }

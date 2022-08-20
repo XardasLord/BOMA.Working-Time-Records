@@ -1,20 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~ngx-toastr/toastr';
+@import 'assets/scss/variabless.scss';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 .mat-table {
-  width: 100%;
-  border-radius: 10px 10px 0px 0px;
-  overflow: hidden !important;
+	width: 100%;
+	border-radius: 10px 10px 0px 0px;
+	overflow: hidden !important;
 }
 
 .mat-dialog-actions {
-  justify-content: flex-end;
+	justify-content: flex-end;
 }
 
 .transparent .mat-dialog-container {
-  box-shadow: none;
-  background: rgba(0, 0, 0, 0.0);
+	box-shadow: none;
+	background: rgba(0, 0, 0, 0);
+}
+
+.mat-cell > .zero-hours {
+	color: $red-color;
+}
+
+.mat-cell > .missing-record-type .mat-icon {
+	color: $warning-color;
 }

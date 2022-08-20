@@ -13,8 +13,10 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         var resultWithMissingRecords = new List<WorkingTimeRecordAggregatedViewModel>();
 
         var previousDay = 0;
-        var aggregatedMinutesForDay = 0d;
-        var previousDate = default(DateTime);
+        var aggregatedMinutesForDayNormalized = 0d;
+        var aggregatedMinutesForDayOriginal = 0d;
+        var previousDateNormalized = default(DateTime);
+        var previousDateOriginal = default(DateTime);
         var previousEventType = RecordEventType.None;
 
         workingTimeRecords = workingTimeRecords.OrderBy(x => x.OccuredAt).ToList();
@@ -29,19 +31,23 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 if (previousEventType == RecordEventType.Exit && timeRecord.EventType == RecordEventType.Entry)
                 {
-                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate));
+                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal));
                     
-                    aggregatedMinutesForDay = 0;
+                    aggregatedMinutesForDayNormalized = 0;
+                    aggregatedMinutesForDayOriginal = 0;
                 } else if (previousEventType == RecordEventType.Entry && timeRecord.EventType == RecordEventType.Exit)
                 {
-                    aggregatedMinutesForDay += (int)(normalizedOccuredAt - previousDate).TotalMinutes;
+                    aggregatedMinutesForDayNormalized += (int)(normalizedOccuredAt - previousDateNormalized).TotalMinutes;
+                    aggregatedMinutesForDayOriginal += (int)(timeRecord.OccuredAt - previousDateOriginal).TotalMinutes;
                     
-                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, normalizedOccuredAt));
+                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, normalizedOccuredAt, aggregatedMinutesForDayOriginal, timeRecord.OccuredAt));
                     
-                    aggregatedMinutesForDay = 0;
+                    aggregatedMinutesForDayNormalized = 0;
+                    aggregatedMinutesForDayOriginal = 0;
                     previousEventType = timeRecord.EventType;
                     previousDay = normalizedOccuredAt.Day;
-                    previousDate = normalizedOccuredAt;
+                    previousDateNormalized = normalizedOccuredAt;
+                    previousDateOriginal = timeRecord.OccuredAt;
                     
                     continue;
                 }
@@ -57,28 +63,32 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                         continue;
                     }
                     
-                    aggregatedMinutesForDay = 0;
+                    aggregatedMinutesForDayNormalized = 0;
+                    aggregatedMinutesForDayOriginal = 0;
                     var missingRecordType = timeRecord.EventType == RecordEventType.Entry ? MissingRecordEventType.MissingExit : MissingRecordEventType.MissingEntry;
 
-                    resultWithMissingRecords.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate, missingRecordType));
+                    resultWithMissingRecords.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal, missingRecordType));
                 }
                 
                 if (timeRecord.EventType == RecordEventType.Exit)
                 {
-                    var minutes = (int)(NormalizeDateTime(timeRecord.EventType, normalizedOccuredAt) - previousDate).TotalMinutes;
-                    aggregatedMinutesForDay += minutes > 0 ? minutes : 0;
+                    var minutesNormalized = (int)(NormalizeDateTime(timeRecord.EventType, normalizedOccuredAt) - previousDateNormalized).TotalMinutes;
+                    var minutesOriginal = (timeRecord.OccuredAt - previousDateOriginal).TotalMinutes;
+                    aggregatedMinutesForDayNormalized += minutesNormalized > 0 ? minutesNormalized : 0;
+                    aggregatedMinutesForDayOriginal += minutesOriginal > 0 ? minutesOriginal : 0;
                 }
             }
 
             
             previousEventType = timeRecord.EventType;
             previousDay = normalizedOccuredAt.Day;
-            previousDate = normalizedOccuredAt;
+            previousDateNormalized = normalizedOccuredAt;
+            previousDateOriginal = timeRecord.OccuredAt;
         }
 
-        if (aggregatedMinutesForDay > 0)
+        if (aggregatedMinutesForDayNormalized > 0)
         {
-            results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDay, previousDate));
+            results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal));
         }
         
         // TODO: Merge entries with missing record type data
@@ -279,57 +289,67 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return nightFactor;
     }
 
-    private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(double aggregatedMinutesForDay, DateTime endWorkDate, MissingRecordEventType? incorrectRecordEventTypeOrder = null)
+    private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(
+        double aggregatedMinutesForDayNormalized,
+        DateTime endWorkDateNormalized,
+        double aggregatedMinutesForDayOriginal,
+        DateTime endWorkDateOriginal,
+        MissingRecordEventType? incorrectRecordEventTypeOrder = null)
     {
-        var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDay).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
-        var startWorkDate = endWorkDate.AddHours(-allWorkedHoursRounded);
+        var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDayNormalized).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+        var startWorkDateNormalized = endWorkDateNormalized.AddHours(-allWorkedHoursRounded);
+        var startWorkDateOriginal = endWorkDateOriginal.AddMinutes(-aggregatedMinutesForDayOriginal);
         
         return new WorkingTimeRecordAggregatedViewModel
         {
-            Date = startWorkDate.Date,
-            WorkedMinutes = aggregatedMinutesForDay,
-            WorkedHoursRounded = endWorkDate.DayOfWeek == DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
-            BaseNormativeHours = GetBaseNormativeHours(endWorkDate, allWorkedHoursRounded),
-            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(endWorkDate, allWorkedHoursRounded),
-            HundredPercentageBonusHours = GetHundredPercentageBonusHours(endWorkDate, allWorkedHoursRounded),
-            SaturdayHours = GetSaturdayHours(endWorkDate, allWorkedHoursRounded),
+            Date = startWorkDateNormalized.Date,
+            StartNormalizedAt = startWorkDateNormalized,
+            FinishNormalizedAt = endWorkDateNormalized,
+            StartOriginalAt = startWorkDateOriginal,
+            FinishOriginalAt = endWorkDateOriginal,
+            WorkedMinutes = aggregatedMinutesForDayNormalized,
+            WorkedHoursRounded = endWorkDateNormalized.DayOfWeek == DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
+            BaseNormativeHours = GetBaseNormativeHours(endWorkDateNormalized, allWorkedHoursRounded),
+            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(endWorkDateNormalized, allWorkedHoursRounded),
+            HundredPercentageBonusHours = GetHundredPercentageBonusHours(endWorkDateNormalized, allWorkedHoursRounded),
+            SaturdayHours = GetSaturdayHours(endWorkDateNormalized, allWorkedHoursRounded),
             NightHours = GetNightHours(),
-            IsWeekendDay = startWorkDate.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
+            IsWeekendDay = startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
             MissingRecordEventType = incorrectRecordEventTypeOrder
         };
 
         // TODO: Move this logic to domain service
         double GetNightHours()
         {
-            if (endWorkDate.Date.DayOfWeek == DayOfWeek.Saturday)
+            if (endWorkDateNormalized.Date.DayOfWeek == DayOfWeek.Saturday)
                 return 0;
 
-            if (startWorkDate.Hour < 22 && endWorkDate.Hour > 6 && endWorkDate.Day > startWorkDate.Day)
+            if (startWorkDateNormalized.Hour < 22 && endWorkDateNormalized.Hour > 6 && endWorkDateNormalized.Day > startWorkDateNormalized.Day)
             {
                 // Worked all night
                 return 8;
             }
             
-            if (startWorkDate.Hour is < 22 and > 6 && endWorkDate.Hour is > 22 or <= 6)
+            if (startWorkDateNormalized.Hour is < 22 and > 6 && endWorkDateNormalized.Hour is > 22 or <= 6)
             {
                 // Started before 10pm but finished in night hours
-                var nightWorkTimeSpan = endWorkDate.Subtract(new DateTime(startWorkDate.Year, startWorkDate.Month, startWorkDate.Day, 22, 0, 0));
+                var nightWorkTimeSpan = endWorkDateNormalized.Subtract(new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0));
                 var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
                 return result > 0 ? result : 0;
             }
             
-            if (startWorkDate.Hour is >= 22 or <= 6 && endWorkDate.Hour <= 6)
+            if (startWorkDateNormalized.Hour is >= 22 or <= 6 && endWorkDateNormalized.Hour <= 6)
             {
                 // Started work in night hours and finished in night hours
-                var nightWorkTimeSpan = endWorkDate.Subtract(startWorkDate);
+                var nightWorkTimeSpan = endWorkDateNormalized.Subtract(startWorkDateNormalized);
                 var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
                 return result > 0 ? result : 0;
             }
             
-            if (startWorkDate.Hour is >= 22 or < 6 && endWorkDate.Hour > 6)
+            if (startWorkDateNormalized.Hour is >= 22 or < 6 && endWorkDateNormalized.Hour > 6)
             {
                 // Started work in night hours and finished after 6am
-                var nightWorkTimeSpan =  new DateTime(endWorkDate.Year, endWorkDate.Month, endWorkDate.Day, 6, 0, 0).Subtract(startWorkDate);
+                var nightWorkTimeSpan =  new DateTime(endWorkDateNormalized.Year, endWorkDateNormalized.Month, endWorkDateNormalized.Day, 6, 0, 0).Subtract(startWorkDateNormalized);
                 var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
                 return result > 0 ? result : 0;
             }

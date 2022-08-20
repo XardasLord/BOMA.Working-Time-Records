@@ -1,5 +1,9 @@
 export class WorkingTimeRecordDetailsAggregatedModel {
 	date!: Date;
+	startNormalizedAt!: Date;
+	finishNormalizedAt!: Date;
+	startOriginalAt!: Date;
+	finishOriginalAt!: Date;
 	workedMinutes!: number;
 	workedHoursRounded!: number;
 	baseNormativeHours!: number;

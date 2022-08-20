@@ -27,6 +27,8 @@ export const DefaultColumnsToDisplayForDetailedTable: string[] = [
 	'emptyLabel'
 ];
 
+export const DefaultColumnsToDisplayForReportHoursTable: string[] = ['fullName', 'shiftType', 'position', 'sumHours', 'emptyLabel'];
+
 export function DefaultInitialDayColumnsToDisplayForDetailedTable(year: number, month: number): string[] {
 	const daysArray: string[] = [];
 	for (let i = 1; i <= NumberOfDaysInMonth(year, month); i++) {
