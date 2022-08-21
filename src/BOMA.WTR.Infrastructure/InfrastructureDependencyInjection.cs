@@ -33,6 +33,7 @@ public static class InfrastructureDependencyInjection
         
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddHealthChecks();
 
         services.AddDbContext<BomaDbContext>(x => x.UseSqlServer(configuration.GetConnectionString("Boma")));
         services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
@@ -87,6 +88,8 @@ public static class InfrastructureDependencyInjection
         
         app.UseHttpsRedirection();
         app.UseAuthorization();
+
+        app.UseHealthChecks("/healthz");
 
         app.UseGraphQL(configuration.GetSection("GraphQL"), env);
 
