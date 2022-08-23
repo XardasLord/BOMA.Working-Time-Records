@@ -27,9 +27,6 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 	}
 
 	getAllHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
-		return workingTimeRecordDetails.reduce<number>(
-			(accumulator, obj) => accumulator + obj.workedHoursRounded + obj.saturdayHours + obj.nightHours,
-			0
-		);
+		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.workedHoursRounded + obj.saturdayHours, 0);
 	}
 }
