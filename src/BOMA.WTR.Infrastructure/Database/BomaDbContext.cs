@@ -19,8 +19,7 @@ public class BomaDbContext : DbContext
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
-            .AddJsonFile("appsettings.Development.json")
-            .AddJsonFile("appsettings.Production.json")
+            .AddEnvironmentVariables()
             .Build();
         
         optionsBuilder.UseSqlServer(configuration.GetConnectionString("Boma"));
