@@ -1,0 +1,27 @@
+<section>
+	<mat-form-field appearance="fill">
+		<mat-label>Pracownik</mat-label>
+		<input matInput (valueChanged)="searchTextChanged($event)" [value]="(queryModel$ | async)?.searchText" appDebounce />
+	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Rok</mat-label>
+		<mat-select (selectionChange)="yearChanged($event.value)" [value]="(queryModel$ | async)?.year">
+			<mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Miesiąc</mat-label>
+		<mat-select (selectionChange)="monthChanged($event.value)" [value]="(queryModel$ | async)?.month">
+			<mat-option *ngFor="let month of months" [value]="month.value">{{ month.key }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Grupa</mat-label>
+		<mat-select (selectionChange)="groupChanged($event.value)" [value]="(queryModel$ | async)?.departmentId">
+			<mat-option *ngFor="let department of departments" [value]="department.value">{{ department.key }}</mat-option>
+		</mat-select>
+	</mat-form-field>
+</section>

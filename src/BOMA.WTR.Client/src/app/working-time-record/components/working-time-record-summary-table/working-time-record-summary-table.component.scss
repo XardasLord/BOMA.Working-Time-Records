@@ -1,0 +1,47 @@
+@import '../../../../assets/scss/variabless.scss';
+
+.mat-header-cell,
+.mat-cell {
+	text-align: center;
+}
+
+.mat-column-fullName.mat-cell {
+	font-size: 20px;
+	width: 220px;
+}
+
+.mat-column-gross.mat-cell,
+.mat-column-bonus.mat-cell,
+.mat-column-overtimes.mat-cell,
+.mat-column-saturdays.mat-cell,
+.mat-column-nightHours.mat-cell,
+.mat-column-sum.mat-cell {
+	background-color: $summary-table-base-color;
+}
+
+.mat-column-rate.mat-cell,
+.mat-column-bonusPercentage.mat-cell,
+.mat-column-night.mat-cell,
+.mat-column-holiday.mat-cell,
+.mat-column-sickness.mat-cell,
+.mat-column-additional.mat-cell {
+	background-color: $summary-table-yellow-color;
+}
+
+// Inline form inputs
+.mat-form-field ::ng-deep {
+	text-align: center;
+
+	.mat-form-field-flex {
+		width: 100px;
+	}
+
+	.mat-form-field-flex > .mat-form-field-infix {
+		padding: 0.4em 0px !important;
+		border-top: 0.4em solid transparent;
+	}
+
+	.mat-form-field-wrapper {
+		padding: 0;
+	}
+}
