@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { UpdateFormValue } from '@ngxs/form-plugin';
@@ -15,7 +15,7 @@ import { nameof } from '../../../shared/helpers/name-of.helper';
 	templateUrl: './add-new-employee-dialog.component.html',
 	styleUrls: ['./add-new-employee-dialog.component.scss']
 })
-export class AddNewEmployeeDialogComponent implements OnInit {
+export class AddNewEmployeeDialogComponent {
 	addNewEmployeeForm!: FormGroup<AddNewEmployeeFormGroup>;
 
 	departments = DepartmentsArray;
@@ -35,8 +35,6 @@ export class AddNewEmployeeDialogComponent implements OnInit {
 			position: new FormControl<string>('', { nonNullable: true, validators: [Validators.max(64)] })
 		});
 	}
-
-	ngOnInit(): void {}
 
 	onSubmit() {
 		if (!this.addNewEmployeeForm.valid) return;

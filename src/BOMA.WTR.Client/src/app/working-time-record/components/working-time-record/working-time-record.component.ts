@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-working-time-record',
-  templateUrl: './working-time-record.component.html',
-  styleUrls: ['./working-time-record.component.scss']
+	selector: 'app-working-time-record',
+	templateUrl: './working-time-record.component.html',
+	styleUrls: ['./working-time-record.component.scss']
 })
-export class WorkingTimeRecordComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class WorkingTimeRecordComponent {
+	constructor() {}
 }
