@@ -183,6 +183,10 @@ public class NormalizeDateTimeTests : TestBase
             new DateTime(2022, 8, 1, 16, 0, 0)
         };
         yield return new object[] { 
+            new DateTime(2022, 8, 1, 14, 55, 0),
+            new DateTime(2022, 8, 1, 15, 0, 0)
+        };
+        yield return new object[] { 
             new DateTime(2022, 8, 1, 16, 5, 0),
             new DateTime(2022, 8, 1, 16, 0, 0)
         };
@@ -237,6 +241,10 @@ public class NormalizeDateTimeTests : TestBase
         yield return new object[] { 
             new DateTime(2022, 8, 1, 13, 0, 0),
             new DateTime(2022, 8, 1, 14, 0, 0)
+        };
+        yield return new object[] { 
+            new DateTime(2022, 8, 1, 12, 55, 0),
+            new DateTime(2022, 8, 1, 13, 0, 0)
         };
         yield return new object[] { 
             new DateTime(2022, 8, 1, 14, 5, 0),
