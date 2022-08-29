@@ -5,12 +5,15 @@ import * as moment from 'moment';
 import { MonthsArray } from '../../../shared/models/months-array';
 import { DepartmentsArray } from '../../../shared/models/departments-array';
 import { DepartmentsEnum } from '../../../shared/models/departments.enum';
+import { ShiftTypesArray } from '../../../shared/models/shift-types-array';
+import { ShiftTypesEnum } from '../../../shared/models/shift-types.enum';
 import { KeyValuePair } from '../../models/key-value-pair.model';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import ChangeDate = WorkingTimeRecord.ChangeDate;
 import ApplyFilter = WorkingTimeRecord.ApplyFilter;
 import ChangeGroup = WorkingTimeRecord.ChangeGroup;
+import ChangeShift = WorkingTimeRecord.ChangeShift;
 
 @Component({
 	selector: 'app-working-time-record-filters',
@@ -21,6 +24,7 @@ export class WorkingTimeRecordFiltersComponent {
 	years: number[] = [];
 	months: KeyValuePair<string, number>[] = MonthsArray;
 	departments: KeyValuePair<DepartmentsEnum, number>[] = DepartmentsArray;
+	shifts: KeyValuePair<ShiftTypesEnum, number>[] = ShiftTypesArray;
 
 	queryModel$ = this.store.select(WorkingTimeRecordState.getSearchQueryModel);
 
@@ -34,6 +38,10 @@ export class WorkingTimeRecordFiltersComponent {
 
 	groupChanged(groupId: number): void {
 		this.store.dispatch(new ChangeGroup(groupId));
+	}
+
+	shiftChanged(shiftId: number): void {
+		this.store.dispatch(new ChangeShift(shiftId));
 	}
 
 	searchTextChanged(search: string): void {

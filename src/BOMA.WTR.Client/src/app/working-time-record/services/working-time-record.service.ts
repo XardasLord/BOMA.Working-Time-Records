@@ -19,7 +19,8 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 		let queryParams = new HttpParams()
 			.set('year', queryModel.year)
 			.set('month', queryModel.month)
-			.set('departmentId', queryModel.departmentId);
+			.set('departmentId', queryModel.departmentId)
+			.set('shiftId', queryModel.shiftId);
 
 		if (queryModel.searchText) {
 			queryParams = queryParams.set('searchText', queryModel.searchText);

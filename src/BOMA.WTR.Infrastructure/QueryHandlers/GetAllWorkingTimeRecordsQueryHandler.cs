@@ -5,6 +5,7 @@ using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Infrastructure.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,16 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         if (query.QueryModel.DepartmentId is > 0)
         {
             databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+        }
+
+        if (query.QueryModel.DepartmentId is > 0)
+        {
+            databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+        }
+
+        if (query.QueryModel.ShiftId is > 0)
+        {
+            databaseQuery = databaseQuery.Where(x => x.JobInformation.ShiftType == (ShiftType)query.QueryModel.ShiftId);
         }
 
         var employeesWithWorkingTimeRecords = await databaseQuery

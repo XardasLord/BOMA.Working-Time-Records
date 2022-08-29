@@ -23,6 +23,7 @@ import { DefaultFormStateValue, FormStateModel } from '../../shared/models/form-
 import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-record-summary-data-form.model';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
+import ChangeShift = WorkingTimeRecord.ChangeShift;
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -167,6 +168,18 @@ export class WorkingTimeRecordState {
 	changeGroup(ctx: StateContext<WorkingTimeRecordStateModel>, action: ChangeGroup): Observable<void> {
 		const updatedQuery = { ...ctx.getState().query };
 		updatedQuery.departmentId = action.groupId;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
+	}
+
+	@Action(ChangeShift)
+	changeShift(ctx: StateContext<WorkingTimeRecordStateModel>, action: ChangeShift): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.shiftId = action.shiftId;
 
 		ctx.patchState({
 			query: updatedQuery

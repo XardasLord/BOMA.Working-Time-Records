@@ -24,6 +24,12 @@ export namespace WorkingTimeRecord {
 		static readonly type = `${prefix} ${ChangeGroup.name}`;
 	}
 
+	export class ChangeShift {
+		constructor(public shiftId: number) {}
+
+		static readonly type = `${prefix} ${ChangeShift.name}`;
+	}
+
 	export class ChangeDate {
 		constructor(public year: number, public month: number) {}
 

@@ -24,4 +24,11 @@
 			<mat-option *ngFor="let department of departments" [value]="department.value">{{ department.key }}</mat-option>
 		</mat-select>
 	</mat-form-field>
+
+	<mat-form-field appearance="fill">
+		<mat-label>Zmiana</mat-label>
+		<mat-select (selectionChange)="shiftChanged($event.value)" [value]="(queryModel$ | async)?.shiftId">
+			<mat-option *ngFor="let shift of shifts" [value]="shift.value">{{ shift.key }}</mat-option>
+		</mat-select>
+	</mat-form-field>
 </section>
