@@ -5,6 +5,7 @@ import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-wor
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import GetAll = WorkingTimeRecord.GetAll;
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-working-time-record-report-hours-table',
@@ -28,5 +29,21 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 
 	getAllHoursSum(workingTimeRecordDetails: WorkingTimeRecordDetailsAggregatedModel[]) {
 		return workingTimeRecordDetails.reduce<number>((accumulator, obj) => accumulator + obj.workedHoursRounded + obj.saturdayHours, 0);
+	}
+
+	getTotalHoursSum() {
+		return this.detailedRecords$.pipe(
+			map(
+				(results) =>
+					results
+						.map((r) =>
+							r.workingTimeRecordsAggregated.reduce(
+								(accumulator, obj) => accumulator + obj.workedHoursRounded + obj.saturdayHours,
+								0
+							)
+						)
+						.reduce((acc, obj) => acc + obj, 0) / 3
+			)
+		);
 	}
 }

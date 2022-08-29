@@ -86,3 +86,13 @@ tr.mat-row:nth-child(3n) > .mat-cell {
 .mat-cell.none-value {
 	background-color: $none-cell-color;
 }
+
+tr.mat-footer-row {
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.mat-table-sticky {
+	border-top: 1px solid #e0e0e0;
+}

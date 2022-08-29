@@ -19,6 +19,7 @@
 		>
 			{{ i / 3 + 1 }}
 		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
 	</ng-container>
 
 	<ng-container matColumnDef="fullName">
@@ -31,6 +32,7 @@
 		>
 			{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
 		</td>
+		<td mat-footer-cell *matFooterCellDef rowspan="2">Podsumowanie</td>
 	</ng-container>
 
 	<ng-container matColumnDef="shiftType">
@@ -43,6 +45,7 @@
 		>
 			{{ record?.employee?.shiftTypeName }}
 		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
 	</ng-container>
 
 	<ng-container matColumnDef="position">
@@ -55,6 +58,7 @@
 		>
 			{{ record?.employee?.position }}
 		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
 	</ng-container>
 
 	<ng-container matColumnDef="sumHours">
@@ -67,6 +71,7 @@
 		>
 			{{ getAllHoursSum(record?.workingTimeRecordsAggregated) }}
 		</td>
+		<td mat-footer-cell *matFooterCellDef>{{ getTotalHoursSum() | async }}</td>
 	</ng-container>
 
 	<ng-container matColumnDef="emptyLabel">
@@ -83,6 +88,7 @@
 			<span *ngIf="i % 3 === 1">wejście</span>
 			<span *ngIf="i % 3 === 2">wyjście</span>
 		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
 	</ng-container>
 
 	<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
@@ -120,8 +126,10 @@
 					: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.finishOriginalAt | date: 'shortTime')
 			}}</span>
 		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
 	</ng-container>
 
 	<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async"></tr>
 	<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async"></tr>
+	<tr mat-footer-row *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
 </table>
