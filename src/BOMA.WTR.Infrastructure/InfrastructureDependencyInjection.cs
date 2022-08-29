@@ -9,6 +9,7 @@ using BOMA.WTR.Infrastructure.Database;
 using BOMA.WTR.Infrastructure.Database.Repositories;
 using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
+using BOMA.WTR.Infrastructure.ErrorHandling.Exceptions;
 using BOMA.WTR.Infrastructure.GraphQL;
 using Hangfire;
 using Hangfire.Console;
@@ -65,7 +66,8 @@ public static class InfrastructureDependencyInjection
 
         services.AddSingleton(provider => new MapperConfiguration(cfg =>
         {
-            cfg.AddProfile(new AutoMapperProfile(provider.CreateScope().ServiceProvider.GetService<IEmployeeWorkingTimeRecordCalculationDomainService>()));
+            cfg.AddProfile(new AutoMapperProfile(provider.CreateScope().ServiceProvider.GetService<IEmployeeWorkingTimeRecordCalculationDomainService>() 
+                                                 ?? throw new ConfigurationException($"Cannot get {nameof(IEmployeeWorkingTimeRecordCalculationDomainService)} implementation for AutoMapper configuration")));
         }).CreateMapper());
 
         return services;

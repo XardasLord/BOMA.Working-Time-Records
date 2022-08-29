@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using BOMA.WTR.Application.Exceptions;
+using BOMA.WTR.Infrastructure.ErrorHandling.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -48,6 +49,8 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
             BadRequestException => StatusCodes.Status400BadRequest,
             NotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status422UnprocessableEntity,
+            ApplicationException => StatusCodes.Status400BadRequest,
+            InfrastructureException => StatusCodes.Status424FailedDependency,
             _ => StatusCodes.Status500InternalServerError
         };
     private static string GetTitle(Exception exception) =>

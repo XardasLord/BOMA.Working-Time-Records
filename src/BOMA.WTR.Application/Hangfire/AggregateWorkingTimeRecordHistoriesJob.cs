@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BOMA.WTR.Application.Exceptions;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
@@ -42,7 +43,8 @@ public class AggregateWorkingTimeRecordHistoriesJob
             if (currentEmployee is null)
             {
                 var spec = new EmployeeByRcpIdSpec(model.Employee.RcpId);
-                currentEmployee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken);
+                currentEmployee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken)
+                    ?? throw new NotFoundException($"Employee with ID = {model.Employee.RcpId} was not found");
                     
                 employeesCache.Add(currentEmployee);
             }
