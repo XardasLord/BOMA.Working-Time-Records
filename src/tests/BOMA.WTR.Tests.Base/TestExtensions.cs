@@ -6,7 +6,7 @@ namespace BOMA.WTR.Tests.Base;
 public static class TestExtensions
 {
     public static IEnumerable<object[]> ToMemberData<T>(this IEnumerable<T> data) =>
-        data.Select(item => new object[] { item });
+        data.Select(item => new object[] { item ?? throw new ArgumentNullException(nameof(item)) });
 
     public static IEnumerable<object[]> GetEnumValues<T>(params T[] exceptValues) where T : Enum =>
         Enum.GetValues(typeof(T))

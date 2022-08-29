@@ -36,10 +36,13 @@ public class ParseWorkingTimeRecordsFileJob
 
         foreach (var file in files)
         {
-            var rogerFileModels = ParseCsvToRogerFile(file);
+            var rogerFileModels = ParseCsvToRogerFile(file).ToList();
+            
+            context.WriteLine($"There are {rogerFileModels.Count} of TOTAL entries in the file - {file}");
+            
             rogerFileModels = rogerFileModels.Where(x => x.IsValid()).ToList();
             
-            context.WriteLine($"There are {rogerFileModels.Count()} valid entries in the file - {file}");
+            context.WriteLine($"There are {rogerFileModels.Count} of VALID entries in the file - {file}");
 
             var employeesCache = new List<Employee>();
 
@@ -49,33 +52,33 @@ public class ParseWorkingTimeRecordsFileJob
                 
                 if (currentEmployee is null)
                 {
-                    var spec = new EmployeeByRcpIdSpec(rogerFileModel.UserRcpId.Value);
+                    var spec = new EmployeeByRcpIdSpec(rogerFileModel.UserRcpId!.Value);
                     currentEmployee = await _employeeRepository.FirstOrDefaultAsync(spec, cancellationToken);
                     
                     if (currentEmployee is null)
                     {
-                        var name = new Name(rogerFileModel.Name, rogerFileModel.LastName);
+                        var name = new Name(rogerFileModel.Name!, rogerFileModel.LastName!);
                         var salary = Money.Empty;
                         var bonus = PercentageBonus.Empty;
                         var jobInformation = JobInformation.Empty;
                         
-                        currentEmployee = Employee.Add(name, salary, bonus, jobInformation, rogerFileModel.UserRcpId.Value, rogerFileModel.DepartmentId.Value);
-                        await _employeeRepository.AddAsync(currentEmployee);
+                        currentEmployee = Employee.Add(name, salary, bonus, jobInformation, rogerFileModel.UserRcpId.Value, rogerFileModel.DepartmentId!.Value);
+                        await _employeeRepository.AddAsync(currentEmployee, cancellationToken);
                     }
                     
                     employeesCache.Add(currentEmployee);
                 }
                 
                 currentEmployee.AddWorkingTimeRecord(WorkingTimeRecord.Create(
-                    rogerFileModel.RogerEventType.Value,
+                    rogerFileModel.RogerEventType!.Value,
                     new DateTime(
-                        rogerFileModel.Date.Value.Year,
+                        rogerFileModel.Date!.Value.Year,
                         rogerFileModel.Date.Value.Month,
                         rogerFileModel.Date.Value.Day, 
-                        rogerFileModel.Time.Value.Hours, 
+                        rogerFileModel.Time!.Value.Hours, 
                         rogerFileModel.Time.Value.Minutes, 
                         rogerFileModel.Time.Value.Seconds),
-                    rogerFileModel.DepartmentId.Value));
+                    rogerFileModel.DepartmentId!.Value));
             }
 
             await _employeeRepository.SaveChangesAsync(cancellationToken);

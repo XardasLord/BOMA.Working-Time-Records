@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
@@ -17,7 +17,7 @@ import { nameof } from '../../../shared/helpers/name-of.helper';
 	templateUrl: './edit-employee-dialog.component.html',
 	styleUrls: ['./edit-employee-dialog.component.scss']
 })
-export class EditEmployeeDialogComponent implements OnInit {
+export class EditEmployeeDialogComponent {
 	editEmployeeForm: FormGroup<EditEmployeeFormGroup>;
 	departments = DepartmentsArray;
 	shiftTypes = ShiftTypesArray;
@@ -51,8 +51,6 @@ export class EditEmployeeDialogComponent implements OnInit {
 
 		this.store.dispatch(new ResetForm({ path: 'employee.editEmployeeForm', value: this.editEmployeeForm.value }));
 	}
-
-	ngOnInit(): void {}
 
 	onSubmit() {
 		console.log(this.editEmployeeForm.valid);

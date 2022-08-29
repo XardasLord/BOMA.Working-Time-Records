@@ -4,7 +4,7 @@
 		<td
 			mat-cell
 			*matCellDef="let record; let i = index"
-			[attr.rowspan]="i % 3 == 0 ? '3' : null"
+			[attr.rowspan]="i % 3 === 0 ? '3' : null"
 			[style.display]="i % 3 ? 'none' : null"
 		></td>
 	</ng-container>
@@ -14,7 +14,7 @@
 		<td
 			mat-cell
 			*matCellDef="let record; let i = index"
-			[attr.rowspan]="i % 3 == 0 ? '3' : null"
+			[attr.rowspan]="i % 3 === 0 ? '3' : null"
 			[style.display]="i % 3 ? 'none' : null"
 		>
 			{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
@@ -26,7 +26,7 @@
 		<td
 			mat-cell
 			*matCellDef="let record; let i = index"
-			[attr.rowspan]="i % 3 == 0 ? '3' : null"
+			[attr.rowspan]="i % 3 === 0 ? '3' : null"
 			[style.display]="i % 3 ? 'none' : null"
 		>
 			{{ record?.employee?.shiftTypeName }}
@@ -38,7 +38,7 @@
 		<td
 			mat-cell
 			*matCellDef="let record; let i = index"
-			[attr.rowspan]="i % 3 == 0 ? '3' : null"
+			[attr.rowspan]="i % 3 === 0 ? '3' : null"
 			[style.display]="i % 3 ? 'none' : null"
 		>
 			{{ record?.employee?.position }}
@@ -50,7 +50,7 @@
 		<td
 			mat-cell
 			*matCellDef="let record; let i = index"
-			[attr.rowspan]="i % 3 == 0 ? '3' : null"
+			[attr.rowspan]="i % 3 === 0 ? '3' : null"
 			[style.display]="i % 3 ? 'none' : null"
 		>
 			{{ getAllHoursSum(record?.workingTimeRecordsAggregated) }}
@@ -67,9 +67,9 @@
 				'default-value-hours': i % 3 === 1 || i % 3 === 2
 			}"
 		>
-			<span *ngIf="i % 3 == 0">Godziny</span>
-			<span *ngIf="i % 3 == 1">wejście</span>
-			<span *ngIf="i % 3 == 2">wyjcie</span>
+			<span *ngIf="i % 3 === 0">Godziny</span>
+			<span *ngIf="i % 3 === 1">wejście</span>
+			<span *ngIf="i % 3 === 2">wyjcie</span>
 		</td>
 	</ng-container>
 
@@ -84,26 +84,25 @@
 			}"
 		>
 			<span
-				*ngIf="i % 3 == 0"
+				*ngIf="i % 3 === 0"
 				[ngClass]="{
 					'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType
 				}"
 			>
 				{{
 					record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded +
-						record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours +
-						record?.workingTimeRecordsAggregated[+dayNumber - 1]?.nightHours | emptyIfZero
+						record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero
 				}}
 				<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
 				<!--							<mat-icon>error</mat-icon>-->
 				<!--						</span>-->
 			</span>
-			<span *ngIf="i % 3 == 1">{{
+			<span *ngIf="i % 3 === 1">{{
 				(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.startOriginalAt | date: 'shortTime') === '00:00'
 					? ''
 					: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.startOriginalAt | date: 'shortTime')
 			}}</span>
-			<span *ngIf="i % 3 == 2">{{
+			<span *ngIf="i % 3 === 2">{{
 				(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.finishOriginalAt | date: 'shortTime') === '00:00'
 					? ''
 					: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.finishOriginalAt | date: 'shortTime')
