@@ -24,7 +24,7 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
     {
         var nextMonth = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Month;
         var nextMonthYear = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Year;
-        
+
         var databaseQuery = _dbContext.Employees
             .Include(x => x.Department)
             .Include(x => x.WorkingTimeRecordAggregatedHistories
@@ -32,12 +32,16 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
                             w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1)) // We need to include also the first day of new month for last day of month calculations
             .Where(x => x.WorkingTimeRecordAggregatedHistories
                 .Any(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
-                          w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1))
-            .Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
+                          w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1));
         
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
             databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
+        }
+
+        if (query.QueryModel.DepartmentId is > 0)
+        {
+            databaseQuery = databaseQuery.Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
         }
 
         var employeesWithWorkingTimeRecords = await databaseQuery

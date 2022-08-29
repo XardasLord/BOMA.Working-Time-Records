@@ -1,4 +1,5 @@
 export enum DepartmentsEnum {
+	All = 'Wszyscy',
 	WarehouseDepartment = 'Magazyn',
 	AccessoryDepartment = 'Akcesoria',
 	ProductionDepartment = 'Produkcja',
