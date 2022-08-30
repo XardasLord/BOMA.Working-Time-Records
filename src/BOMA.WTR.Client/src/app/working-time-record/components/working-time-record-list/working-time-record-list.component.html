@@ -1,10 +1,10 @@
 <app-working-time-record-filters></app-working-time-record-filters>
 
 <mat-tab-group>
-	<mat-tab label="Szczegóły">
+	<mat-tab label="Szczegóły" *ngIf="!managerMode">
 		<app-working-time-record-detailed-table></app-working-time-record-detailed-table>
 	</mat-tab>
-	<mat-tab label="Podsumowanie">
+	<mat-tab label="Podsumowanie" *ngIf="!managerMode">
 		<ng-template matTabContent>
 			<app-working-time-record-summary-table></app-working-time-record-summary-table>
 		</ng-template>

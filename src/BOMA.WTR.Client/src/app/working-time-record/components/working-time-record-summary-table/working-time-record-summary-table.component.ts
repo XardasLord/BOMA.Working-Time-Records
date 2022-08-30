@@ -27,6 +27,7 @@ export class WorkingTimeRecordSummaryTableComponent {
 	additionalSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 
 	columnsToDisplay = [
+		'index',
 		'fullName',
 		'rate',
 		'bonusPercentage',

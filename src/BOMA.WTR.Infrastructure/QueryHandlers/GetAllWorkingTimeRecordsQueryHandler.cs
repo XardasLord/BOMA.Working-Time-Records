@@ -5,6 +5,7 @@ using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Infrastructure.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -46,16 +47,30 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             .Include(x => x.Department)
             .Include(x => x.WorkingTimeRecords
                 .Where(w => (w.OccuredAt.Year == query.QueryModel.Year && w.OccuredAt.Month == query.QueryModel.Month) ||
-                       w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1)) // We need to include also the first day of new month for last day of month calculations
+                            w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1)) // We need to include also the first day of new month for last day of month calculations
             .Where(x => x.WorkingTimeRecords
                 .Any(w => (w.OccuredAt.Year == query.QueryModel.Year && w.OccuredAt.Month == query.QueryModel.Month) ||
-                     w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1))
-            .Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+                          w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1));
 
 
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
             databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
+        }
+
+        if (query.QueryModel.DepartmentId is > 0)
+        {
+            databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+        }
+
+        if (query.QueryModel.DepartmentId is > 0)
+        {
+            databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+        }
+
+        if (query.QueryModel.ShiftId is > 0)
+        {
+            databaseQuery = databaseQuery.Where(x => x.JobInformation.ShiftType == (ShiftType)query.QueryModel.ShiftId);
         }
 
         var employeesWithWorkingTimeRecords = await databaseQuery
