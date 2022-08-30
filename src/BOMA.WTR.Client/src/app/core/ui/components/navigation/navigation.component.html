@@ -9,7 +9,7 @@
 	>
 		<mat-toolbar>BOMA</mat-toolbar>
 		<mat-nav-list>
-			<mat-list-item routerLink="/employees" routerLinkActive="active-route">
+			<mat-list-item routerLink="/employees" routerLinkActive="active-route" *ngIf="!managerMode">
 				<mat-icon class="material-icons-outlined" matListIcon>person</mat-icon>
 				<span matLine>Pracownicy</span>
 			</mat-list-item>
