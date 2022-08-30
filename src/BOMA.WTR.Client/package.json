@@ -5,7 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "deploy-dev-iis": "ng build --watch --base-href / --configuration production",
+    "deploy-dev-iis": "ng build --watch --base-href /",
+    "deploy-prod-iis": "ng build --watch --base-href / --configuration production",
+    "deploy-prod-manager-iis": "ng build --watch --base-href / --configuration production-manager",
     "test": "ng test",
     "lint": "ng lint"
   },
