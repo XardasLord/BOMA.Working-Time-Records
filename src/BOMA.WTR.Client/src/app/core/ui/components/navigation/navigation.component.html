@@ -7,7 +7,10 @@
 		[mode]="(isHandset$ | async) ? 'over' : 'side'"
 		[opened]="(isHandset$ | async) === false"
 	>
-		<mat-toolbar>BOMA</mat-toolbar>
+		<mat-toolbar>
+			BOMA&nbsp;&nbsp;
+			<span class="app-version">(v.{{ appVersion }})</span>
+		</mat-toolbar>
 		<mat-nav-list>
 			<mat-list-item routerLink="/employees" routerLinkActive="active-route">
 				<mat-icon class="material-icons-outlined" matListIcon>person</mat-icon>

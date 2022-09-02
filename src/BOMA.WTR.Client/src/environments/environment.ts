@@ -2,8 +2,11 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import packageJson from '../../package.json';
+
 export const environment = {
 	production: false,
+	appVersion: `${packageJson.version}-dev`,
 	apiEndpoint: 'https://localhost:7055/api',
 	managerMode: false
 };

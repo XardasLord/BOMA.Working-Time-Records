@@ -92,6 +92,9 @@
             "production": {
               "browserTarget": "BOMA.WTR.Client:build:production"
             },
+            "production-manager": {
+              "browserTarget": "BOMA.WTR.Client:build:production-manager"
+            },
             "development": {
               "browserTarget": "BOMA.WTR.Client:build:development"
             }
