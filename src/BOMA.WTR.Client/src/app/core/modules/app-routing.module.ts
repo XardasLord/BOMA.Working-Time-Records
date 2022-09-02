@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationComponent } from '../ui/components/navigation/navigation.component';
-import { ManagerGuard } from '../guards/manager-guard.service';
 
 export const RoutePaths = {
 	Employees: 'employees',
@@ -16,7 +15,6 @@ const routes: Routes = [
 		children: [
 			{
 				path: RoutePaths.Employees,
-				canActivate: [ManagerGuard],
 				loadChildren: () => import('../../employee/employee.module').then((m) => m.EmployeeModule)
 			},
 			{

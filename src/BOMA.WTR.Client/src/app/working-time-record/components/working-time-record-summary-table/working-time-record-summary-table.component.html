@@ -1,145 +1,147 @@
-<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" [ngxsFormClearOnDestroy]="true" ngxsForm="workingTimeRecord.summaryForm">
-	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
-		<ng-container matColumnDef="index">
-			<th mat-header-cell *matHeaderCellDef>Lp</th>
-			<td mat-cell *matCellDef="let record; let i = index">
-				{{ i + 1 }}
-			</td>
-		</ng-container>
+<div class="table-container">
+	<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" [ngxsFormClearOnDestroy]="true" ngxsForm="workingTimeRecord.summaryForm">
+		<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
+			<ng-container matColumnDef="index">
+				<th mat-header-cell *matHeaderCellDef>Lp</th>
+				<td mat-cell *matCellDef="let record; let i = index">
+					{{ i + 1 }}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="fullName">
-			<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
-			<td mat-cell *matCellDef="let record">{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}</td>
-		</ng-container>
+			<ng-container matColumnDef="fullName">
+				<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+				<td mat-cell *matCellDef="let record">{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}</td>
+			</ng-container>
 
-		<ng-container matColumnDef="rate">
-			<th mat-header-cell *matHeaderCellDef>Stawka</th>
-			<td mat-cell *matCellDef="let record">
-				{{ record?.employee?.baseSalary | currency: 'PLN' }}
-			</td>
-		</ng-container>
+			<ng-container matColumnDef="rate">
+				<th mat-header-cell *matHeaderCellDef>Stawka</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.employee?.baseSalary | currency: 'PLN' }}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="bonusPercentage">
-			<th mat-header-cell *matHeaderCellDef>Premia</th>
-			<td mat-cell *matCellDef="let record">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} %</td>
-		</ng-container>
+			<ng-container matColumnDef="bonusPercentage">
+				<th mat-header-cell *matHeaderCellDef>Premia</th>
+				<td mat-cell *matCellDef="let record">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} %</td>
+			</ng-container>
 
-		<ng-container matColumnDef="gross">
-			<th mat-header-cell *matHeaderCellDef>Brutto</th>
-			<td mat-cell *matCellDef="let record">
-				{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}
-			</td>
-		</ng-container>
+			<ng-container matColumnDef="gross">
+				<th mat-header-cell *matHeaderCellDef>Brutto</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="bonus">
-			<th mat-header-cell *matHeaderCellDef>Premia</th>
-			<td mat-cell *matCellDef="let record">
-				{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}
-			</td>
-		</ng-container>
+			<ng-container matColumnDef="bonus">
+				<th mat-header-cell *matHeaderCellDef>Premia</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="overtimes">
-			<th mat-header-cell *matHeaderCellDef>Nadgodziny</th>
-			<td mat-cell *matCellDef="let record">
-				{{
-					record?.salaryInformation?.grossSumBase50PercentageSalary + record?.salaryInformation?.grossSumBase100PercentageSalary
-						| currency: 'PLN'
-				}}
-			</td>
-		</ng-container>
+			<ng-container matColumnDef="overtimes">
+				<th mat-header-cell *matHeaderCellDef>Nadgodziny</th>
+				<td mat-cell *matCellDef="let record">
+					{{
+						record?.salaryInformation?.grossSumBase50PercentageSalary +
+							record?.salaryInformation?.grossSumBase100PercentageSalary | currency: 'PLN'
+					}}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="saturdays">
-			<th mat-header-cell *matHeaderCellDef>Soboty</th>
-			<td mat-cell *matCellDef="let record">
-				{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}
-			</td>
-		</ng-container>
+			<ng-container matColumnDef="saturdays">
+				<th mat-header-cell *matHeaderCellDef>Soboty</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="night">
-			<th mat-header-cell *matHeaderCellDef>Nocka</th>
-			<td mat-cell *matCellDef="let record; let i = index">{{ record?.salaryInformation?.nightBaseSalary | currency: 'PLN' }}</td>
-		</ng-container>
+			<ng-container matColumnDef="night">
+				<th mat-header-cell *matHeaderCellDef>Nocka</th>
+				<td mat-cell *matCellDef="let record; let i = index">{{ record?.salaryInformation?.nightBaseSalary | currency: 'PLN' }}</td>
+			</ng-container>
 
-		<ng-container matColumnDef="nightHours">
-			<th mat-header-cell *matHeaderCellDef>Nocka [h]</th>
-			<td mat-cell *matCellDef="let record">
-				{{ record?.salaryInformation?.nightWorkedHours | number: '1.1-1' }}
-			</td>
-		</ng-container>
+			<ng-container matColumnDef="nightHours">
+				<th mat-header-cell *matHeaderCellDef>Nocka [h]</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.salaryInformation?.nightWorkedHours | number: '1.1-1' }}
+				</td>
+			</ng-container>
 
-		<ng-container matColumnDef="holiday">
-			<th mat-header-cell *matHeaderCellDef>Urlop</th>
-			<td mat-cell *matCellDef="let record">
-				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
-					<mat-form-field appearance="outline" class="number-input">
-						<input type="number" min="0" matInput formControlName="holidaySalary" />
-					</mat-form-field>
+			<ng-container matColumnDef="holiday">
+				<th mat-header-cell *matHeaderCellDef>Urlop</th>
+				<td mat-cell *matCellDef="let record">
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" matInput formControlName="holidaySalary" />
+						</mat-form-field>
+					</ng-template>
+					<ng-template #readOnlyMode>
+						{{ record?.salaryInformation?.holidaySalary | currency: 'PLN' }}
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="sickness">
+				<th mat-header-cell *matHeaderCellDef>Chorobowe</th>
+				<td mat-cell *matCellDef="let record">
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" matInput formControlName="sicknessSalary" />
+						</mat-form-field>
+					</ng-template>
+					<ng-template #readOnlyMode>
+						{{ record?.salaryInformation?.sicknessSalary | currency: 'PLN' }}
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="additional">
+				<th mat-header-cell *matHeaderCellDef>Dodatkowe</th>
+				<td mat-cell *matCellDef="let record">
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" matInput formControlName="additionalSalary" />
+						</mat-form-field>
+					</ng-template>
+					<ng-template #readOnlyMode>
+						{{ record?.salaryInformation?.additionalSalary | currency: 'PLN' }}
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="sum">
+				<th mat-header-cell *matHeaderCellDef>Suma</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.salaryInformation?.finalSumSalary | currency: 'PLN' }}
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef></th>
+				<td mat-cell *matCellDef="let record">
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="notEditing">
+						<button mat-icon-button type="submit" matTooltip="Zapisz">
+							<mat-icon>save</mat-icon>
+						</button>
+						<button mat-icon-button (click)="cancelEditMode()" matTooltip="Anuluj">
+							<mat-icon>cancel</mat-icon>
+						</button>
+					</ng-template>
+					<ng-template #notEditing>
+						<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
+							<mat-icon>edit</mat-icon>
+						</button>
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+			<tr mat-row *matRowDef="let record; columns: columnsToDisplay">
+				<ng-template [ngIf]="isRowEditing(record)">
+					<input style="display: none" type="number" matInput formControlName="employeeId" />
 				</ng-template>
-				<ng-template #readOnlyMode>
-					{{ record?.salaryInformation?.holidaySalary | currency: 'PLN' }}
-				</ng-template>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="sickness">
-			<th mat-header-cell *matHeaderCellDef>Chorobowe</th>
-			<td mat-cell *matCellDef="let record">
-				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
-					<mat-form-field appearance="outline" class="number-input">
-						<input type="number" min="0" matInput formControlName="sicknessSalary" />
-					</mat-form-field>
-				</ng-template>
-				<ng-template #readOnlyMode>
-					{{ record?.salaryInformation?.sicknessSalary | currency: 'PLN' }}
-				</ng-template>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="additional">
-			<th mat-header-cell *matHeaderCellDef>Dodatkowe</th>
-			<td mat-cell *matCellDef="let record">
-				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
-					<mat-form-field appearance="outline" class="number-input">
-						<input type="number" min="0" matInput formControlName="additionalSalary" />
-					</mat-form-field>
-				</ng-template>
-				<ng-template #readOnlyMode>
-					{{ record?.salaryInformation?.additionalSalary | currency: 'PLN' }}
-				</ng-template>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="sum">
-			<th mat-header-cell *matHeaderCellDef>Suma</th>
-			<td mat-cell *matCellDef="let record">
-				{{ record?.salaryInformation?.finalSumSalary | currency: 'PLN' }}
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="actions">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td mat-cell *matCellDef="let record">
-				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="notEditing">
-					<button mat-icon-button type="submit" matTooltip="Zapisz">
-						<mat-icon>save</mat-icon>
-					</button>
-					<button mat-icon-button (click)="cancelEditMode()" matTooltip="Anuluj">
-						<mat-icon>cancel</mat-icon>
-					</button>
-				</ng-template>
-				<ng-template #notEditing>
-					<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
-						<mat-icon>edit</mat-icon>
-					</button>
-				</ng-template>
-			</td>
-		</ng-container>
-
-		<tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-		<tr mat-row *matRowDef="let record; columns: columnsToDisplay">
-			<ng-template [ngIf]="isRowEditing(record)">
-				<input style="display: none" type="number" matInput formControlName="employeeId" />
-			</ng-template>
-		</tr>
-	</table>
-</form>
+			</tr>
+		</table>
+	</form>
+</div>

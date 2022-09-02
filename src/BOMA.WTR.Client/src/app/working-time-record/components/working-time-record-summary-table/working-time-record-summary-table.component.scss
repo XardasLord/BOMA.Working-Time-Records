@@ -1,5 +1,11 @@
 @import '../../../../assets/scss/variabless.scss';
 
+.container {
+	height: 80vh;
+	max-width: 100%;
+	overflow: auto;
+}
+
 .mat-header-cell,
 .mat-cell {
 	text-align: center;
