@@ -16,9 +16,13 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "eslint:recommended"
       ],
       "rules": {
+        "indent": ["warn", "tab"],
+        "no-unused-vars": "off",
+        "no-undef": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {
