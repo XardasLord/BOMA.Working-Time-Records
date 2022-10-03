@@ -1,4 +1,4 @@
-<div class="table-container">
+<div id="print-content" class="table-container">
 	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackRecord">
 		<ng-container matColumnDef="actions">
 			<th mat-header-cell *matHeaderCellDef></th>
@@ -135,3 +135,7 @@
 		<tr mat-footer-row *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
 	</table>
 </div>
+
+<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" (click)="onPrint('print-content')">
+	<mat-icon>print</mat-icon>
+</button>

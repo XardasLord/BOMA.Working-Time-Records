@@ -39,3 +39,9 @@ body {
 .mat-cell > .missing-record-type .mat-icon {
 	color: $warning-color;
 }
+
+button.print-table {
+	position: fixed;
+	bottom: 40px;
+	right: 40px;
+}

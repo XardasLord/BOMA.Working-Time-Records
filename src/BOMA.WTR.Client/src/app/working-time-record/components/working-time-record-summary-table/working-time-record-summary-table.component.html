@@ -1,4 +1,4 @@
-<div class="table-container">
+<div id="print-content" class="table-container">
 	<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" [ngxsFormClearOnDestroy]="true" ngxsForm="workingTimeRecord.summaryForm">
 		<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
 			<ng-container matColumnDef="index">
@@ -145,3 +145,7 @@
 		</table>
 	</form>
 </div>
+
+<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" (click)="onPrint('print-content')">
+	<mat-icon>print</mat-icon>
+</button>
