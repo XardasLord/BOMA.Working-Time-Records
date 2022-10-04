@@ -4,8 +4,9 @@ import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
-import GetAll = WorkingTimeRecord.GetAll;
 import { map } from 'rxjs/operators';
+import GetAll = WorkingTimeRecord.GetAll;
+import PrintData = WorkingTimeRecord.PrintData;
 
 @Component({
 	selector: 'app-working-time-record-report-hours-table',
@@ -45,5 +46,9 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 						.reduce((acc, obj) => acc + obj, 0) / 3
 			)
 		);
+	}
+
+	onPrint(divIdName: string): void {
+		this.store.dispatch(new PrintData(divIdName));
 	}
 }

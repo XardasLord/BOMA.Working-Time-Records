@@ -43,8 +43,14 @@ public class AggregateWorkingTimeRecordHistoriesJob
             if (currentEmployee is null)
             {
                 var spec = new EmployeeByRcpIdSpec(model.Employee.RcpId);
+
+                if (await _employeeRepository.CountAsync(spec, cancellationToken) > 1)
+                {
+                    throw new InvalidOperationException($"Employee with RCP ID = {model.Employee.RcpId} is not unique. There are more than one entry with this RCP ID in database.");
+                }
+                
                 currentEmployee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken)
-                    ?? throw new NotFoundException($"Employee with ID = {model.Employee.RcpId} was not found");
+                    ?? throw new NotFoundException($"Employee with RCP ID = {model.Employee.RcpId} was not found");
                     
                 employeesCache.Add(currentEmployee);
             }

@@ -6,15 +6,21 @@ html,
 body {
 	height: 100%;
 }
+
 body {
 	margin: 0;
 	font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
+.table-container {
+	height: 80vh;
+	max-width: 100%;
+	overflow: auto;
+}
+
 .mat-table {
 	width: 100%;
 	border-radius: 10px 10px 0px 0px;
-	overflow: hidden !important;
 }
 
 .mat-dialog-actions {
@@ -32,4 +38,10 @@ body {
 
 .mat-cell > .missing-record-type .mat-icon {
 	color: $warning-color;
+}
+
+button.print-table {
+	position: fixed;
+	bottom: 40px;
+	right: 40px;
 }

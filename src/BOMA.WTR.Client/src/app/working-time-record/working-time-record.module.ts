@@ -20,7 +20,7 @@ import { WorkingTimeRecordReportHoursTableComponent } from './components/working
 		WorkingTimeRecordFiltersComponent,
 		WorkingTimeRecordDetailedTableComponent,
 		WorkingTimeRecordSummaryTableComponent,
-  WorkingTimeRecordReportHoursTableComponent
+		WorkingTimeRecordReportHoursTableComponent
 	],
 	imports: [SharedModule, WorkingTimeRecordRoutingModule, NgxsModule.forFeature([WorkingTimeRecordState]), NgxsFormPluginModule],
 	providers: [{ provide: IWorkingTimeRecordService, useClass: WorkingTimeRecordService }]

@@ -1,15 +1,18 @@
 <mat-sidenav-container class="sidenav-container">
 	<mat-sidenav
-		#drawer
+		#sidenav
 		class="sidenav"
 		fixedInViewport
 		[attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
 		[mode]="(isHandset$ | async) ? 'over' : 'side'"
 		[opened]="(isHandset$ | async) === false"
 	>
-		<mat-toolbar>BOMA</mat-toolbar>
+		<mat-toolbar>
+			BOMA&nbsp;&nbsp;
+			<span class="app-version">(v.{{ appVersion }})</span>
+		</mat-toolbar>
 		<mat-nav-list>
-			<mat-list-item routerLink="/employees" routerLinkActive="active-route" *ngIf="!managerMode">
+			<mat-list-item routerLink="/employees" routerLinkActive="active-route">
 				<mat-icon class="material-icons-outlined" matListIcon>person</mat-icon>
 				<span matLine>Pracownicy</span>
 			</mat-list-item>
@@ -21,7 +24,7 @@
 	</mat-sidenav>
 	<mat-sidenav-content>
 		<mat-toolbar color="primary">
-			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button>
 			<span>BOMA - System Ewidencji Czasu Pracy</span>

@@ -10,8 +10,7 @@ import { environment } from '../../../../../environments/environment';
 	styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent {
-	managerMode = environment.managerMode;
-
+	appVersion: string = environment.appVersion;
 	isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
 		map((result) => result.matches),
 		shareReplay()

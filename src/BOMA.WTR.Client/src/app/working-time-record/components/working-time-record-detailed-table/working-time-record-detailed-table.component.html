@@ -1,281 +1,295 @@
-<form [formGroup]="detailedHoursForm" (ngSubmit)="onFormSubmit()">
-	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackDetailedRecord">
-		<ng-container matColumnDef="actions">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 6 === 0 ? '6' : null"
-				[style.display]="i % 6 ? 'none' : null"
-			>
-				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="notEditing">
-					<button mat-icon-button type="submit" matTooltip="Zapisz">
-						<mat-icon>save</mat-icon>
-					</button>
-					<button mat-icon-button (click)="cancelEditMode()" matTooltip="Anuluj">
-						<mat-icon>cancel</mat-icon>
-					</button>
+<div id="print-content" class="table-container">
+	<form [formGroup]="detailedHoursForm" (ngSubmit)="onFormSubmit()">
+		<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackDetailedRecord">
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef></th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 6 === 0 ? '6' : null"
+					[style.display]="i % 6 ? 'none' : null"
+				>
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="notEditing">
+						<button mat-icon-button type="submit" matTooltip="Zapisz">
+							<mat-icon>save</mat-icon>
+						</button>
+						<button mat-icon-button (click)="cancelEditMode()" matTooltip="Anuluj">
+							<mat-icon>cancel</mat-icon>
+						</button>
+					</ng-template>
+					<ng-template #notEditing>
+						<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
+							<mat-icon>edit</mat-icon>
+						</button>
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="index">
+				<th mat-header-cell *matHeaderCellDef>Lp</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 6 === 0 ? '6' : null"
+					[style.display]="i % 6 ? 'none' : null"
+				>
+					{{ i / 6 + 1 }}
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="fullName">
+				<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 6 === 0 ? '6' : null"
+					[style.display]="i % 6 ? 'none' : null"
+				>
+					{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="rate">
+				<th mat-header-cell *matHeaderCellDef>Stawka</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'empty-value': i % 6 === 0 || i % 6 === 5,
+						'base-rate': i % 6 === 1,
+						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
+					}"
+				>
+					<ng-container *ngIf="i % 6 === 0"></ng-container>
+					<ng-container *ngIf="i % 6 === 1">{{ record?.employee?.baseSalary | currency: 'PLN' }}</ng-container>
+					<ng-container *ngIf="i % 6 === 2">{{
+						record?.salaryInformation?.base50PercentageSalary | currency: 'PLN'
+					}}</ng-container>
+					<ng-container *ngIf="i % 6 === 3">{{
+						record?.salaryInformation?.base100PercentageSalary | currency: 'PLN'
+					}}</ng-container>
+					<ng-container *ngIf="i % 6 === 4">{{ record?.salaryInformation?.baseSaturdaySalary | currency: 'PLN' }}</ng-container>
+					<ng-container *ngIf="i % 6 === 5"></ng-container>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="gross">
+				<th mat-header-cell *matHeaderCellDef>Brutto</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'empty-value': i % 6 === 0 || i % 6 === 5,
+						'base-gross': i % 6 === 1,
+						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
+					}"
+				>
+					<span *ngIf="i % 6 === 0"></span>
+					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossBase50PercentageSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.grossBase100PercentageSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.grossBaseSaturdaySalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 5"></span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="bonus">
+				<th mat-header-cell *matHeaderCellDef>Premia</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'percentage-bonus': i % 6 === 0,
+						'base-bonus': i % 6 === 1,
+						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4,
+						'empty-value': i % 6 === 5
+					}"
+				>
+					<span *ngIf="i % 6 === 0">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} % </span>
+					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.bonusBase50PercentageSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusBase100PercentageSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.bonusBaseSaturdaySalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 5"></span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="sumValue">
+				<th mat-header-cell *matHeaderCellDef>Suma duża</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'empty-value': i % 6 === 0 || i % 6 === 5,
+						'default-value': i % 6 === 1,
+						'fifty-percentage-gross-sum': i % 6 === 2,
+						'hundred-percentage-gross-sum': i % 6 === 3,
+						'saturday-gross-sum': i % 6 === 4
+					}"
+				>
+					<span *ngIf="i % 6 === 0"></span>
+					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossSumBaseSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossSumBase50PercentageSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.grossSumBase100PercentageSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 5"></span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="sumBonus">
+				<th mat-header-cell *matHeaderCellDef>Suma premia</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'empty-value': i % 6 === 0 || i % 6 === 1 || i % 6 === 5,
+						'fifty-percentage-bonus-sum': i % 6 === 2,
+						'hundred-percentage-bonus-sum': i % 6 === 3,
+						'saturday-bonus-sum': i % 6 === 4
+					}"
+				>
+					<span *ngIf="i % 6 === 0"></span>
+					<span *ngIf="i % 6 === 1"></span>
+					<span *ngIf="i % 6 === 2"></span>
+					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusSumSalary | currency: 'PLN' }}</span>
+					<span *ngIf="i % 6 === 4"></span>
+					<span *ngIf="i % 6 === 5"></span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="sumHours">
+				<th mat-header-cell *matHeaderCellDef>Suma [h]</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="default-value">
+					<span *ngIf="i % 6 === 0">{{ getWorkingHoursSum(record?.workingTimeRecordsAggregated) }}</span>
+					<span *ngIf="i % 6 === 1">{{ getNormativeHoursSum(record?.workingTimeRecordsAggregated) }}</span>
+					<span *ngIf="i % 6 === 2">{{ get50PercentageHoursSum(record?.workingTimeRecordsAggregated) }}</span>
+					<span *ngIf="i % 6 === 3">{{ get100PercentageHoursSum(record?.workingTimeRecordsAggregated) }}</span>
+					<span *ngIf="i % 6 === 4">{{ getSaturdayHoursSum(record?.workingTimeRecordsAggregated) }}</span>
+					<span *ngIf="i % 6 === 5">{{ getNightHoursSum(record?.workingTimeRecordsAggregated) }}</span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="emptyLabel">
+				<th mat-header-cell *matHeaderCellDef></th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
+						'default-value': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
+					}"
+				>
+					<span *ngIf="i % 6 === 0">Godziny</span>
+					<span *ngIf="i % 6 === 1">Normatywne</span>
+					<span *ngIf="i % 6 === 2">50%</span>
+					<span *ngIf="i % 6 === 3">100%</span>
+					<span *ngIf="i % 6 === 4">Sobota</span>
+					<span *ngIf="i % 6 === 5">Nocka</span>
+				</td>
+			</ng-container>
+
+			<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
+				<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
+						'default-value-hours': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
+					}"
+				>
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<span *ngIf="i % 6 === 0">
+							<mat-form-field appearance="outline" class="number-input">
+								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}" />
+							</mat-form-field>
+						</span>
+						<span
+							*ngIf="i % 6 === 1"
+							[ngClass]="{
+								'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours === 0
+							}"
+							>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours }}</span
+						>
+						<span
+							*ngIf="i % 6 === 2"
+							[ngClass]="{
+								'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours === 0
+							}"
+							>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours }}</span
+						>
+						<span
+							*ngIf="i % 6 === 3"
+							[ngClass]="{
+								'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours === 0
+							}"
+							>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours }}</span
+						>
+						<span *ngIf="i % 6 === 4">
+							<mat-form-field appearance="outline" class="number-input">
+								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}saturday" />
+							</mat-form-field>
+						</span>
+						<span *ngIf="i % 6 === 5">
+							<mat-form-field appearance="outline" class="number-input">
+								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}night" />
+							</mat-form-field>
+						</span>
+					</ng-template>
+
+					<ng-template #readOnlyMode>
+						<span
+							*ngIf="i % 6 === 0"
+							[ngClass]="{
+								'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType
+							}"
+						>
+							{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded | emptyIfZero }}
+							<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
+							<!--							<mat-icon>error</mat-icon>-->
+							<!--						</span>-->
+						</span>
+						<span
+							*ngIf="i % 6 === 1"
+							[ngClass]="{
+								'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours === 0
+							}"
+							>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours }}</span
+						>
+						<span
+							*ngIf="i % 6 === 2"
+							[ngClass]="{
+								'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours === 0
+							}"
+							>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours }}</span
+						>
+						<span
+							*ngIf="i % 6 === 3"
+							[ngClass]="{
+								'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours === 0
+							}"
+							>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours }}</span
+						>
+						<span *ngIf="i % 6 === 4">{{
+							record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero
+						}}</span>
+						<span *ngIf="i % 6 === 5">{{
+							record?.workingTimeRecordsAggregated[+dayNumber - 1]?.nightHours | emptyIfZero
+						}}</span>
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async; sticky: true"></tr>
+			<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async">
+				<ng-template [ngIf]="isRowEditing(record)">
+					<input style="display: none" type="number" matInput formControlName="employeeId" />
 				</ng-template>
-				<ng-template #notEditing>
-					<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
-						<mat-icon>edit</mat-icon>
-					</button>
-				</ng-template>
-			</td>
-		</ng-container>
+			</tr>
+		</table>
+	</form>
+</div>
 
-		<ng-container matColumnDef="index">
-			<th mat-header-cell *matHeaderCellDef>Lp</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 6 === 0 ? '6' : null"
-				[style.display]="i % 6 ? 'none' : null"
-			>
-				{{ i / 6 + 1 }}
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="fullName">
-			<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 6 === 0 ? '6' : null"
-				[style.display]="i % 6 ? 'none' : null"
-			>
-				{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="rate">
-			<th mat-header-cell *matHeaderCellDef>Stawka</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'empty-value': i % 6 === 0 || i % 6 === 5,
-					'base-rate': i % 6 === 1,
-					'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
-				}"
-			>
-				<ng-container *ngIf="i % 6 === 0"></ng-container>
-				<ng-container *ngIf="i % 6 === 1">{{ record?.employee?.baseSalary | currency: 'PLN' }}</ng-container>
-				<ng-container *ngIf="i % 6 === 2">{{ record?.salaryInformation?.base50PercentageSalary | currency: 'PLN' }}</ng-container>
-				<ng-container *ngIf="i % 6 === 3">{{ record?.salaryInformation?.base100PercentageSalary | currency: 'PLN' }}</ng-container>
-				<ng-container *ngIf="i % 6 === 4">{{ record?.salaryInformation?.baseSaturdaySalary | currency: 'PLN' }}</ng-container>
-				<ng-container *ngIf="i % 6 === 5"></ng-container>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="gross">
-			<th mat-header-cell *matHeaderCellDef>Brutto</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'empty-value': i % 6 === 0 || i % 6 === 5,
-					'base-gross': i % 6 === 1,
-					'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
-				}"
-			>
-				<span *ngIf="i % 6 === 0"></span>
-				<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossBase50PercentageSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.grossBase100PercentageSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.grossBaseSaturdaySalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 5"></span>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="bonus">
-			<th mat-header-cell *matHeaderCellDef>Premia</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'percentage-bonus': i % 6 === 0,
-					'base-bonus': i % 6 === 1,
-					'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4,
-					'empty-value': i % 6 === 5
-				}"
-			>
-				<span *ngIf="i % 6 === 0">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} % </span>
-				<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.bonusBase50PercentageSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusBase100PercentageSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.bonusBaseSaturdaySalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 5"></span>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="sumValue">
-			<th mat-header-cell *matHeaderCellDef>Suma duża</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'empty-value': i % 6 === 0 || i % 6 === 5,
-					'default-value': i % 6 === 1,
-					'fifty-percentage-gross-sum': i % 6 === 2,
-					'hundred-percentage-gross-sum': i % 6 === 3,
-					'saturday-gross-sum': i % 6 === 4
-				}"
-			>
-				<span *ngIf="i % 6 === 0"></span>
-				<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossSumBaseSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossSumBase50PercentageSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.grossSumBase100PercentageSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 5"></span>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="sumBonus">
-			<th mat-header-cell *matHeaderCellDef>Suma premia</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'empty-value': i % 6 === 0 || i % 6 === 1 || i % 6 === 5,
-					'fifty-percentage-bonus-sum': i % 6 === 2,
-					'hundred-percentage-bonus-sum': i % 6 === 3,
-					'saturday-bonus-sum': i % 6 === 4
-				}"
-			>
-				<span *ngIf="i % 6 === 0"></span>
-				<span *ngIf="i % 6 === 1"></span>
-				<span *ngIf="i % 6 === 2"></span>
-				<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusSumSalary | currency: 'PLN' }}</span>
-				<span *ngIf="i % 6 === 4"></span>
-				<span *ngIf="i % 6 === 5"></span>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="sumHours">
-			<th mat-header-cell *matHeaderCellDef>Suma [h]</th>
-			<td mat-cell *matCellDef="let record; let i = index" class="default-value">
-				<span *ngIf="i % 6 === 0">{{ getWorkingHoursSum(record?.workingTimeRecordsAggregated) }}</span>
-				<span *ngIf="i % 6 === 1">{{ getNormativeHoursSum(record?.workingTimeRecordsAggregated) }}</span>
-				<span *ngIf="i % 6 === 2">{{ get50PercentageHoursSum(record?.workingTimeRecordsAggregated) }}</span>
-				<span *ngIf="i % 6 === 3">{{ get100PercentageHoursSum(record?.workingTimeRecordsAggregated) }}</span>
-				<span *ngIf="i % 6 === 4">{{ getSaturdayHoursSum(record?.workingTimeRecordsAggregated) }}</span>
-				<span *ngIf="i % 6 === 5">{{ getNightHoursSum(record?.workingTimeRecordsAggregated) }}</span>
-			</td>
-		</ng-container>
-
-		<ng-container matColumnDef="emptyLabel">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
-					'default-value': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
-				}"
-			>
-				<span *ngIf="i % 6 === 0">Godziny</span>
-				<span *ngIf="i % 6 === 1">Normatywne</span>
-				<span *ngIf="i % 6 === 2">50%</span>
-				<span *ngIf="i % 6 === 3">100%</span>
-				<span *ngIf="i % 6 === 4">Sobota</span>
-				<span *ngIf="i % 6 === 5">Nocka</span>
-			</td>
-		</ng-container>
-
-		<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
-			<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
-					'default-value-hours': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
-				}"
-			>
-				<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
-					<span *ngIf="i % 6 === 0">
-						<mat-form-field appearance="outline" class="number-input">
-							<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}" />
-						</mat-form-field>
-					</span>
-					<span
-						*ngIf="i % 6 === 1"
-						[ngClass]="{
-							'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours === 0
-						}"
-						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours }}</span
-					>
-					<span
-						*ngIf="i % 6 === 2"
-						[ngClass]="{
-							'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours === 0
-						}"
-						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours }}</span
-					>
-					<span
-						*ngIf="i % 6 === 3"
-						[ngClass]="{
-							'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours === 0
-						}"
-						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours }}</span
-					>
-					<span *ngIf="i % 6 === 4">
-						<mat-form-field appearance="outline" class="number-input">
-							<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}saturday" />
-						</mat-form-field>
-					</span>
-					<span *ngIf="i % 6 === 5">
-						<mat-form-field appearance="outline" class="number-input">
-							<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}night" />
-						</mat-form-field>
-					</span>
-				</ng-template>
-
-				<ng-template #readOnlyMode>
-					<span
-						*ngIf="i % 6 === 0"
-						[ngClass]="{
-							'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType
-						}"
-					>
-						{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded | emptyIfZero }}
-						<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
-						<!--							<mat-icon>error</mat-icon>-->
-						<!--						</span>-->
-					</span>
-					<span
-						*ngIf="i % 6 === 1"
-						[ngClass]="{
-							'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours === 0
-						}"
-						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.baseNormativeHours }}</span
-					>
-					<span
-						*ngIf="i % 6 === 2"
-						[ngClass]="{
-							'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours === 0
-						}"
-						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.fiftyPercentageBonusHours }}</span
-					>
-					<span
-						*ngIf="i % 6 === 3"
-						[ngClass]="{
-							'zero-hours': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours === 0
-						}"
-						>{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.hundredPercentageBonusHours }}</span
-					>
-					<span *ngIf="i % 6 === 4">{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero }}</span>
-					<span *ngIf="i % 6 === 5">{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.nightHours | emptyIfZero }}</span>
-				</ng-template>
-			</td>
-		</ng-container>
-
-		<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async"></tr>
-		<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async">
-			<ng-template [ngIf]="isRowEditing(record)">
-				<input style="display: none" type="number" matInput formControlName="employeeId" />
-			</ng-template>
-		</tr>
-	</table>
-</form>
+<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" (click)="onPrint('print-content')">
+	<mat-icon>print</mat-icon>
+</button>
