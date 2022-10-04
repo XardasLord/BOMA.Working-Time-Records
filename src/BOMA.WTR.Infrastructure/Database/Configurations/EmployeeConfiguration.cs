@@ -41,7 +41,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         {
             bonus.Property(p => p.Value)
                 .HasColumnName("PercentageBonusSalary")
-                .HasDefaultValue(0)
                 .HasColumnType("money");
         });
 
