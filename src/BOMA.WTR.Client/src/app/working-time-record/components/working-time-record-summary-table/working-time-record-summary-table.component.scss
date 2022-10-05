@@ -34,6 +34,12 @@
 	background-color: $summary-table-yellow-color;
 }
 
+tr.mat-footer-row {
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+}
+
 // Inline form inputs
 .mat-form-field ::ng-deep {
 	text-align: center;

@@ -12,6 +12,7 @@ import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import PrintData = WorkingTimeRecord.PrintData;
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-working-time-record-summary-table',
@@ -152,5 +153,11 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 	onPrint(divIdName: string): void {
 		this.store.dispatch(new PrintData(divIdName));
+	}
+
+	getAllFinalSum() {
+		return this.detailedRecords$.pipe(
+			map((results) => results.map((r) => r.salaryInformation).reduce((acc, obj) => acc + obj.finalSumSalary, 0))
+		);
 	}
 }
