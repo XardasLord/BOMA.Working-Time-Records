@@ -135,7 +135,8 @@ export class WorkingTimeRecordState {
 
 	@Action(GetAll)
 	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, _: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		this.progressSpinnerService.showProgressSpinner();
+		// Temporary disabled progress spinner
+		// this.progressSpinnerService.showProgressSpinner();
 
 		return this.workingTimeRecordService.getAll(ctx.getState().query).pipe(
 			take(1),
@@ -144,10 +145,10 @@ export class WorkingTimeRecordState {
 					detailedRecords: response
 				});
 
-				this.progressSpinnerService.hideProgressSpinner();
+				// this.progressSpinnerService.hideProgressSpinner();
 			}),
 			catchError((e) => {
-				this.progressSpinnerService.hideProgressSpinner();
+				// this.progressSpinnerService.hideProgressSpinner();
 				return throwError(e);
 			})
 		);
