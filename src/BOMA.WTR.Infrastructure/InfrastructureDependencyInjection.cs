@@ -43,7 +43,7 @@ public static class InfrastructureDependencyInjection
         services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
         services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
 
-        services.AddGraphQL();
+        // services.AddGraphQL();
         
         services.AddHangfire(config =>
         {
@@ -95,7 +95,7 @@ public static class InfrastructureDependencyInjection
 
         app.UseHealthChecks("/healthz");
 
-        app.UseGraphQL(configuration.GetSection("GraphQL"), env);
+        // app.UseGraphQL(configuration.GetSection("GraphQL"), env);
 
         app.UseHangfireDashboard();
         
