@@ -99,7 +99,8 @@
 				*matCellDef="let record; let i = index"
 				[ngClass]="{
 					'none-value': i % 3 === 0,
-					'default-value-hours': i % 3 === 1 || i % 3 === 2
+					'default-value-hours': i % 3 === 1 || i % 3 === 2,
+					'weekend-day': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isWeekendDay
 				}"
 			>
 				<span
