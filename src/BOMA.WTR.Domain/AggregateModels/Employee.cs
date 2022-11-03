@@ -101,9 +101,9 @@ public class Employee : Entity<int>, IAggregateRoot
 
             record.WorkedHoursRounded = workedHours;
             
-            // We zeros the start and finish times because we don't know that after edit
-            record.StartOriginalAt = record.Date;
-            record.FinishOriginalAt = record.Date;
+            // We zeros the start and finish times because we don't know that after edit - this is temporarily disabled due to business needs
+            // record.StartOriginalAt = record.Date;
+            // record.FinishOriginalAt = record.Date;
 
             record.BaseNormativeHours = calculationDomainService.GetBaseNormativeHours(record.Date, workedHours);
             record.FiftyPercentageBonusHours = calculationDomainService.GetFiftyPercentageBonusHours(record.Date, workedHours);
