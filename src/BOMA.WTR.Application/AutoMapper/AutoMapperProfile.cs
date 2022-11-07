@@ -39,9 +39,9 @@ public class AutoMapperProfile : Profile
 
         CreateMap<EmployeeWorkingTimeRecordViewModel, EmployeeSalaryViewModel>()
             .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary))
-            .ForMember(dest => dest.Base50PercentageSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary * 1.5m))
-            .ForMember(dest => dest.Base100PercentageSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary * 2m))
-            .ForMember(dest => dest.BaseSaturdaySalary, opt => opt.MapFrom(src => src.Employee.BaseSalary * 2m))
+            .ForMember(dest => dest.Base50PercentageSalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 1.5m, 2)))
+            .ForMember(dest => dest.Base100PercentageSalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 2m, 2)))
+            .ForMember(dest => dest.BaseSaturdaySalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 2m, 2)))
 
             .ForMember(dest => dest.GrossBaseSalary,
                 opt => opt.MapFrom(src => CalculateGrossBaseSalary(src)))
@@ -85,42 +85,42 @@ public class AutoMapperProfile : Profile
 
     private static decimal CalculateGrossBaseSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.BaseNormativeHours);
+        return Math.Round(src.Employee.BaseSalary * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.BaseNormativeHours), 2);
     }
 
     private static decimal CalculateGrossBase50PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * 1.5m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.FiftyPercentageBonusHours);
+        return Math.Round(src.Employee.BaseSalary * 1.5m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.FiftyPercentageBonusHours), 2);
     }
 
     private static decimal CalculateGrossBase100PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.HundredPercentageBonusHours);
+        return Math.Round(src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.HundredPercentageBonusHours), 2);
     }
 
     private static decimal CalculateGrossBaseSaturdaySalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.SaturdayHours);
+        return Math.Round(src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.SaturdayHours), 2);
     }
 
     private static decimal CalculateBonusBaseSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return CalculateGrossBaseSalary(src) * src.Employee.SalaryBonusPercentage / 100;
+        return Math.Round(CalculateGrossBaseSalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
     }
 
     private static decimal CalculateBonusBase50PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return CalculateGrossBase50PercentageSalary(src) * src.Employee.SalaryBonusPercentage / 100;
+        return Math.Round(CalculateGrossBase50PercentageSalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
     }
 
     private static decimal CalculateBonusBase100PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return CalculateGrossBase100PercentageSalary(src) * src.Employee.SalaryBonusPercentage / 100;
+        return Math.Round(CalculateGrossBase100PercentageSalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
     }
 
     private static decimal CalculateBonusBaseSaturdaySalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return CalculateGrossBaseSaturdaySalary(src) * src.Employee.SalaryBonusPercentage / 100;
+        return Math.Round(CalculateGrossBaseSaturdaySalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
     }
 
     private static decimal CalculateGrossSumBaseSalary(EmployeeWorkingTimeRecordViewModel src)
@@ -158,7 +158,7 @@ public class AutoMapperProfile : Profile
         var nightWorkedHours = (decimal)CalculateAllNightWorkedHours(src);
         var nightSumSalary =  (decimal)nightFactor * nightWorkedHours;
 
-        return nightSumSalary;
+        return Math.Round(nightSumSalary, 2);
     }
 
     private decimal CalculateFinalSumSalary(EmployeeWorkingTimeRecordViewModel src)

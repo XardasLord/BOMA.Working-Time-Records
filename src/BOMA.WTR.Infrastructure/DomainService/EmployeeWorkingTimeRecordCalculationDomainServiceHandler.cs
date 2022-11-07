@@ -286,7 +286,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonthExcludingBankHolidays();
         var nightFactor = 3010 / workedHoursInMonth * 0.2;
 
-        return nightFactor;
+        return Math.Round(nightFactor, 2);
     }
 
     private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(
