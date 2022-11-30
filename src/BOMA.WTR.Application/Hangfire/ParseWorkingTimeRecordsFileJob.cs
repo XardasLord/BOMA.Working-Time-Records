@@ -52,6 +52,11 @@ public class ParseWorkingTimeRecordsFileJob
                 
                 if (currentEmployee is null)
                 {
+                    if (!rogerFileModel.UserRcpId.HasValue)
+                    {
+                        continue;
+                    }
+                    
                     var spec = new EmployeeByRcpIdSpec(rogerFileModel.UserRcpId!.Value);
                     currentEmployee = await _employeeRepository.FirstOrDefaultAsync(spec, cancellationToken);
                     
