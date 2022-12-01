@@ -529,11 +529,25 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
             WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 3, 6, 0 ,0), 0),
             WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 3, 20, 0 ,0), 0)
         }, 14, 8, 2, 4, 0, 0};
+        
+        // Work on Saturday
         yield return new object[] { new List<WorkingTimeRecord>
         {
             WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 1, 1, 6, 0 ,0), 0),
             WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 1, 1, 14, 0 ,0), 0)
         }, 0, 0, 0, 0, 8, 0};
+        
+        // Started on Friday, finished on Saturday
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 11, 18, 15, 56 ,20), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 11, 19, 2, 4 ,10), 0)
+        }, 10, 8, 0, 2, 0, 4};
+        yield return new object[] { new List<WorkingTimeRecord>
+        {
+            WorkingTimeRecord.Create(RecordEventType.Entry, new DateTime(2022, 11, 25, 15, 51 ,50), 0),
+            WorkingTimeRecord.Create(RecordEventType.Exit, new DateTime(2022, 11, 26, 2, 0 ,30), 0)
+        }, 10, 8, 0, 2, 0, 4};
     }
 
     public static IEnumerable<object[]> HoursCalculationRealExamplesData()

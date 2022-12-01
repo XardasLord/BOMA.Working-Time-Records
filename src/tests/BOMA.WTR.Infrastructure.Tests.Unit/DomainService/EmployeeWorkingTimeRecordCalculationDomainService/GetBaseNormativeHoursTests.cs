@@ -7,7 +7,8 @@ namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRe
 public class GetBaseNormativeHoursTests : TestBase
 {
     private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
-    private DateTime _date;
+    private DateTime _startWorkDate;
+    private DateTime _endWorkDate;
     private double _workedHours;
 
     public GetBaseNormativeHoursTests()
@@ -15,13 +16,14 @@ public class GetBaseNormativeHoursTests : TestBase
         _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService();
     }
 
-    private double Act() => _sut.GetBaseNormativeHours(_date, _workedHours);
+    private double Act() => _sut.GetBaseNormativeHours(_startWorkDate, _endWorkDate, _workedHours);
 
     [Fact]
     public void Saturday_Should_ReturnZero()
     {
         // Arrange
-        _date = new DateTime(2022, 7, 30);
+        _startWorkDate = new DateTime(2022, 7, 30);
+        _endWorkDate = new DateTime(2022, 7, 30);
         _workedHours = 8;
         
         // Act
@@ -36,7 +38,8 @@ public class GetBaseNormativeHoursTests : TestBase
     public void HoursForWeekDay_Should_ReturnProperCalculatedHours(DateTime date, double workedHours, double expectedHours)
     {
         // Arrange
-        _date = date;
+        _startWorkDate = date;
+        _endWorkDate = date;
         _workedHours = workedHours;
         
         // Act

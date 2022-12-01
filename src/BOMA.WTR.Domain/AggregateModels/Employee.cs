@@ -105,9 +105,9 @@ public class Employee : Entity<int>, IAggregateRoot
             // record.StartOriginalAt = record.Date;
             // record.FinishOriginalAt = record.Date;
 
-            record.BaseNormativeHours = calculationDomainService.GetBaseNormativeHours(record.Date, workedHours);
-            record.FiftyPercentageBonusHours = calculationDomainService.GetFiftyPercentageBonusHours(record.Date, workedHours);
-            record.HundredPercentageBonusHours = calculationDomainService.GetHundredPercentageBonusHours(record.Date, workedHours);
+            record.BaseNormativeHours = calculationDomainService.GetBaseNormativeHours(record.Date, record.Date, workedHours);
+            record.FiftyPercentageBonusHours = calculationDomainService.GetFiftyPercentageBonusHours(record.Date, record.Date, workedHours);
+            record.HundredPercentageBonusHours = calculationDomainService.GetHundredPercentageBonusHours(record.Date, record.Date, workedHours);
             record.SaturdayHours = saturdayHours;
             record.NightHours = nightHours;
         });

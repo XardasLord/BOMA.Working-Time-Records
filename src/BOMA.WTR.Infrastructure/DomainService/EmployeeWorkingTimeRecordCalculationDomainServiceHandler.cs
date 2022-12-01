@@ -252,33 +252,36 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         }
     }
 
-    public double GetBaseNormativeHours(DateTime date, double workedHoursRounded)
+    public double GetBaseNormativeHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
     {
-        if (date.DayOfWeek == DayOfWeek.Saturday)
+        if (startWorkDate.DayOfWeek is DayOfWeek.Saturday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
             return 0;
             
         return workedHoursRounded > 8 ? workedHoursRounded + 8 - workedHoursRounded : workedHoursRounded;
     }
 
-    public double GetFiftyPercentageBonusHours(DateTime date, double workedHoursRounded)
+    public double GetFiftyPercentageBonusHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
     {
-        if (date.DayOfWeek == DayOfWeek.Saturday)
+        if (startWorkDate.DayOfWeek is DayOfWeek.Saturday || endWorkDate.DayOfWeek is DayOfWeek.Saturday)
             return 0;
             
         return workedHoursRounded > 8 ? (workedHoursRounded - 8 > 2 ? 2 : workedHoursRounded - 8) : 0;
     }
 
-    public double GetHundredPercentageBonusHours(DateTime date, double workedHoursRounded)
+    public double GetHundredPercentageBonusHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
     {
-        if (date.DayOfWeek == DayOfWeek.Saturday)
+        if (startWorkDate.DayOfWeek is DayOfWeek.Saturday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
             return 0;
-            
+
+        if (startWorkDate.DayOfWeek is DayOfWeek.Friday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
+            return workedHoursRounded > 8 ? workedHoursRounded - 8 : 0;
+
         return workedHoursRounded > 10 ? workedHoursRounded - 10 : 0;
     }
 
-    public double GetSaturdayHours(DateTime date, double workedHoursRounded)
+    public double GetSaturdayHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
     {
-        return date.DayOfWeek == DayOfWeek.Saturday ? workedHoursRounded : 0;
+        return startWorkDate.DayOfWeek is DayOfWeek.Saturday && endWorkDate.DayOfWeek is DayOfWeek.Saturday ? workedHoursRounded : 0;
     }
 
     public double GetNightFactorBonus(int year, int month)
@@ -308,11 +311,11 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             StartOriginalAt = startWorkDateOriginal,
             FinishOriginalAt = endWorkDateOriginal,
             WorkedMinutes = aggregatedMinutesForDayNormalized,
-            WorkedHoursRounded = endWorkDateNormalized.DayOfWeek == DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
-            BaseNormativeHours = GetBaseNormativeHours(endWorkDateNormalized, allWorkedHoursRounded),
-            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(endWorkDateNormalized, allWorkedHoursRounded),
-            HundredPercentageBonusHours = GetHundredPercentageBonusHours(endWorkDateNormalized, allWorkedHoursRounded),
-            SaturdayHours = GetSaturdayHours(endWorkDateNormalized, allWorkedHoursRounded),
+            WorkedHoursRounded = startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
+            BaseNormativeHours = GetBaseNormativeHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
+            FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
+            HundredPercentageBonusHours = GetHundredPercentageBonusHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
+            SaturdayHours = GetSaturdayHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
             NightHours = GetNightHours(),
             IsWeekendDay = startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
             MissingRecordEventType = incorrectRecordEventTypeOrder
@@ -321,7 +324,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         // TODO: Move this logic to domain service
         double GetNightHours()
         {
-            if (endWorkDateNormalized.Date.DayOfWeek == DayOfWeek.Saturday)
+            if (startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday)
                 return 0;
 
             if (startWorkDateNormalized.Hour < 22 && endWorkDateNormalized.Hour > 6 && endWorkDateNormalized.Day > startWorkDateNormalized.Day)
