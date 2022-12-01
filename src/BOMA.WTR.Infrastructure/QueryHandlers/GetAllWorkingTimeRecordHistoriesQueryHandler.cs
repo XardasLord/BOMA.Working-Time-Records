@@ -88,6 +88,7 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
             entry.SalaryInformation.FinalSumSalary += entry.SalaryInformation.HolidaySalary + entry.SalaryInformation.SicknessSalary + entry.SalaryInformation.AdditionalSalary;
             
             entry.WorkingTimeRecordsAggregated.RemoveAll(x => x.Date.Month != query.QueryModel.Month); // Remove all records from different months (the first day of the next month)
+            entry.WorkingTimeRecordsAggregated.ForEach(x => x.IsWeekendDay = x.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday);
         });
         
         return result;
