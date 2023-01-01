@@ -101,8 +101,7 @@
 					[ngClass]="{
 						'percentage-bonus': i % 6 === 0,
 						'base-bonus': i % 6 === 1,
-						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4,
-						'empty-value': i % 6 === 5
+						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4 || i % 6 === 5
 					}"
 				>
 					<span *ngIf="i % 6 === 0">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} % </span>
@@ -110,7 +109,9 @@
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.bonusBase50PercentageSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusBase100PercentageSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.bonusBaseSaturdaySalary | currency: 'PLN' }}</span>
-					<span *ngIf="i % 6 === 5"></span>
+					<span *ngIf="i % 6 === 5">{{
+						record?.salaryInformation?.bonusFromGrossSumSalary10PercentageSalary | currency: 'PLN'
+					}}</span>
 				</td>
 			</ng-container>
 

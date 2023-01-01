@@ -39,6 +39,7 @@ public class EmployeeSalaryViewModel
     public decimal BonusBase50PercentageSalary { get; set; }
     public decimal BonusBase100PercentageSalary { get; set; }
     public decimal BonusBaseSaturdaySalary { get; set; }
+    public decimal BonusFromGrossSumSalary10PercentageSalary { get; set; }
     
     // Gross Sum
     public decimal GrossSumBaseSalary { get; set; }

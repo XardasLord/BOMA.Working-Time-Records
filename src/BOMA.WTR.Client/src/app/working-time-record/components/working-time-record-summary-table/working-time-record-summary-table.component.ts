@@ -35,6 +35,7 @@ export class WorkingTimeRecordSummaryTableComponent {
 		'bonusPercentage',
 		'gross',
 		'bonus',
+		'bonus10Percentage',
 		'overtimes',
 		'saturdays',
 		'night',

@@ -45,6 +45,14 @@
 				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
+			<ng-container matColumnDef="bonus10Percentage">
+				<th mat-header-cell *matHeaderCellDef>10%</th>
+				<td mat-cell *matCellDef="let record">
+					{{ record?.salaryInformation?.bonusFromGrossSumSalary10PercentageSalary | currency: 'PLN' }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
+
 			<ng-container matColumnDef="overtimes">
 				<th mat-header-cell *matHeaderCellDef>Nadgodziny</th>
 				<td mat-cell *matCellDef="let record">
