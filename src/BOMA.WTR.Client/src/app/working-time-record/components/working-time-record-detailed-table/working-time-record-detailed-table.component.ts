@@ -12,7 +12,6 @@ import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-ti
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import GetAll = WorkingTimeRecord.GetAll;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
-import PrintData = WorkingTimeRecord.PrintData;
 
 @Component({
 	selector: 'app-working-time-record-detailed-table',
@@ -405,9 +404,5 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 
 		this.store.dispatch(new UpdateDetailedData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
-	}
-
-	onPrint(divIdName: string): void {
-		this.store.dispatch(new PrintData(divIdName));
 	}
 }

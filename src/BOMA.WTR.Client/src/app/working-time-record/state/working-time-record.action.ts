@@ -47,10 +47,4 @@ export namespace WorkingTimeRecord {
 
 		static readonly type = `${prefix} ${UpdateDetailedData.name}`;
 	}
-
-	export class PrintData {
-		constructor(public divIdName: string) {}
-
-		static readonly type = `${prefix} ${PrintData.name}`;
-	}
 }

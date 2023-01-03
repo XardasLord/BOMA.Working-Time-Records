@@ -9,6 +9,7 @@ import { YearFormatDirective } from './directives/date-picket-year-format.direct
 import { MonthFormatDirective } from './directives/date-picker-month-format.directive';
 import { ProgressSpinnerDialogComponent } from './ui/components/progress-spinner/progress-spinner-dialog.component';
 import { EmptyIfZeroPipe } from './pipes/empty-if-zero.pipe';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
 	declarations: [DebounceDirective, YearFormatDirective, MonthFormatDirective, EmptyIfZeroPipe, ProgressSpinnerDialogComponent],
@@ -20,6 +21,7 @@ import { EmptyIfZeroPipe } from './pipes/empty-if-zero.pipe';
 		HttpClientModule,
 		AppMaterialModule,
 		ToastrModule,
+		NgxPrintModule,
 		DebounceDirective,
 		YearFormatDirective,
 		MonthFormatDirective,

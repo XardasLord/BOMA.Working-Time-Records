@@ -6,7 +6,6 @@ import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-ti
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import { map } from 'rxjs/operators';
 import GetAll = WorkingTimeRecord.GetAll;
-import PrintData = WorkingTimeRecord.PrintData;
 
 @Component({
 	selector: 'app-working-time-record-report-hours-table',
@@ -46,9 +45,5 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 						.reduce((acc, obj) => acc + obj, 0) / 3
 			)
 		);
-	}
-
-	onPrint(divIdName: string): void {
-		this.store.dispatch(new PrintData(divIdName));
 	}
 }

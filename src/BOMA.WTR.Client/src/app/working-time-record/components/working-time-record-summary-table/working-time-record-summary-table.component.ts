@@ -11,7 +11,6 @@ import { nameof } from '../../../shared/helpers/name-of.helper';
 import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time-record-summary-data-form.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
-import PrintData = WorkingTimeRecord.PrintData;
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -150,10 +149,6 @@ export class WorkingTimeRecordSummaryTableComponent {
 
 		this.store.dispatch(new UpdateSummaryData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
-	}
-
-	onPrint(divIdName: string): void {
-		this.store.dispatch(new PrintData(divIdName));
 	}
 
 	getAllFinalSum() {

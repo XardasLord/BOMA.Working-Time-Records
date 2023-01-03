@@ -137,6 +137,6 @@
 	</table>
 </div>
 
-<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" (click)="onPrint('print-content')">
+<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" ngxPrint printSectionId="print-content" [useExistingCss]="true">
 	<mat-icon>print</mat-icon>
 </button>

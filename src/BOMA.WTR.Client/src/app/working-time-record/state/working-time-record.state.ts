@@ -24,7 +24,6 @@ import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-re
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 import ChangeShift = WorkingTimeRecord.ChangeShift;
-import PrintData = WorkingTimeRecord.PrintData;
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -255,29 +254,5 @@ export class WorkingTimeRecordState {
 				return throwError(() => e);
 			})
 		);
-	}
-
-	@Action(PrintData)
-	printData(ctx: StateContext<WorkingTimeRecordStateModel>, action: PrintData): Observable<void> {
-		const printContent = document.getElementById(action.divIdName);
-		const WindowPrt = window.open('', '', 'left=0,top=0,width=1600,height=1200,toolbar=0,scrollbars=0,status=0');
-
-		if (!printContent) {
-			this.toastService.warning(`Nie można znaleźć elementu z ID = ${action.divIdName}`, 'Problem z wydrukiem');
-			return of();
-		}
-
-		if (!WindowPrt) {
-			this.toastService.warning(`Nie można utworzyć elementu do wydruku`, 'Problem z wydrukiem');
-			return of();
-		}
-
-		WindowPrt.document.write(printContent.innerHTML);
-		WindowPrt.document.close();
-		WindowPrt.focus();
-		WindowPrt.print();
-		WindowPrt.close();
-
-		return of();
 	}
 }
