@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
-import { catchError, Observable, of, take, tap, throwError } from 'rxjs';
+import { catchError, Observable, take, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
@@ -134,8 +134,7 @@ export class WorkingTimeRecordState {
 
 	@Action(GetAll)
 	getAll(ctx: StateContext<WorkingTimeRecordStateModel>, _: GetAll): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		// Temporary disabled progress spinner
-		// this.progressSpinnerService.showProgressSpinner();
+		this.progressSpinnerService.showProgressSpinner();
 
 		return this.workingTimeRecordService.getAll(ctx.getState().query).pipe(
 			take(1),
@@ -144,10 +143,10 @@ export class WorkingTimeRecordState {
 					detailedRecords: response
 				});
 
-				// this.progressSpinnerService.hideProgressSpinner();
+				this.progressSpinnerService.hideProgressSpinner();
 			}),
 			catchError((e) => {
-				// this.progressSpinnerService.hideProgressSpinner();
+				this.progressSpinnerService.hideProgressSpinner();
 				return throwError(e);
 			})
 		);

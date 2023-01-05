@@ -1,6 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import {
 	WorkingTimeRecordDetailedDataFormModel,
@@ -19,7 +20,7 @@ import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 	styleUrls: ['./working-time-record-detailed-table.component.scss']
 })
 export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
-	detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable);
+	detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
 	numberOfDays$ = this.store.select(WorkingTimeRecordState.getDaysInMonth);
 	columnsToDisplay$ = this.store.select(WorkingTimeRecordState.getColumnsToDisplay);
 
@@ -131,6 +132,7 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 
 	ngAfterViewInit() {
 		this.store.dispatch(new GetAll());
+		this.detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable);
 	}
 
 	trackDetailedRecord(index: number, element: EmployeeWorkingTimeRecordDetailsModel): number {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { UpdateFormValue } from '@ngxs/form-plugin';
@@ -12,14 +12,15 @@ import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-working-time-record-summary-table',
 	templateUrl: './working-time-record-summary-table.component.html',
 	styleUrls: ['./working-time-record-summary-table.component.scss']
 })
-export class WorkingTimeRecordSummaryTableComponent {
-	detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecords);
+export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
+	detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
 
 	salaryForm: FormGroup;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
@@ -67,6 +68,10 @@ export class WorkingTimeRecordSummaryTableComponent {
 			year: new FormControl<number>(0),
 			month: new FormControl<number>(0)
 		});
+	}
+
+	ngAfterViewInit() {
+		this.detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecords);
 	}
 
 	trackSummaryRecord(index: number, element: EmployeeWorkingTimeRecordDetailsModel): number {
@@ -152,7 +157,7 @@ export class WorkingTimeRecordSummaryTableComponent {
 	}
 
 	getAllFinalSum() {
-		return this.detailedRecords$.pipe(
+		return this.detailedRecords$?.pipe(
 			map((results) => results.map((r) => r.salaryInformation).reduce((acc, obj) => acc + obj.finalSumSalary, 0))
 		);
 	}
