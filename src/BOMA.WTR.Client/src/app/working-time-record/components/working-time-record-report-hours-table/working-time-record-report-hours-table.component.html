@@ -103,12 +103,7 @@
 					'weekend-day': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isWeekendDay
 				}"
 			>
-				<span
-					*ngIf="i % 3 === 0"
-					[ngClass]="{
-						'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType
-					}"
-				>
+				<span *ngIf="i % 3 === 0">
 					{{
 						record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded +
 							record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero

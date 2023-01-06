@@ -90,6 +90,28 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         {
             results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal));
         }
+
+        if (previousEventType == RecordEventType.Entry)
+        {
+            // Employee entries the work but did not finish yet
+            results.Add(new WorkingTimeRecordAggregatedViewModel
+            {
+                Date = previousDateOriginal.Date,
+                StartNormalizedAt = previousDateNormalized,
+                FinishNormalizedAt = null,
+                StartOriginalAt = previousDateOriginal,
+                FinishOriginalAt = null,
+                WorkedMinutes = 0,
+                WorkedHoursRounded = 0,
+                BaseNormativeHours = 0,
+                FiftyPercentageBonusHours = 0,
+                HundredPercentageBonusHours = 0,
+                SaturdayHours = 0,
+                NightHours = 0,
+                IsWeekendDay = previousDateOriginal.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
+                MissingRecordEventType = null
+            });
+        }
         
         // TODO: Merge entries with missing record type data
         foreach (var entryWithMissingRecord in resultWithMissingRecords)

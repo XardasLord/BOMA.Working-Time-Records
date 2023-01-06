@@ -27,7 +27,7 @@ public class EmployeeByRcpIdSpecTests : TestBase
         result.Should().NotBeNull();
         result?.RcpId.Should().Be(TestRcpId);
         result?.Id.Should().Be(TestId);
-        _spec.IncludeExpressions.Should().BeNullOrEmpty();
+        _spec.IncludeExpressions.Should().NotBeEmpty();
     }
 
     private static IEnumerable<Employee> GetTestListOfEmployees() 
