@@ -24,9 +24,9 @@ public class WorkingTimeRecordAggregatedViewModel
     public RecordEventType EventType { get; set; }
     public DateTime Date { get; set; }
     public DateTime StartNormalizedAt { get; set; }
-    public DateTime FinishNormalizedAt { get; set; }
+    public DateTime? FinishNormalizedAt { get; set; }
     public DateTime StartOriginalAt { get; set; }
-    public DateTime FinishOriginalAt { get; set; }
+    public DateTime? FinishOriginalAt { get; set; }
     public double WorkedMinutes { get; set; }
     public double WorkedHoursRounded { get; set; }
     public double BaseNormativeHours { get; set; }
