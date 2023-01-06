@@ -11,7 +11,6 @@ import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
-import GetAll = WorkingTimeRecord.GetAll;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 
 @Component({
@@ -131,7 +130,6 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this.store.dispatch(new GetAll());
 		this.detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecordsNormalizedForTable);
 	}
 
