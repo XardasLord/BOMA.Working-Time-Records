@@ -16,7 +16,7 @@ export interface SalaryInformationModel {
 	bonusBase50PercentageSalary: number;
 	bonusBase100PercentageSalary: number;
 	bonusBaseSaturdaySalary: number;
-	bonusFromGrossSumSalary10PercentageSalary: number;
+	bonusFromGrossSumSalaryCustomPercentageSalary: number;
 
 	// Gross Sum
 	grossSumBaseSalary: number;

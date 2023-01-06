@@ -110,7 +110,7 @@
 					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusBase100PercentageSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.bonusBaseSaturdaySalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 5">{{
-						record?.salaryInformation?.bonusFromGrossSumSalary10PercentageSalary | currency: 'PLN'
+						record?.salaryInformation?.bonusFromGrossSumSalaryCustomPercentageSalary | currency: 'PLN'
 					}}</span>
 				</td>
 			</ng-container>

@@ -60,8 +60,8 @@ public class AutoMapperProfile : Profile
                 opt => opt.MapFrom(src => CalculateBonusBase100PercentageSalary(src)))
             .ForMember(dest => dest.BonusBaseSaturdaySalary,
                 opt => opt.MapFrom(src => CalculateBonusBaseSaturdaySalary(src)))
-            .ForMember(dest => dest.BonusFromGrossSumSalary10PercentageSalary,
-                opt => opt.MapFrom(src => CalculateBonusFromGrossSumSalary10PercentageSalary(src)))
+            .ForMember(dest => dest.BonusFromGrossSumSalaryCustomPercentageSalary,
+                opt => opt.MapFrom(src => CalculateBonusFromGrossSumSalaryCustomPercentageSalary(src)))
             
             .ForMember(dest => dest.GrossSumBaseSalary,
                 opt => opt.MapFrom(src => CalculateGrossSumBaseSalary(src)))
@@ -125,9 +125,14 @@ public class AutoMapperProfile : Profile
         return Math.Round(CalculateGrossBaseSaturdaySalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
     }
 
-    private static decimal CalculateBonusFromGrossSumSalary10PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
+    private static decimal CalculateBonusFromGrossSumSalaryCustomPercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return Math.Round((CalculateGrossBaseSalary(src) + CalculateGrossBase50PercentageSalary(src) + CalculateGrossBase100PercentageSalary(src) + CalculateGrossBaseSaturdaySalary(src)) * 0.1m, 2);
+        // 7% bonus salary
+        return Math.Round((
+            CalculateGrossBaseSalary(src) + 
+            CalculateGrossBase50PercentageSalary(src) + 
+            CalculateGrossBase100PercentageSalary(src) + 
+            CalculateGrossBaseSaturdaySalary(src)) * 0.07m, 2);
     }
 
     private static decimal CalculateGrossSumBaseSalary(EmployeeWorkingTimeRecordViewModel src)
@@ -175,7 +180,7 @@ public class AutoMapperProfile : Profile
                CalculateGrossSumBase100PercentageSalary(src) +
                CalculateGrossSumBaseSaturdaySalary(src) +
                CalculateNightSumSalary(src)+
-               CalculateBonusFromGrossSumSalary10PercentageSalary(src);
+               CalculateBonusFromGrossSumSalaryCustomPercentageSalary(src);
         // src.SalaryInformation.HolidaySalary +
         // src.SalaryInformation.SicknessSalary +
         // src.SalaryInformation.AdditionalSalary;
