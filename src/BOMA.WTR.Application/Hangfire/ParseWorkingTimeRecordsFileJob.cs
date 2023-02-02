@@ -56,6 +56,11 @@ public class ParseWorkingTimeRecordsFileJob
                     {
                         continue;
                     }
+
+                    if (rogerFileModel.DepartmentId!.Value == 0)
+                    {
+                        rogerFileModel.DepartmentId = 9; // Bez grupy
+                    }
                     
                     var spec = new EmployeeByRcpIdSpec(rogerFileModel.UserRcpId!.Value);
                     currentEmployee = await _employeeRepository.FirstOrDefaultAsync(spec, cancellationToken);
@@ -83,7 +88,7 @@ public class ParseWorkingTimeRecordsFileJob
                         rogerFileModel.Time!.Value.Hours, 
                         rogerFileModel.Time.Value.Minutes, 
                         rogerFileModel.Time.Value.Seconds),
-                    rogerFileModel.DepartmentId!.Value));
+                    currentEmployee.DepartmentId));
             }
 
             await _employeeRepository.SaveChangesAsync(cancellationToken);
