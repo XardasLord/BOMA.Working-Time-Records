@@ -19,6 +19,10 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .HasColumnName("Id")
             .ValueGeneratedOnAdd();
 
+        builder.Property(x => x.IsActive)
+            .HasColumnName("IsActive")
+            .HasDefaultValue(true);
+
         builder.OwnsOne(x => x.Name, x =>
         {
             x.Property(p => p.FirstName).HasColumnName("FirstName").HasMaxLength(64).IsRequired();

@@ -8,6 +8,8 @@ namespace BOMA.WTR.Domain.AggregateModels;
 
 public class Employee : Entity<int>, IAggregateRoot
 {
+    private const int InactiveRcpId = 999;
+    
     private Name _name;
     private Money _salary;
     private PercentageBonus _salaryBonusPercentage;
@@ -15,6 +17,7 @@ public class Employee : Entity<int>, IAggregateRoot
     private Department _department;
     private int _departmentId;
     private JobInformation _jobInformation;
+    private bool _isActive;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
     private readonly List<WorkingTimeRecordAggregatedHistory> _workingTimeRecordAggregatedHistories;
 
@@ -42,6 +45,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public Department Department => _department;
     public int DepartmentId => _departmentId;
     public JobInformation JobInformation => _jobInformation;
+    public bool IsActive => _isActive;
     public virtual IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
     public virtual IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> WorkingTimeRecordAggregatedHistories => _workingTimeRecordAggregatedHistories;
 
@@ -140,5 +144,14 @@ public class Employee : Entity<int>, IAggregateRoot
     {
         _workingTimeRecords.Clear();
         _workingTimeRecordAggregatedHistories.Clear();
+    }
+
+    public void Deactivate()
+    {
+        if (!_isActive)
+            throw new InvalidOperationException("Pracownik został już zdeaktywowany.");
+        
+        _isActive = false;
+        _rcpId = InactiveRcpId;
     }
 }
