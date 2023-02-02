@@ -127,12 +127,12 @@ public class AutoMapperProfile : Profile
 
     private static decimal CalculateBonusFromGrossSumSalaryCustomPercentageSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        // 7% bonus salary
+        // 6% bonus salary
         return Math.Round((
             CalculateGrossBaseSalary(src) + 
             CalculateGrossBase50PercentageSalary(src) + 
             CalculateGrossBase100PercentageSalary(src) + 
-            CalculateGrossBaseSaturdaySalary(src)) * 0.07m, 2);
+            CalculateGrossBaseSaturdaySalary(src)) * 0.06m, 2);
     }
 
     private static decimal CalculateGrossSumBaseSalary(EmployeeWorkingTimeRecordViewModel src)
