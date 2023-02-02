@@ -1,4 +1,5 @@
 ﻿using BOMA.WTR.Application.UseCases.Employees.Commands.Add;
+using BOMA.WTR.Application.UseCases.Employees.Commands.Deactivate;
 using BOMA.WTR.Application.UseCases.Employees.Commands.Edit;
 using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsDetailsData;
 using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsSummaryData;
@@ -33,6 +34,15 @@ public class EmployeesController : ApiBaseController
         };
         
         await Mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Deactivate(int id)
+    {
+        await Mediator.Send(new DeactivateEmployeeCommand(id));
 
         return NoContent();
     }

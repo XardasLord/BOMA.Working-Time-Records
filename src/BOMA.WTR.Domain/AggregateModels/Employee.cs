@@ -17,7 +17,7 @@ public class Employee : Entity<int>, IAggregateRoot
     private Department _department;
     private int _departmentId;
     private JobInformation _jobInformation;
-    private bool _isActive;
+    internal bool _isActive;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
     private readonly List<WorkingTimeRecordAggregatedHistory> _workingTimeRecordAggregatedHistories;
 

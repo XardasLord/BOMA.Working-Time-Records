@@ -23,4 +23,8 @@ export class EmployeeService extends IEmployeeService {
 	editEmployee(employeeId: number, employee: EditEmployeeFormModel): Observable<void> {
 		return this.httpClient.put<void>(`${this.apiEndpoint}/employees/${employeeId}`, employee);
 	}
+
+	deactivateEmployee(employeeId: number): Observable<void> {
+		return this.httpClient.delete<void>(`${this.apiEndpoint}/employees/${employeeId}`);
+	}
 }

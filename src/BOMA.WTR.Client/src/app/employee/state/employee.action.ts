@@ -19,4 +19,10 @@ export namespace Employee {
 
 		static readonly type = `${prefix} ${Edit.name}`;
 	}
+
+	export class Deactivate {
+		constructor(public employeeId: number) {}
+
+		static readonly type = `${prefix} ${Deactivate.name}`;
+	}
 }
