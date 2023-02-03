@@ -89,6 +89,8 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
             
             entry.WorkingTimeRecordsAggregated.RemoveAll(x => x.Date.Month != query.QueryModel.Month); // Remove all records from different months (the first day of the next month)
             entry.WorkingTimeRecordsAggregated.ForEach(x => x.IsWeekendDay = x.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday);
+            
+            entry.WorkingTimeRecordsAggregated = entry.WorkingTimeRecordsAggregated.OrderBy(x => x.Date).ToList();
         });
         
         return result;

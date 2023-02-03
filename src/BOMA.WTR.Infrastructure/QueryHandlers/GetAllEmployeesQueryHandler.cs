@@ -21,6 +21,7 @@ public sealed class GetAllEmployeesQueryHandler : IQueryHandler<GetAllEmployeesQ
     {
         var employees = await _dbContext.Employees
             .Include(x => x.Department)
+            .Where(x => x.IsActive)
             .OrderBy(x => x.Name.LastName)
             .ToListAsync(cancellationToken);
 

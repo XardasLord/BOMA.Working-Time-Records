@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
-import { append, patch, updateItem } from '@ngxs/store/operators';
+import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
@@ -14,6 +14,7 @@ import { Employee } from './employee.action';
 import GetAll = Employee.GetAll;
 import Add = Employee.Add;
 import Edit = Employee.Edit;
+import Deactivate = Employee.Deactivate;
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
@@ -123,6 +124,21 @@ export class EmployeeState {
 
 				this.toastService.success(`Pracownik został edytowany`, 'Sukces');
 				this.dialogRef.closeAll();
+			})
+		);
+	}
+
+	@Action(Deactivate)
+	deactivate(ctx: StateContext<EmployeeStateModel>, action: Deactivate): Observable<void> {
+		return this.employeeService.deactivateEmployee(action.employeeId).pipe(
+			tap((_) => {
+				ctx.setState(
+					patch({
+						employees: removeItem<EmployeeModel>((x) => x?.id === action.employeeId)
+					})
+				);
+
+				this.toastService.success(`Pracownik został deaktywowany`, 'Sukces');
 			})
 		);
 	}

@@ -8,4 +8,5 @@ export abstract class IEmployeeService extends RemoteServiceBase {
 	public abstract getAll(): Observable<EmployeeModel[]>;
 	public abstract addEmployee(employee: AddNewEmployeeFormModel): Observable<number>;
 	public abstract editEmployee(employeeId: number, employee: EditEmployeeFormModel): Observable<void>;
+	public abstract deactivateEmployee(employeeId: number): Observable<void>;
 }

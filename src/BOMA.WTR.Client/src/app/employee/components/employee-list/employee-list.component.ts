@@ -8,6 +8,7 @@ import { Modal } from '../../../shared/state/modal.action';
 import GetAll = Employee.GetAll;
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
+import Deactivate = Employee.Deactivate;
 
 @Component({
 	selector: 'app-employee-list',
@@ -41,6 +42,10 @@ export class EmployeeListComponent implements OnInit {
 
 	edit(employee: EmployeeModel) {
 		this.store.dispatch(new OpenEditEmployeeDialog(employee));
+	}
+
+	deactivate(employee: EmployeeModel) {
+		this.store.dispatch(new Deactivate(employee.id));
 	}
 
 	refresh() {
