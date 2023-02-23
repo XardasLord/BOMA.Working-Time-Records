@@ -35,7 +35,6 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 		'bonusPercentage',
 		'gross',
 		'bonus',
-		'bonus10Percentage',
 		'overtimes',
 		'saturdays',
 		'night',
