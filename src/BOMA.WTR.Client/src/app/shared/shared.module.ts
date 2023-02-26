@@ -10,9 +10,10 @@ import { MonthFormatDirective } from './directives/date-picker-month-format.dire
 import { ProgressSpinnerDialogComponent } from './ui/components/progress-spinner/progress-spinner-dialog.component';
 import { EmptyIfZeroPipe } from './pipes/empty-if-zero.pipe';
 import { NgxPrintModule } from 'ngx-print';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
-	declarations: [DebounceDirective, YearFormatDirective, MonthFormatDirective, EmptyIfZeroPipe, ProgressSpinnerDialogComponent],
+	declarations: [DebounceDirective, YearFormatDirective, MonthFormatDirective, EmptyIfZeroPipe, ProgressSpinnerDialogComponent, ConfirmationDialogComponent],
 	imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, AppMaterialModule, ToastrModule.forRoot()],
 	exports: [
 		CommonModule,

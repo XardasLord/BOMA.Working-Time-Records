@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeModel } from '../../shared/models/employee.model';
@@ -15,6 +15,10 @@ import GetAll = Employee.GetAll;
 import Add = Employee.Add;
 import Edit = Employee.Edit;
 import Deactivate = Employee.Deactivate;
+import {
+	ConfirmationDialogComponent,
+	ConfirmationDialogModel
+} from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
@@ -37,7 +41,8 @@ export class EmployeeState {
 		private employeeService: IEmployeeService,
 		private toastService: ToastrService,
 		private progressSpinnerService: IProgressSpinnerService,
-		private dialogRef: MatDialog
+		private dialogRef: MatDialog,
+		private zone: NgZone
 	) {}
 
 	@Selector([EMPLOYEE_STATE_TOKEN])
@@ -129,17 +134,37 @@ export class EmployeeState {
 	}
 
 	@Action(Deactivate)
-	deactivate(ctx: StateContext<EmployeeStateModel>, action: Deactivate): Observable<void> {
-		return this.employeeService.deactivateEmployee(action.employeeId).pipe(
-			tap((_) => {
-				ctx.setState(
-					patch({
-						employees: removeItem<EmployeeModel>((x) => x?.id === action.employeeId)
-					})
-				);
+	deactivate(ctx: StateContext<EmployeeStateModel>, action: Deactivate) {
+		const message = `Czy na pewno chcesz dezaktywować pracownika?`;
 
-				this.toastService.success(`Pracownik został deaktywowany`, 'Sukces');
-			})
-		);
+		const dialogData = new ConfirmationDialogModel('Potwierdzenie dezaktywacji pracownika', message);
+
+		return this.zone
+			.run(() =>
+				this.dialogRef.open(ConfirmationDialogComponent, {
+					maxWidth: '400px',
+					data: dialogData
+				})
+			)
+			.afterClosed()
+			.pipe(
+				switchMap((dialogResultAction) => {
+					if (dialogResultAction === undefined || dialogResultAction === false) {
+						return of({});
+					}
+
+					return this.employeeService.deactivateEmployee(action.employeeId).pipe(
+						tap((_) => {
+							ctx.setState(
+								patch({
+									employees: removeItem<EmployeeModel>((x) => x?.id === action.employeeId)
+								})
+							);
+
+							this.toastService.success(`Pracownik został deaktywowany`, 'Sukces');
+						})
+					);
+				})
+			);
 	}
 }
