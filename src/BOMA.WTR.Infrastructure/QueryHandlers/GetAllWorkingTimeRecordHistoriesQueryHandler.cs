@@ -31,6 +31,7 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
             .Include(x => x.WorkingTimeRecordAggregatedHistories
                 .Where(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
                             w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1)) // We need to include also the first day of new month for last day of month calculations
+            .Where(x => x.IsActive)
             .Where(x => x.WorkingTimeRecordAggregatedHistories
                 .Any(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
                           w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1));
