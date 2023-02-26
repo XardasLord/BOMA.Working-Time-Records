@@ -40,7 +40,12 @@
 			<ng-container matColumnDef="bonus">
 				<th mat-header-cell *matHeaderCellDef>Premia</th>
 				<td mat-cell *matCellDef="let record">
-					{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}
+					{{
+						record?.salaryInformation?.bonusBaseSalary +
+							record?.salaryInformation?.bonusBase50PercentageSalary +
+							record?.salaryInformation?.bonusBase100PercentageSalary +
+							record?.salaryInformation?.bonusBaseSaturdaySalary | currency: 'PLN'
+					}}
 				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
@@ -49,8 +54,8 @@
 				<th mat-header-cell *matHeaderCellDef>Nadgodziny</th>
 				<td mat-cell *matCellDef="let record">
 					{{
-						record?.salaryInformation?.grossSumBase50PercentageSalary +
-							record?.salaryInformation?.grossSumBase100PercentageSalary | currency: 'PLN'
+						record?.salaryInformation?.grossBase50PercentageSalary + record?.salaryInformation?.grossBase100PercentageSalary
+							| currency: 'PLN'
 					}}
 				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
@@ -59,7 +64,7 @@
 			<ng-container matColumnDef="saturdays">
 				<th mat-header-cell *matHeaderCellDef>Soboty</th>
 				<td mat-cell *matCellDef="let record">
-					{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}
+					{{ record?.salaryInformation?.grossBaseSaturdaySalary | currency: 'PLN' }}
 				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
