@@ -7,6 +7,8 @@ namespace BOMA.WTR.Infrastructure.DomainService;
 
 public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkingTimeRecordCalculationDomainService
 {
+    private const int MinSalary = 3490;
+    
     public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
     {
         var results = new List<WorkingTimeRecordAggregatedViewModel>();
@@ -309,7 +311,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
     public double GetNightFactorBonus(int year, int month)
     {
         var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonthExcludingBankHolidays();
-        var nightFactor = 3010 / workedHoursInMonth * 0.2;
+        var nightFactor = MinSalary / workedHoursInMonth * 0.2;
 
         return Math.Round(nightFactor, 2);
     }
