@@ -29,12 +29,10 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
         var databaseQuery = _dbContext.Employees
             .Include(x => x.Department)
             .Include(x => x.WorkingTimeRecordAggregatedHistories
-                .Where(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
-                            w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1)) // We need to include also the first day of new month for last day of month calculations
+                .Where(w => w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month)) // We need to include also the first day of new month for last day of month calculations
             .Where(x => x.IsActive)
             .Where(x => x.WorkingTimeRecordAggregatedHistories
-                .Any(w => (w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month) ||
-                          w.Date.Year == nextMonthYear && w.Date.Month == nextMonth && w.Date.Day == 1));
+                .Any(w => w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month));
         
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
