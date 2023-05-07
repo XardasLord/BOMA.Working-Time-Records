@@ -145,7 +145,7 @@ public class AutoMapperProfile : Profile
 
     private static decimal CalculateBonusSumSalary(EmployeeWorkingTimeRecordViewModel src)
     {
-        return CalculateGrossSumBase50PercentageSalary(src) + CalculateGrossSumBase100PercentageSalary(src) + CalculateGrossSumBaseSaturdaySalary(src);
+        return CalculateGrossBase50PercentageSalary(src) + CalculateGrossBase100PercentageSalary(src) + CalculateGrossBaseSaturdaySalary(src);
     }
 
     private decimal CalculateNightSumSalary(EmployeeWorkingTimeRecordViewModel src)
