@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
-import { catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeModel } from '../../shared/models/employee.model';
@@ -56,15 +56,15 @@ export class EmployeeState {
 
 		return this.employeeService.getAll().pipe(
 			tap((response) => {
-				this.progressSpinnerService.hideProgressSpinner();
-
 				ctx.patchState({
 					employees: response
 				});
 			}),
 			catchError((e) => {
-				this.progressSpinnerService.hideProgressSpinner();
 				return throwError(e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
 			})
 		);
 	}
