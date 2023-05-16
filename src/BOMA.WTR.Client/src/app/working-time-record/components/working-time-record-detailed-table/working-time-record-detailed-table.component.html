@@ -51,15 +51,7 @@
 
 			<ng-container matColumnDef="rate">
 				<th mat-header-cell *matHeaderCellDef>Stawka</th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'empty-value': i % 6 === 0 || i % 6 === 5,
-						'base-rate': i % 6 === 1,
-						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getRateCssClass(i)">
 					<ng-container *ngIf="i % 6 === 0"></ng-container>
 					<ng-container *ngIf="i % 6 === 1">{{ record?.employee?.baseSalary | currency: 'PLN' }}</ng-container>
 					<ng-container *ngIf="i % 6 === 2">{{
@@ -75,15 +67,7 @@
 
 			<ng-container matColumnDef="gross">
 				<th mat-header-cell *matHeaderCellDef>Brutto</th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'empty-value': i % 6 === 0 || i % 6 === 5,
-						'base-gross': i % 6 === 1,
-						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getGrossCssClass(i)">
 					<span *ngIf="i % 6 === 0"></span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossBase50PercentageSalary | currency: 'PLN' }}</span>
@@ -95,15 +79,7 @@
 
 			<ng-container matColumnDef="bonus">
 				<th mat-header-cell *matHeaderCellDef>Premia</th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'percentage-bonus': i % 6 === 0,
-						'base-bonus': i % 6 === 1,
-						'default-value': i % 6 === 2 || i % 6 === 3 || i % 6 === 4 || i % 6 === 5
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getBonusCssClass(i)">
 					<span *ngIf="i % 6 === 0">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} % </span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.bonusBase50PercentageSalary | currency: 'PLN' }}</span>
@@ -115,17 +91,7 @@
 
 			<ng-container matColumnDef="sumValue">
 				<th mat-header-cell *matHeaderCellDef>Suma duża</th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'empty-value': i % 6 === 0 || i % 6 === 5,
-						'default-value': i % 6 === 1,
-						'fifty-percentage-gross-sum': i % 6 === 2,
-						'hundred-percentage-gross-sum': i % 6 === 3,
-						'saturday-gross-sum': i % 6 === 4
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getSumValueCssClass(i)">
 					<span *ngIf="i % 6 === 0"></span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossSumBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossSumBase50PercentageSalary | currency: 'PLN' }}</span>
@@ -137,16 +103,7 @@
 
 			<ng-container matColumnDef="sumBonus">
 				<th mat-header-cell *matHeaderCellDef>Suma premia</th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'empty-value': i % 6 === 0 || i % 6 === 1 || i % 6 === 5,
-						'fifty-percentage-bonus-sum': i % 6 === 2,
-						'hundred-percentage-bonus-sum': i % 6 === 3,
-						'saturday-bonus-sum': i % 6 === 4
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getSumBonusCssClass(i)">
 					<span *ngIf="i % 6 === 0"></span>
 					<span *ngIf="i % 6 === 1"></span>
 					<span *ngIf="i % 6 === 2"></span>
@@ -170,14 +127,7 @@
 
 			<ng-container matColumnDef="emptyLabel">
 				<th mat-header-cell *matHeaderCellDef></th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
-						'default-value': i % 6 === 1 || i % 6 === 2 || i % 6 === 3
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getEmptyLabelCssClass(i)">
 					<span *ngIf="i % 6 === 0">Godziny</span>
 					<span *ngIf="i % 6 === 1">Normatywne</span>
 					<span *ngIf="i % 6 === 2">50%</span>
@@ -189,15 +139,7 @@
 
 			<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
 				<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
-				<td
-					mat-cell
-					*matCellDef="let record; let i = index"
-					[ngClass]="{
-						'none-value': i % 6 === 0 || i % 6 === 4 || i % 6 === 5,
-						'default-value-hours': i % 6 === 1 || i % 6 === 2 || i % 6 === 3,
-						'weekend-day': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isWeekendDay
-					}"
-				>
+				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getDayNumberCssClass(i, +dayNumber, record)">
 					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
 						<span *ngIf="i % 6 === 0">
 							<mat-form-field appearance="outline" class="number-input">
@@ -238,12 +180,11 @@
 					</ng-template>
 
 					<ng-template #readOnlyMode>
-						<span
-							*ngIf="i % 6 === 0"
-							[ngClass]="{
-								'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType
-							}"
-						>
+						<span *ngIf="i % 6 === 0">
+							<!--              // TODO: This should apply to the above span-->
+							<!--              [ngClass]="{-->
+							<!--              'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType-->
+							<!--							}"-->
 							{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded | emptyIfZero }}
 							<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
 							<!--							<mat-icon>error</mat-icon>-->

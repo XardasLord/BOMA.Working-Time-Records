@@ -405,4 +405,66 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 		this.store.dispatch(new UpdateDetailedData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
 	}
+
+	private cssEmptyValueClass = 'empty-value';
+	private cssDefaultValueClass = 'default-value';
+	private cssNoneValueClass = 'none-value';
+
+	getRateCssClass(i: number): string {
+		if (i % 6 === 0 || i % 6 === 5) return this.cssEmptyValueClass;
+		if (i % 6 === 1) return 'base-rate';
+		if (i % 6 === 2 || i % 6 === 3 || i % 6 === 4) return this.cssDefaultValueClass;
+
+		return '';
+	}
+
+	getGrossCssClass(i: number): string {
+		if (i % 6 === 0 || i % 6 === 5) return this.cssEmptyValueClass;
+		if (i % 6 === 1) return 'base-gross';
+		if (i % 6 === 2 || i % 6 === 3 || i % 6 === 4) return this.cssDefaultValueClass;
+
+		return '';
+	}
+
+	getBonusCssClass(i: number): string {
+		if (i % 6 === 0) return 'percentage-bonus';
+		if (i % 6 === 1) return 'base-bonus';
+		if (i % 6 === 2 || i % 6 === 3 || i % 6 === 4 || i % 6 === 5) return this.cssDefaultValueClass;
+
+		return '';
+	}
+
+	getSumValueCssClass(i: number): string {
+		if (i % 6 === 0 || i % 6 === 5) return this.cssEmptyValueClass;
+		if (i % 6 === 1) return this.cssDefaultValueClass;
+		if (i % 6 === 2) return 'fifty-percentage-gross-sum';
+		if (i % 6 === 3) return 'hundred-percentage-gross-sum';
+		if (i % 6 === 4) return 'saturday-gross-sum';
+
+		return '';
+	}
+
+	getSumBonusCssClass(i: number): string {
+		if (i % 6 === 0 || i % 6 === 1 || i % 6 === 5) return this.cssEmptyValueClass;
+		if (i % 6 === 2) return 'fifty-percentage-bonus-sum';
+		if (i % 6 === 3) return 'hundred-percentage-bonus-sum';
+		if (i % 6 === 4) return 'saturday-bonus-sum';
+
+		return '';
+	}
+
+	getEmptyLabelCssClass(i: number): string {
+		if (i % 6 === 0 || i % 6 === 4 || i % 6 === 5) return this.cssNoneValueClass;
+		if (i % 6 === 1 || i % 6 === 2 || i % 6 === 3) return this.cssDefaultValueClass;
+
+		return '';
+	}
+
+	getDayNumberCssClass(i: number, dayNumber: number, record: EmployeeWorkingTimeRecordDetailsModel): string {
+		if (record.workingTimeRecordsAggregated[dayNumber - 1].isWeekendDay) return 'weekend-day';
+		if (i % 6 === 0 || i % 6 === 4 || i % 6 === 5) return this.cssNoneValueClass;
+		if (i % 6 === 1 || i % 6 === 2 || i % 6 === 3) return 'default-value-hours';
+
+		return '';
+	}
 }
