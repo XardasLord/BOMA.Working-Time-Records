@@ -461,7 +461,7 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	}
 
 	getDayNumberCssClass(i: number, dayNumber: number, record: EmployeeWorkingTimeRecordDetailsModel): string {
-		if (record.workingTimeRecordsAggregated[dayNumber - 1].isWeekendDay) return 'weekend-day';
+		if (record?.workingTimeRecordsAggregated[dayNumber - 1]?.isWeekendDay) return 'weekend-day';
 		if (i % 6 === 0 || i % 6 === 4 || i % 6 === 5) return this.cssNoneValueClass;
 		if (i % 6 === 1 || i % 6 === 2 || i % 6 === 3) return 'default-value-hours';
 
