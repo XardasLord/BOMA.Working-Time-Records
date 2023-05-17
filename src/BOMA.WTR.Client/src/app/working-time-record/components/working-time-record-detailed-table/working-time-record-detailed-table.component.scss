@@ -96,6 +96,14 @@ tr.mat-row:nth-child(6n) > .mat-cell {
 	background-color: $weekend-day-color !important;
 }
 
+.mat-cell.too-less-hours {
+	background-color: $too-less-hours-color !important;
+}
+
+.mat-cell.too-much-hours {
+	background-color: $too-much-hours-color !important;
+}
+
 .mat-cell.none-value {
 	background-color: $none-cell-color;
 }

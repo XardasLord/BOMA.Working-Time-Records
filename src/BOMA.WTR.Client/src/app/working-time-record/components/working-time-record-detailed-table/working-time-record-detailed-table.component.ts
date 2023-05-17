@@ -463,9 +463,15 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	getDayNumberCssClass(i: number, dayNumber: number, record: EmployeeWorkingTimeRecordDetailsModel): string[] {
 		const cssClasses: string[] = [];
 
+		const currentRecordDay = record?.workingTimeRecordsAggregated[dayNumber - 1];
+
 		if (i % 6 === 0 || i % 6 === 4 || i % 6 === 5) cssClasses.push(this.cssNoneValueClass);
 		if (i % 6 === 1 || i % 6 === 2 || i % 6 === 3) cssClasses.push('default-value-hours');
-		if (record?.workingTimeRecordsAggregated[dayNumber - 1]?.isWeekendDay) cssClasses.push('weekend-day');
+		if (currentRecordDay?.isWeekendDay) cssClasses.push('weekend-day');
+		if (i % 6 === 0 && currentRecordDay?.workedHoursRounded != 0 && currentRecordDay?.workedHoursRounded > 12)
+			cssClasses.push('too-much-hours');
+		if (i % 6 === 0 && currentRecordDay?.workedHoursRounded != 0 && currentRecordDay?.workedHoursRounded < 8)
+			cssClasses.push('too-less-hours');
 
 		return cssClasses;
 	}
