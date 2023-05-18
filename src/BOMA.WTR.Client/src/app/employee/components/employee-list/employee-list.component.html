@@ -1,7 +1,7 @@
 <div class="table-container">
-	<table mat-table class="mat-elevation-z6" [dataSource]="(employees$ | async)!">
+	<table mat-table matSort class="mat-elevation-z6" [dataSource]="dataSource">
 		<ng-container matColumnDef="rcpId">
-			<th mat-header-cell *matHeaderCellDef>RCP ID</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="rcpId">RCP ID</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.rcpId }}</td>
 		</ng-container>
 
@@ -11,7 +11,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="lastName">
-			<th mat-header-cell *matHeaderCellDef>Nazwisko</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="lastName">Nazwisko</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.lastName }}</td>
 		</ng-container>
 
@@ -31,12 +31,12 @@
 		</ng-container>
 
 		<ng-container matColumnDef="baseSalary">
-			<th mat-header-cell *matHeaderCellDef>Stawka</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="baseSalary">Stawka</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.baseSalary | currency: 'PLN' }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="salaryBonusPercentage">
-			<th mat-header-cell *matHeaderCellDef>Premia</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="salaryBonusPercentage">Premia</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.salaryBonusPercentage / 100 | percent }}</td>
 		</ng-container>
 
