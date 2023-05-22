@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
-import { catchError, Observable, take, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, take, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
@@ -142,12 +142,12 @@ export class WorkingTimeRecordState {
 				ctx.patchState({
 					detailedRecords: response
 				});
-
-				this.progressSpinnerService.hideProgressSpinner();
 			}),
 			catchError((e) => {
-				this.progressSpinnerService.hideProgressSpinner();
 				return throwError(e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
 			})
 		);
 	}
@@ -219,17 +219,17 @@ export class WorkingTimeRecordState {
 
 		return this.workingTimeRecordService.updateSummaryData(action.employeeId, action.updateModel).pipe(
 			tap(() => {
-				this.progressSpinnerService.hideProgressSpinner();
-
 				// This is not needed to update state, because we need to recalculate the sums that API does only
 
 				ctx.dispatch(new GetAll());
 				this.toastService.success('Dane zostały zapisane');
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.progressSpinnerService.hideProgressSpinner();
 				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
 				return throwError(() => e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
 			})
 		);
 	}
@@ -240,17 +240,17 @@ export class WorkingTimeRecordState {
 
 		return this.workingTimeRecordService.updateDetailedData(action.employeeId, action.updateModel).pipe(
 			tap(() => {
-				this.progressSpinnerService.hideProgressSpinner();
-
 				// This is not needed to update state, because we need to recalculate the sums that API does only
 
 				ctx.dispatch(new GetAll());
 				this.toastService.success('Dane zostały zapisane');
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.progressSpinnerService.hideProgressSpinner();
 				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
 				return throwError(() => e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
 			})
 		);
 	}

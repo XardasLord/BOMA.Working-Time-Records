@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { nameof } from '../../../shared/helpers/name-of.helper';
 import { Employee } from '../../state/employee.action';
@@ -9,14 +9,22 @@ import GetAll = Employee.GetAll;
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 import Deactivate = Employee.Deactivate;
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-employee-list',
 	templateUrl: './employee-list.component.html',
 	styleUrls: ['./employee-list.component.scss']
 })
-export class EmployeeListComponent implements OnInit {
+export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
+	@ViewChild(MatSort) sort!: MatSort;
+	dataSource!: MatTableDataSource<EmployeeModel>;
+
 	employees$ = this.store.select(EmployeeState.getEmployees);
+
+	private subscriptions: Subscription = new Subscription();
 
 	columnsToDisplay: string[] = [
 		nameof<EmployeeModel>('rcpId'),
@@ -34,6 +42,19 @@ export class EmployeeListComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.refresh();
+	}
+
+	ngAfterViewInit(): void {
+		this.subscriptions.add(
+			this.employees$.subscribe((data) => {
+				this.dataSource = new MatTableDataSource(data);
+				this.dataSource.sort = this.sort;
+			})
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
 	}
 
 	addEmployee() {
