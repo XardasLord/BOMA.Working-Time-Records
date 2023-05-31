@@ -6,7 +6,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="firstName">
-			<th mat-header-cell *matHeaderCellDef>Imię</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="firstName">Imię</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.firstName }}</td>
 		</ng-container>
 
@@ -16,17 +16,17 @@
 		</ng-container>
 
 		<ng-container matColumnDef="departmentName">
-			<th mat-header-cell *matHeaderCellDef>Dział</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="departmentName">Dział</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.departmentName }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="shiftTypeName">
-			<th mat-header-cell *matHeaderCellDef>Zmiana</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="shiftTypeName">Zmiana</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.shiftTypeName }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="position">
-			<th mat-header-cell *matHeaderCellDef>Stanowisko</th>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="position">Stanowisko</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.position }}</td>
 		</ng-container>
 
