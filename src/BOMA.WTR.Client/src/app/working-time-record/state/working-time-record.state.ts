@@ -24,6 +24,7 @@ import { WorkingTimeRecordSummaryDataFormModel } from '../models/working-time-re
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 import ChangeShift = WorkingTimeRecord.ChangeShift;
+import { EmployeeWorkingTimeRecordAbsentsModel } from '../models/employee-working-time-record-absents.model';
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -92,7 +93,7 @@ export class WorkingTimeRecordState {
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getDetailedRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
-		const result: any = [];
+		const result: EmployeeWorkingTimeRecordDetailsModel[] = [];
 
 		// For table binding with rowspan simplicity
 		state.detailedRecords.map((x) => {
@@ -113,7 +114,7 @@ export class WorkingTimeRecordState {
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getReportHourRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
-		const result: any = [];
+		const result: EmployeeWorkingTimeRecordDetailsModel[] = [];
 
 		// For table binding with rowspan simplicity
 		state.detailedRecords.map((x) => {
@@ -122,6 +123,27 @@ export class WorkingTimeRecordState {
 				salaryInformation: x.salaryInformation,
 				workingTimeRecordsAggregated: x.workingTimeRecordsAggregated,
 				isEditable: x.isEditable
+			};
+
+			for (let i = 0; i < 3; i++) {
+				result.push(model);
+			}
+		});
+
+		return result;
+	}
+
+	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
+	static getReportAbsentEmployeesRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordAbsentsModel[] {
+		const result: EmployeeWorkingTimeRecordAbsentsModel[] = [];
+
+		// For table binding with rowspan simplicity
+		// TODO: Adjust for absent records only - return only employees that were absent
+		state.detailedRecords.map((x) => {
+			const model: EmployeeWorkingTimeRecordAbsentsModel = {
+				employee: x.employee,
+				salaryInformation: x.salaryInformation,
+				workingTimeRecordsAggregated: x.workingTimeRecordsAggregated
 			};
 
 			for (let i = 0; i < 3; i++) {
