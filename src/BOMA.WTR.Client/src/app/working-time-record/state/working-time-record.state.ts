@@ -8,6 +8,7 @@ import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-workin
 import { WorkingTimeRecord } from './working-time-record.action';
 import { IWorkingTimeRecordService } from '../services/working-time-record.service.base';
 import {
+	DefaultColumnsToDisplayForAbsentReportTable,
 	DefaultColumnsToDisplayForDetailedTable,
 	DefaultColumnsToDisplayForReportHoursTable,
 	DefaultInitialDayColumnsToDisplayForDetailedTable,
@@ -25,6 +26,7 @@ import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 import ChangeShift = WorkingTimeRecord.ChangeShift;
 import { EmployeeWorkingTimeRecordAbsentsModel } from '../models/employee-working-time-record-absents.model';
+import { WorkingTimeRecordAbsentAggregatedModel } from '../models/working-time-record-details-aggregated.model';
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -32,6 +34,7 @@ export interface WorkingTimeRecordStateModel {
 	numberOfDays: number;
 	columnsToDisplay: string[];
 	columnsToDisplayForReportHours: string[];
+	columnsToDisplayForAbsentReport: string[];
 	summaryForm: FormStateModel<WorkingTimeRecordSummaryDataFormModel>;
 }
 
@@ -48,6 +51,10 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 		],
 		columnsToDisplayForReportHours: [
 			...DefaultColumnsToDisplayForReportHoursTable,
+			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
+		],
+		columnsToDisplayForAbsentReport: [
+			...DefaultColumnsToDisplayForAbsentReportTable,
 			...DefaultInitialDayColumnsToDisplayForDetailedTable(DefaultQueryModel.year, DefaultQueryModel.month)
 		],
 		summaryForm: DefaultFormStateValue
@@ -89,6 +96,11 @@ export class WorkingTimeRecordState {
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getColumnsToDisplayForReportHours(state: WorkingTimeRecordStateModel): string[] {
 		return state.columnsToDisplayForReportHours;
+	}
+
+	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
+	static getColumnsToDisplayForAbsentReportTable(state: WorkingTimeRecordStateModel): string[] {
+		return state.columnsToDisplayForAbsentReport;
 	}
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
@@ -138,18 +150,30 @@ export class WorkingTimeRecordState {
 		const result: EmployeeWorkingTimeRecordAbsentsModel[] = [];
 
 		// For table binding with rowspan simplicity
-		// TODO: Adjust for absent records only - return only employees that were absent
-		state.detailedRecords.map((x) => {
-			const model: EmployeeWorkingTimeRecordAbsentsModel = {
-				employee: x.employee,
-				salaryInformation: x.salaryInformation,
-				workingTimeRecordsAggregated: x.workingTimeRecordsAggregated
-			};
+		state.detailedRecords
+			.filter((x) => x.workingTimeRecordsAggregated.some((h) => h.isWeekendDay === false && h.workedHoursRounded === 0))
+			.map((x) => {
+				const absentRecords: WorkingTimeRecordAbsentAggregatedModel[] = x.workingTimeRecordsAggregated.map((record) => {
+					const { date, isWeekendDay, missingRecordEventType } = record;
+					const isAbsent = record.workedHoursRounded === 0;
 
-			for (let i = 0; i < 3; i++) {
-				result.push(model);
-			}
-		});
+					return {
+						date,
+						isWeekendDay,
+						missingRecordEventType,
+						isAbsent
+					};
+				});
+				const model: EmployeeWorkingTimeRecordAbsentsModel = {
+					employee: x.employee,
+					salaryInformation: x.salaryInformation,
+					workingTimeRecordsAggregated: absentRecords
+				};
+
+				for (let i = 0; i < 3; i++) {
+					result.push(model);
+				}
+			});
 
 		return result;
 	}

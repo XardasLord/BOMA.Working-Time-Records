@@ -14,3 +14,10 @@ export class WorkingTimeRecordDetailsAggregatedModel {
 	isWeekendDay!: boolean;
 	missingRecordEventType?: number;
 }
+
+export class WorkingTimeRecordAbsentAggregatedModel {
+	date!: Date;
+	isWeekendDay!: boolean;
+	missingRecordEventType?: number;
+	isAbsent!: boolean;
+}
