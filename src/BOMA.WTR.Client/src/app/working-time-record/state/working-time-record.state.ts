@@ -170,9 +170,7 @@ export class WorkingTimeRecordState {
 					workingTimeRecordsAggregated: absentRecords
 				};
 
-				for (let i = 0; i < 3; i++) {
-					result.push(model);
-				}
+				result.push(model);
 			});
 
 		return result;

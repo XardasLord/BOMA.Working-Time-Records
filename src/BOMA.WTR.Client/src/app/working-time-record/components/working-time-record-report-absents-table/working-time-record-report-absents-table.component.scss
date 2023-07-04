@@ -12,23 +12,21 @@ td.mat-footer-cell:first-of-type {
 	padding-left: 0;
 }
 
+.mat-header-cell.mat-column-index {
+	width: 50px;
+}
+
 .mat-column-fullName.mat-cell {
 	width: 220px;
 	text-align: center;
 	font-size: 20px;
 	font-weight: bold;
 	text-transform: uppercase;
-	border-bottom: 2px solid black;
 }
 
 .mat-header-cell.mat-column-shiftType,
-.mat-header-cell.mat-column-position,
-.mat-header-cell.mat-column-sumHours {
+.mat-header-cell.mat-column-position {
 	width: 80px;
-}
-
-.mat-header-cell.mat-column-emptyLabel {
-	width: 100px;
 }
 
 .mat-header-cell.mat-column-1,
@@ -67,10 +65,6 @@ td.mat-footer-cell:first-of-type {
 
 tr.mat-row {
 	height: 24px;
-}
-
-tr.mat-row:nth-child(3n) > .mat-cell {
-	border-bottom: 2px solid black;
 }
 
 .mat-cell.default-value,

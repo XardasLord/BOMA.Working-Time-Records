@@ -41,7 +41,7 @@ export const DefaultColumnsToDisplayForReportHoursTable: string[] = [
 	'emptyLabel'
 ];
 
-export const DefaultColumnsToDisplayForAbsentReportTable: string[] = ['index', 'fullName', 'shiftType', 'position', 'emptyLabel'];
+export const DefaultColumnsToDisplayForAbsentReportTable: string[] = ['index', 'fullName', 'shiftType', 'position'];
 
 export function DefaultInitialDayColumnsToDisplayForDetailedTable(year: number, month: number): string[] {
 	const daysArray: string[] = [];
