@@ -3,6 +3,7 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordAbsentsModel } from '../../models/employee-working-time-record-absents.model';
+import { WorkingTimeRecordAbsentAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 
 @Component({
 	selector: 'app-working-time-record-report-absents-table',
@@ -22,5 +23,9 @@ export class WorkingTimeRecordReportAbsentsTableComponent implements AfterViewIn
 
 	trackRecord(index: number, element: EmployeeWorkingTimeRecordAbsentsModel): number {
 		return element.employee.id;
+	}
+
+	getAbsentDaysSum(records: WorkingTimeRecordAbsentAggregatedModel[]): number {
+		return records.filter((x) => x.isAbsent && !x.isWeekendDay).length;
 	}
 }

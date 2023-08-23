@@ -148,14 +148,17 @@ export class WorkingTimeRecordState {
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getReportAbsentEmployeesRecordsNormalizedForTable(state: WorkingTimeRecordStateModel): EmployeeWorkingTimeRecordAbsentsModel[] {
 		const result: EmployeeWorkingTimeRecordAbsentsModel[] = [];
+		const now = new Date();
 
 		// For table binding with rowspan simplicity
 		state.detailedRecords
-			.filter((x) => x.workingTimeRecordsAggregated.some((h) => h.isWeekendDay === false && h.workedHoursRounded === 0))
+			.filter((x) =>
+				x.workingTimeRecordsAggregated.some((h) => h.workedHoursRounded === 0 && h.isWeekendDay === false && new Date(h.date) < now)
+			)
 			.map((x) => {
 				const absentRecords: WorkingTimeRecordAbsentAggregatedModel[] = x.workingTimeRecordsAggregated.map((record) => {
 					const { date, isWeekendDay, missingRecordEventType } = record;
-					const isAbsent = record.workedHoursRounded === 0;
+					const isAbsent = record.workedHoursRounded === 0 && record.isWeekendDay === false && new Date(record.date) < now;
 
 					return {
 						date,
