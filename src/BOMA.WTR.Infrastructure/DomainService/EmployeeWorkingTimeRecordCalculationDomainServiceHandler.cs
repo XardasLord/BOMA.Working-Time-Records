@@ -7,7 +7,7 @@ namespace BOMA.WTR.Infrastructure.DomainService;
 
 public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkingTimeRecordCalculationDomainService
 {
-    private const int MinSalary = 3490;
+    private const int MinSalary = 3600;
     
     public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
     {
