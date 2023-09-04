@@ -39,7 +39,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             historyEntries.ForEach(x => x.IsEditable = true);
             return historyEntries;
         }
-
+        
         var nextMonth = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Month;
         var nextMonthYear = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Year;
 
@@ -102,7 +102,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         {
             for (var day = 1; day <= DateTime.DaysInMonth(query.QueryModel.Year, query.QueryModel.Month); day++)
             {
-                if (entry.WorkingTimeRecordsAggregated.Any(x => x.Date.Day == day))
+                if (entry.WorkingTimeRecordsAggregated.Any(x => x.Date.Day == day && x.Date.Month == query.QueryModel.Month))
                     continue;
                 
                 // Entry for this day does not exist so we need to add empty one

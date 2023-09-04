@@ -46,3 +46,8 @@ button.print-table {
 	right: 40px;
 	z-index: 100;
 }
+
+#print-content {
+	-webkit-print-color-adjust: exact;
+	color-adjust: exact;
+}

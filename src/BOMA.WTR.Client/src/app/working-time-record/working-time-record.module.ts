@@ -12,6 +12,7 @@ import { WorkingTimeRecordFiltersComponent } from './components/working-time-rec
 import { WorkingTimeRecordDetailedTableComponent } from './components/working-time-record-detailed-table/working-time-record-detailed-table.component';
 import { WorkingTimeRecordSummaryTableComponent } from './components/working-time-record-summary-table/working-time-record-summary-table.component';
 import { WorkingTimeRecordReportHoursTableComponent } from './components/working-time-record-report-hours-table/working-time-record-report-hours-table.component';
+import { WorkingTimeRecordReportAbsentsTableComponent } from './components/working-time-record-report-absents-table/working-time-record-report-absents-table.component';
 
 @NgModule({
 	declarations: [
@@ -20,7 +21,8 @@ import { WorkingTimeRecordReportHoursTableComponent } from './components/working
 		WorkingTimeRecordFiltersComponent,
 		WorkingTimeRecordDetailedTableComponent,
 		WorkingTimeRecordSummaryTableComponent,
-		WorkingTimeRecordReportHoursTableComponent
+		WorkingTimeRecordReportHoursTableComponent,
+		WorkingTimeRecordReportAbsentsTableComponent
 	],
 	imports: [SharedModule, WorkingTimeRecordRoutingModule, NgxsModule.forFeature([WorkingTimeRecordState]), NgxsFormPluginModule],
 	providers: [{ provide: IWorkingTimeRecordService, useClass: WorkingTimeRecordService }]
