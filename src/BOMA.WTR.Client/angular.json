@@ -54,7 +54,8 @@
                 }
               ],
               "outputHashing": "all"
-            },"production-manager": {
+            },
+            "production-manager": {
               "budgets": [
                 {
                   "type": "initial",
@@ -71,6 +72,27 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod-manager.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "production-szef": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod-szef.ts"
                 }
               ],
               "outputHashing": "all"
@@ -94,6 +116,9 @@
             },
             "production-manager": {
               "browserTarget": "BOMA.WTR.Client:build:production-manager"
+            },
+            "production-szef": {
+              "browserTarget": "BOMA.WTR.Client:build:production-szef"
             },
             "development": {
               "browserTarget": "BOMA.WTR.Client:build:development"
