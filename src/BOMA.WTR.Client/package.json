@@ -8,6 +8,7 @@
     "deploy-dev-iis": "ng build --watch --base-href /",
     "deploy-prod-iis": "ng build --watch --base-href / --configuration production",
     "deploy-prod-manager-iis": "ng build --watch --base-href / --configuration production-manager",
+    "deploy-prod-szef-iis": "ng build --watch --base-href / --configuration production-szef",
     "test": "ng test",
     "lint": "ng lint"
   },
