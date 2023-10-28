@@ -7,18 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <COMReference Include="InsERT">
-        <WrapperTool>tlbimp</WrapperTool>
-        <VersionMinor>0</VersionMinor>
-        <VersionMajor>1</VersionMajor>
-        <Guid>f1e91071-83cc-4766-90ba-e038b005ace5</Guid>
-        <Lcid>0</Lcid>
-        <Isolated>false</Isolated>
-        <EmbedInteropTypes>true</EmbedInteropTypes>
-      </COMReference>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
       <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
@@ -46,6 +34,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BOMA.WTR.Application\BOMA.WTR.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Interop.InsERT">
+        <HintPath>DLL\Interop.InsERT.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
