@@ -113,12 +113,12 @@
 					<!--						</span>-->
 				</span>
 				<span *ngIf="i % 3 === 1">{{
-					(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.startOriginalAt | date: 'shortTime') === '00:00'
+					(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.startOriginalAt | date: 'mediumTime') === '00:00:00'
 						? ''
 						: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.startOriginalAt | date: 'shortTime')
 				}}</span>
 				<span *ngIf="i % 3 === 2">{{
-					(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.finishOriginalAt | date: 'shortTime') === '00:00'
+					(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.finishOriginalAt | date: 'mediumTime') === '00:00:00'
 						? ''
 						: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.finishOriginalAt | date: 'shortTime')
 				}}</span>
