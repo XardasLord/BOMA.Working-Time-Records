@@ -252,10 +252,12 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                 // Exists work at 13:55-14:24 then system records it as 14:00
                 if (dateTime.Minute is >= 55 or <= 24)
                 {
+                    var day = dateTime.Minute is >= 55 and <= 59 && dateTime.Hour is 23 ? dateTime.AddDays(1).Day : dateTime.Day;
+                        
                     return new DateTime(
                         dateTime.Year,
                         dateTime.Month,
-                        dateTime.Day,
+                        day,
                         dateTime.Minute is >= 55 and <= 59 ? dateTime.AddHours(1).Hour : dateTime.Hour,
                         0,
                         0);
