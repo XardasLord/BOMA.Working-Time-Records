@@ -63,6 +63,21 @@ public class NormalizeDateTimeTests : TestBase
         result.Should().Be(expectedEntry);
     }
 
+    [Theory]
+    [MemberData(nameof(ThirdShiftExitData))]
+    public void ThirdShiftEntry_Should_ReturnProperCalculatedExitDateTime(DateTime exit, DateTime expectedExit)
+    {
+        // Arrange
+        _recordEventType = RecordEventType.Exit;
+        _date = exit;
+        
+        // Act
+        var result = Act();
+        
+        // Assert
+        result.Should().Be(expectedExit);
+    }
+
     [Fact]
     public void EntryWithNoneSpecifiedEntryType_Should_ReturnTheSameEntryDateTime()
     {
@@ -261,6 +276,14 @@ public class NormalizeDateTimeTests : TestBase
         yield return new object[] { 
             new DateTime(2022, 8, 1, 14, 40, 0),
             new DateTime(2022, 8, 1, 15, 0, 0)
+        };
+    }
+
+    public static IEnumerable<object[]> ThirdShiftExitData()
+    {
+        yield return new object[] { 
+            new DateTime(2022, 8, 1, 23, 59, 0),
+            new DateTime(2022, 8, 2, 0, 0, 0)
         };
     }
 }
