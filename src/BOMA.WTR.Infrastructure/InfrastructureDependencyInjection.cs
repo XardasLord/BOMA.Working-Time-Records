@@ -10,7 +10,7 @@ using BOMA.WTR.Infrastructure.Database.Repositories;
 using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
 using BOMA.WTR.Infrastructure.ErrorHandling.Exceptions;
-using BOMA.WTR.Infrastructure.GraphQL;
+using BOMA.WTR.Infrastructure.InsertGT.Gratyfikant;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
@@ -44,6 +44,7 @@ public static class InfrastructureDependencyInjection
         services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
 
         // services.AddGraphQL();
+        services.AddGratyfikant(configuration);
         
         services.AddHangfire(config =>
         {
