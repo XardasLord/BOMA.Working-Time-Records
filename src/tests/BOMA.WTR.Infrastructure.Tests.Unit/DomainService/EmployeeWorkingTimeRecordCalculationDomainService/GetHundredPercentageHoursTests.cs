@@ -34,6 +34,22 @@ public class GetHundredPercentageBonusHoursTests : TestBase
     }
 
     [Theory]
+    [MemberData(nameof(TestTwoDaysWorkData))]
+    public void ExitsWorkAfterMidnight_Should_ReturnProperCalculatedHours(DateTime startDate, DateTime exitDate, double workedHours, double expectedHours)
+    {
+        // Arrange
+        _startWorkDate = startDate;
+        _endWorkDate = exitDate;
+        _workedHours = workedHours;
+        
+        // Act
+        var result = Act();
+        
+        // Assert
+        result.Should().Be(expectedHours);
+    }
+
+    [Theory]
     [MemberData(nameof(TestWeekData))]
     public void HoursForWeekDay_Should_ReturnProperCalculatedHours(DateTime date, double workedHours, double expectedHours)
     {
@@ -60,5 +76,41 @@ public class GetHundredPercentageBonusHoursTests : TestBase
         yield return new object[] { new DateTime(2022, 8, 5), 12, 2 };
         yield return new object[] { new DateTime(2022, 8, 5), 13, 3 };
         yield return new object[] { new DateTime(2022, 8, 5), 20, 10 };
+    }
+
+    public static IEnumerable<object[]> TestTwoDaysWorkData()
+    {
+        yield return new object[]
+        {
+            // Next day is saturday but exits work at 00:00
+            new DateTime(2023, 10, 27, 14, 0, 0),
+            new DateTime(2023, 10, 28, 0, 0, 0),
+            9,
+            0
+        };
+        yield return new object[]
+        {
+            // Next day is saturday but exits work at 01:00
+            new DateTime(2023, 10, 27, 14, 0, 0),
+            new DateTime(2023, 10, 28, 1, 0, 0),
+            10,
+            1
+        };
+        yield return new object[]
+        {
+            // Next day is saturday but exits work at 02:00
+            new DateTime(2023, 10, 27, 14, 0, 0),
+            new DateTime(2023, 10, 28, 2, 0, 0),
+            11,
+            2
+        };
+        yield return new object[]
+        {
+            // Next day is friday but exits work at 02:00
+            new DateTime(2023, 10, 26, 14, 0, 0),
+            new DateTime(2023, 10, 27, 2, 0, 0),
+            11,
+            1
+        };
     }
 }

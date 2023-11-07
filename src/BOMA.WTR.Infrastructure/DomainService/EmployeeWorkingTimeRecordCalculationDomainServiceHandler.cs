@@ -300,7 +300,13 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             return 0;
 
         if (startWorkDate.DayOfWeek is DayOfWeek.Friday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
-            return workedHoursRounded > 8 ? workedHoursRounded - 8 : 0;
+        {
+            var saturdayStart = startWorkDate.Date.AddDays(1);
+            
+            var saturdayWorkDuration = endWorkDate.Subtract(saturdayStart);
+            
+            return (int)saturdayWorkDuration.TotalHours;
+        }
 
         return workedHoursRounded > 10 ? workedHoursRounded - 10 : 0;
     }
