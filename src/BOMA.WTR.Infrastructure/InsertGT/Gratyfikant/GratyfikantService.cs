@@ -13,7 +13,7 @@ internal class GratyfikantService : IGratyfikantService
         _gratyfikantOptions = gratyfikantSettings.Value;
     }
 
-    public async Task OpenGratyfikant()
+    public async Task SetWorkingHours()
     {
         await RunSTATask<bool>(() =>
         {
@@ -47,7 +47,7 @@ internal class GratyfikantService : IGratyfikantService
             Produkt = InsERT.ProduktEnum.gtaProduktGratyfikant,
             Serwer = _gratyfikantOptions.Server,
             Baza = _gratyfikantOptions.Database,
-            Autentykacja = InsERT.AutentykacjaEnum.gtaAutentykacjaMieszana,
+            Autentykacja = InsERT.AutentykacjaEnum.gtaAutentykacjaWindows,
             Uzytkownik = _gratyfikantOptions.User,
             Operator = _gratyfikantOptions.Operator,
             OperatorHaslo = _gratyfikantOptions.OperatorPassword
