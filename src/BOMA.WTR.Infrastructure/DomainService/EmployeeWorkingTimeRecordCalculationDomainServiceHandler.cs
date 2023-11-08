@@ -323,6 +323,45 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         return Math.Round(nightFactor, 2);
     }
+    
+    // TODO: Move this logic to domain service
+    double GetNightHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
+    {
+        if (startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday)
+            return 0;
+
+        if (startWorkDateNormalized.Hour < 22 && endWorkDateNormalized.Hour > 6 && endWorkDateNormalized.Day > startWorkDateNormalized.Day)
+        {
+            // Worked all night
+            return 8;
+        }
+            
+        if (startWorkDateNormalized.Hour is < 22 and > 6 && endWorkDateNormalized.Hour is > 22 or <= 6)
+        {
+            // Started before 10pm but finished in night hours
+            var nightWorkTimeSpan = endWorkDateNormalized.Subtract(new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0));
+            var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+            return result > 0 ? result : 0;
+        }
+            
+        if (startWorkDateNormalized.Hour is >= 22 or <= 6 && endWorkDateNormalized.Hour <= 6)
+        {
+            // Started work in night hours and finished in night hours
+            var nightWorkTimeSpan = endWorkDateNormalized.Subtract(startWorkDateNormalized);
+            var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+            return result > 0 ? result : 0;
+        }
+            
+        if (startWorkDateNormalized.Hour is >= 22 or < 6 && endWorkDateNormalized.Hour > 6)
+        {
+            // Started work in night hours and finished after 6am
+            var nightWorkTimeSpan =  new DateTime(endWorkDateNormalized.Year, endWorkDateNormalized.Month, endWorkDateNormalized.Day, 6, 0, 0).Subtract(startWorkDateNormalized);
+            var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
+            return result > 0 ? result : 0;
+        }
+
+        return 0;
+    }
 
     private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(
         double aggregatedMinutesForDayNormalized,
@@ -348,48 +387,9 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             FiftyPercentageBonusHours = GetFiftyPercentageBonusHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
             HundredPercentageBonusHours = GetHundredPercentageBonusHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
             SaturdayHours = GetSaturdayHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
-            NightHours = GetNightHours(),
+            NightHours = GetNightHours(startWorkDateNormalized, endWorkDateNormalized),
             IsWeekendDay = startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
             MissingRecordEventType = incorrectRecordEventTypeOrder
         };
-
-        // TODO: Move this logic to domain service
-        double GetNightHours()
-        {
-            if (startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday)
-                return 0;
-
-            if (startWorkDateNormalized.Hour < 22 && endWorkDateNormalized.Hour > 6 && endWorkDateNormalized.Day > startWorkDateNormalized.Day)
-            {
-                // Worked all night
-                return 8;
-            }
-            
-            if (startWorkDateNormalized.Hour is < 22 and > 6 && endWorkDateNormalized.Hour is > 22 or <= 6)
-            {
-                // Started before 10pm but finished in night hours
-                var nightWorkTimeSpan = endWorkDateNormalized.Subtract(new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0));
-                var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
-                return result > 0 ? result : 0;
-            }
-            
-            if (startWorkDateNormalized.Hour is >= 22 or <= 6 && endWorkDateNormalized.Hour <= 6)
-            {
-                // Started work in night hours and finished in night hours
-                var nightWorkTimeSpan = endWorkDateNormalized.Subtract(startWorkDateNormalized);
-                var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
-                return result > 0 ? result : 0;
-            }
-            
-            if (startWorkDateNormalized.Hour is >= 22 or < 6 && endWorkDateNormalized.Hour > 6)
-            {
-                // Started work in night hours and finished after 6am
-                var nightWorkTimeSpan =  new DateTime(endWorkDateNormalized.Year, endWorkDateNormalized.Month, endWorkDateNormalized.Day, 6, 0, 0).Subtract(startWorkDateNormalized);
-                var result = Math.Round(nightWorkTimeSpan.TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
-                return result > 0 ? result : 0;
-            }
-
-            return 0;
-        }
     }
 }
