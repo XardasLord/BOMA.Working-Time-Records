@@ -325,7 +325,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
     }
     
     // TODO: Move this logic to domain service
-    double GetNightHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
+    public double GetNightHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
     {
         if (startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday)
             return 0;
