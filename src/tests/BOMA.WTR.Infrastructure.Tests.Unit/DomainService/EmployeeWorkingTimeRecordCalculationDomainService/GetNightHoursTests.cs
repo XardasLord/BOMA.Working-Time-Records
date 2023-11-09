@@ -55,6 +55,78 @@ public class GetNightHoursTests : TestBase
             new DateTime(2023, 11, 2, 14, 0, 0),
             0
         };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 18, 0, 0),
+            new DateTime(2023, 11, 3, 8, 0, 0),
+            8
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 22, 0, 0),
+            new DateTime(2023, 11, 3, 6, 0, 0),
+            8
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 23, 0, 0),
+            new DateTime(2023, 11, 3, 6, 0, 0),
+            7
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 22, 0, 0),
+            new DateTime(2023, 11, 3, 5, 0, 0),
+            7
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 23, 0, 0),
+            new DateTime(2023, 11, 3, 5, 0, 0),
+            6
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 20, 0, 0),
+            new DateTime(2023, 11, 3, 2, 0, 0),
+            4
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 22, 0, 0),
+            new DateTime(2023, 11, 3, 2, 0, 0),
+            4
+        };
+        // yield return new object[]
+        // {
+        //     new DateTime(2023, 11, 2, 22, 0, 0),
+        //     new DateTime(2023, 11, 2, 23, 0, 0),
+        //     1
+        // };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 2, 23, 0, 0),
+            new DateTime(2023, 11, 3, 8, 0, 0),
+            7
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 3, 2, 0, 0),
+            new DateTime(2023, 11, 3, 8, 0, 0),
+            4
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 3, 5, 0, 0),
+            new DateTime(2023, 11, 3, 8, 0, 0),
+            1
+        };
+        yield return new object[]
+        {
+            new DateTime(2023, 11, 3, 2, 0, 0),
+            new DateTime(2023, 11, 3, 4, 0, 0),
+            2
+        };
     }
 
     public static IEnumerable<object[]> SaturdayData()
