@@ -134,7 +134,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return results;
     }
 
-    // TODO: Need a refactor to make it much simplier to understand
+    // TODO: Need a refactor to make it much simpler to understand
     public DateTime NormalizeDateTime(RecordEventType recordEventType, DateTime dateTime)
     {
         switch (recordEventType)
@@ -324,7 +324,6 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return Math.Round(nightFactor, 2);
     }
     
-    // TODO: Move this logic to domain service
     public double GetNightHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
     {
         if (startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday)

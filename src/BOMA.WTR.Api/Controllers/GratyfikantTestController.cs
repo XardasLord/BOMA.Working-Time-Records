@@ -1,22 +1,16 @@
-using BOMA.WTR.Application.InsertGT.Gratyfikant;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Commands;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BOMA.WTR.Api.Controllers;
 
 public class GratyfikantTestController : ApiBaseController
 {
-    private readonly IGratyfikantService _gratyfikantService;
-
-    public GratyfikantTestController(IGratyfikantService gratyfikantService)
-    {
-        _gratyfikantService = gratyfikantService;
-    }
-    
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetRecordsQueryModel queryModel)
     {
-        await _gratyfikantService.SetWorkingHours();
+        await Mediator.Send(new SetWorkingTimeRecordsInGratyfikantCommand(queryModel));
 
-        return Ok();
+        return NoContent();
     }
 }
