@@ -32,17 +32,17 @@ internal class GratyfikantService : IGratyfikantService
                 .Single(x => x.Employee.LastName == "Bondarieva")
                 .WorkingTimeRecordsAggregated;
 
-            var recordDetails = employeeWorkingRecordDetails.Single(x => x.Date.Day == 27);
-            var startTime = recordDetails.StartNormalizedAt;
-            var endTime = recordDetails.FinishNormalizedAt;
-
-            if (!endTime.HasValue)
-                return false;
-            
-            rcp.DodajOkresPracy(TotalMinutesSinceMidnight(startTime), TotalMinutesSinceMidnight(endTime.Value), GodzinyEnum.gtaGodzinyDzienne);
-
-            rcp.PrzeliczycGodzinyPracy = true;
-            rcp.Zapisz();
+            // var recordDetails = employeeWorkingRecordDetails.Single(x => x.Date.Day == 27);
+            // var startTime = recordDetails.StartNormalizedAt;
+            // var endTime = recordDetails.FinishNormalizedAt;
+            //
+            // if (!endTime.HasValue)
+            //     return false;
+            //
+            // rcp.DodajOkresPracy(TotalMinutesSinceMidnight(startTime), TotalMinutesSinceMidnight(endTime.Value), GodzinyEnum.gtaGodzinyDzienne);
+            //
+            // rcp.PrzeliczycGodzinyPracy = true;
+            // rcp.Zapisz();
 
             return true;
         });

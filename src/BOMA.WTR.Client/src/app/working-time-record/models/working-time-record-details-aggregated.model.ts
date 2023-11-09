@@ -1,9 +1,7 @@
 export class WorkingTimeRecordDetailsAggregatedModel {
 	date!: Date;
-	startNormalizedAt!: Date;
-	finishNormalizedAt!: Date;
-	startOriginalAt!: Date;
-	finishOriginalAt!: Date;
+	workTimePeriodNormalized!: WorkTimePeriod;
+	workTimePeriodOriginal!: WorkTimePeriod;
 	workedMinutes!: number;
 	workedHoursRounded!: number;
 	baseNormativeHours!: number;
@@ -20,4 +18,9 @@ export class WorkingTimeRecordAbsentAggregatedModel {
 	isWeekendDay!: boolean;
 	missingRecordEventType?: number;
 	isAbsent!: boolean;
+}
+
+export interface WorkTimePeriod {
+	from: Date;
+	to: Date | null;
 }

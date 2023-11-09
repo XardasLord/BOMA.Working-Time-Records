@@ -1,4 +1,5 @@
-﻿using BOMA.WTR.Domain.SharedKernel;
+﻿using BOMA.WTR.Domain.AggregateModels.ValueObjects;
+using BOMA.WTR.Domain.SharedKernel;
 
 namespace BOMA.WTR.Domain.AggregateModels.Entities;
 
@@ -7,10 +8,8 @@ public class WorkingTimeRecordAggregatedViewModel
     public static WorkingTimeRecordAggregatedViewModel EmptyForDay(DateTime date) => new()
     {
         Date = date,
-        StartNormalizedAt = date,
-        FinishNormalizedAt = date,
-        StartOriginalAt = date,
-        FinishOriginalAt = date,
+        WorkTimePeriodNormalized = new WorkTimePeriod(date, date),
+        WorkTimePeriodOriginal = new WorkTimePeriod(date, date),
         WorkedMinutes = 0,
         WorkedHoursRounded = 0,
         BaseNormativeHours = 0,
@@ -23,10 +22,8 @@ public class WorkingTimeRecordAggregatedViewModel
     
     public RecordEventType EventType { get; set; }
     public DateTime Date { get; set; }
-    public DateTime StartNormalizedAt { get; set; }
-    public DateTime? FinishNormalizedAt { get; set; }
-    public DateTime StartOriginalAt { get; set; }
-    public DateTime? FinishOriginalAt { get; set; }
+    public WorkTimePeriod WorkTimePeriodNormalized { get; set; }
+    public WorkTimePeriod WorkTimePeriodOriginal { get; set; }
     public double WorkedMinutes { get; set; }
     public double WorkedHoursRounded { get; set; }
     public double BaseNormativeHours { get; set; }
@@ -35,5 +32,9 @@ public class WorkingTimeRecordAggregatedViewModel
     public double SaturdayHours { get; set; }
     public double NightHours { get; set; }
     public bool IsWeekendDay { get; set; }
+    // public DateTime StartDayWorkNormalizedAt { get; set; }
+    // public DateTime FinishDayWorkNormalizedAt { get; set; }
+    // public DateTime StartNightWorkNormalizedAt { get; set; }
+    // public DateTime FinishNightWorkNormalizedAt { get; set; }
     public MissingRecordEventType? MissingRecordEventType { get; set; }
 }

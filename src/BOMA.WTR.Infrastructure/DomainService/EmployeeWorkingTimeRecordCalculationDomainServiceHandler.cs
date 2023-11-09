@@ -1,5 +1,6 @@
 ﻿using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.Extensions;
 using BOMA.WTR.Domain.SharedKernel;
 
@@ -99,10 +100,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             results.Add(new WorkingTimeRecordAggregatedViewModel
             {
                 Date = previousDateOriginal.Date,
-                StartNormalizedAt = previousDateNormalized,
-                FinishNormalizedAt = null,
-                StartOriginalAt = previousDateOriginal,
-                FinishOriginalAt = null,
+                WorkTimePeriodNormalized = new WorkTimePeriod(previousDateNormalized, null),
+                WorkTimePeriodOriginal = new WorkTimePeriod(previousDateOriginal, null),
                 WorkedMinutes = 0,
                 WorkedHoursRounded = 0,
                 BaseNormativeHours = 0,
@@ -376,10 +375,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return new WorkingTimeRecordAggregatedViewModel
         {
             Date = startWorkDateNormalized.Date,
-            StartNormalizedAt = startWorkDateNormalized,
-            FinishNormalizedAt = endWorkDateNormalized,
-            StartOriginalAt = startWorkDateOriginal,
-            FinishOriginalAt = endWorkDateOriginal,
+            WorkTimePeriodOriginal = new WorkTimePeriod(startWorkDateOriginal, endWorkDateOriginal),
+            WorkTimePeriodNormalized = new WorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized),
             WorkedMinutes = aggregatedMinutesForDayNormalized,
             WorkedHoursRounded = startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
             BaseNormativeHours = GetBaseNormativeHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
