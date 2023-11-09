@@ -277,32 +277,32 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         }
     }
 
-    public double GetBaseNormativeHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
+    public double GetBaseNormativeHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded)
     {
-        if (startWorkDate.DayOfWeek is DayOfWeek.Saturday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
+        if (startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday)
             return 0;
             
         return workedHoursRounded > 8 ? workedHoursRounded + 8 - workedHoursRounded : workedHoursRounded;
     }
 
-    public double GetFiftyPercentageBonusHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
+    public double GetFiftyPercentageBonusHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded)
     {
-        if (startWorkDate.DayOfWeek is DayOfWeek.Saturday || endWorkDate.DayOfWeek is DayOfWeek.Saturday)
+        if (startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday || endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday)
             return 0;
             
         return workedHoursRounded > 8 ? (workedHoursRounded - 8 > 2 ? 2 : workedHoursRounded - 8) : 0;
     }
 
-    public double GetHundredPercentageBonusHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
+    public double GetHundredPercentageBonusHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded)
     {
-        if (startWorkDate.DayOfWeek is DayOfWeek.Saturday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
+        if (startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday)
             return 0;
 
-        if (startWorkDate.DayOfWeek is DayOfWeek.Friday && endWorkDate.DayOfWeek is DayOfWeek.Saturday)
+        if (startWorkDateNormalized.DayOfWeek is DayOfWeek.Friday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday)
         {
-            var saturdayStart = startWorkDate.Date.AddDays(1);
+            var saturdayStart = startWorkDateNormalized.Date.AddDays(1);
             
-            var saturdayWorkDuration = endWorkDate.Subtract(saturdayStart);
+            var saturdayWorkDuration = endWorkDateNormalized.Subtract(saturdayStart);
             
             return (int)saturdayWorkDuration.TotalHours;
         }
@@ -310,17 +310,9 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return workedHoursRounded > 10 ? workedHoursRounded - 10 : 0;
     }
 
-    public double GetSaturdayHours(DateTime startWorkDate, DateTime endWorkDate, double workedHoursRounded)
+    public double GetSaturdayHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded)
     {
-        return startWorkDate.DayOfWeek is DayOfWeek.Saturday && endWorkDate.DayOfWeek is DayOfWeek.Saturday ? workedHoursRounded : 0;
-    }
-
-    public double GetNightFactorBonus(int year, int month)
-    {
-        var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonthExcludingBankHolidays();
-        var nightFactor = MinSalary / workedHoursInMonth * 0.2;
-
-        return Math.Round(nightFactor, 2);
+        return startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday ? workedHoursRounded : 0;
     }
     
     public double GetNightHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
@@ -359,6 +351,14 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         }
 
         return 0;
+    }
+
+    public double GetNightFactorBonus(int year, int month)
+    {
+        var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonthExcludingBankHolidays();
+        var nightFactor = MinSalary / workedHoursInMonth * 0.2;
+
+        return Math.Round(nightFactor, 2);
     }
 
     private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(
