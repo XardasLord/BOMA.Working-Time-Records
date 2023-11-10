@@ -1,3 +1,14 @@
 namespace BOMA.WTR.Domain.AggregateModels.ValueObjects;
 
-public record WorkTimePeriod(DateTime From, DateTime? To);
+public class WorkTimePeriod
+{
+    public WorkTimePeriod(DateTime from, DateTime? to)
+    {
+        From = from;
+        To = to;
+    }
+
+    public DateTime From { get; }
+    public DateTime? To { get; }
+    public TimeSpan? Duration => To - From;
+}

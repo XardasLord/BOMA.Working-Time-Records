@@ -361,6 +361,115 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return Math.Round(nightFactor, 2);
     }
 
+    public WorkTimePeriod? GetDayWorkTimePeriod(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
+    {
+        if (startWorkDateNormalized > endWorkDateNormalized)
+            throw new ArgumentException("Czas rozpoczęcia pracy nie może być późniejszy niż czas zakończenia pracy.");
+        
+        var dayStart = new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 6, 0, 0);
+        var dayEnd = new DateTime(dayStart.Year, dayStart.Month, dayStart.Day, 22, 0, 0);
+        
+        // Praca zaczyna się i kończy w ciągu dnia.
+        if (WorkStartsAtDay() && endWorkDateNormalized <= dayEnd && endWorkDateNormalized < dayStart.AddDays(1))
+            return new WorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized);
+        
+        // Praca rozpoczyna się po godzinie 22:00 i kończy przed 6:00 następnego dnia.
+        if (startWorkDateNormalized >= dayEnd && endWorkDateNormalized <= dayStart.AddDays(1))
+            return null;
+
+        // Praca zaczyna się i kończy poza standardowymi godzinami pracy (np. nocą).
+        if ((startWorkDateNormalized < dayStart && endWorkDateNormalized <= dayStart) || (startWorkDateNormalized >= dayEnd && endWorkDateNormalized >= dayEnd))
+            return null;
+
+        // Praca zaczyna się w ciągu dnia i kończy przed 6:00 następnego dnia.
+        if (WorkStartsAtDay() && endWorkDateNormalized > dayEnd && endWorkDateNormalized < dayStart.AddDays(1))
+            return new WorkTimePeriod(startWorkDateNormalized, dayEnd);
+        
+        // Praca zaczyna się w ciągu dnia i kończy po 22:00 tego samego dnia.
+        if (WorkStartsAtDay() && endWorkDateNormalized > dayEnd)
+            return new WorkTimePeriod(startWorkDateNormalized, dayEnd);
+        
+        // Praca zaczyna się przed godziną 6:00 i kończy po 22:00 tego samego dnia.
+        if (startWorkDateNormalized < dayStart && endWorkDateNormalized > dayEnd)
+            return new WorkTimePeriod(dayStart, dayEnd);
+        
+        // Praca zaczyna się przed godziną 6:00, ale kończy później tego samego dnia.
+        if (startWorkDateNormalized < dayStart && endWorkDateNormalized > dayStart && endWorkDateNormalized <= dayEnd)
+            return new WorkTimePeriod(dayStart, endWorkDateNormalized);
+
+        // Praca rozpoczyna się po godzinie 22:00, ale kończy następnego dnia po godzinie 6:00.
+        if (startWorkDateNormalized >= dayEnd && endWorkDateNormalized > dayStart.AddDays(1))
+            return new WorkTimePeriod(dayStart.AddDays(1), endWorkDateNormalized);
+        
+        // Przypadek domyślny - powinien być obsłużony przez powyższe warunki.
+        return new WorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized);
+
+        bool WorkStartsAtDay()
+        {
+            return startWorkDateNormalized >= dayStart && startWorkDateNormalized < dayEnd;
+        }
+    }
+
+    public WorkTimePeriod? GetNightWorkTimePeriod(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized)
+    {
+        if (startWorkDateNormalized > endWorkDateNormalized)
+            throw new ArgumentException("Czas rozpoczęcia pracy nie może być późniejszy niż czas zakończenia pracy.");
+        
+        var nightStart = new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0);
+
+        if (startWorkDateNormalized.Hour >= 22)
+            nightStart = new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0);
+        else if (startWorkDateNormalized.Hour < 6)
+            nightStart = new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0).AddDays(-1);
+        else if (startWorkDateNormalized.Hour >= 6)
+            nightStart = new DateTime(startWorkDateNormalized.Year, startWorkDateNormalized.Month, startWorkDateNormalized.Day, 22, 0, 0);
+        
+        var nightEnd = new DateTime(nightStart.Year, nightStart.Month, nightStart.Day, 6, 0, 0).AddDays(1);
+
+        // Praca zaczyna się i kończy w ciągu nocy.
+        if (WorkStartsAtNight() && WorkEndsAtNight())
+            return new WorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized);
+
+        // Praca zaczyna się w ciągu nocy i kończy po 6:00 następnego dnia.
+        if (WorkStartsAtNight() && endWorkDateNormalized > nightEnd)
+            return new WorkTimePeriod(startWorkDateNormalized, nightEnd);
+        
+        // Praca zaczyna się w ciągu dnia i kończy w nocy.
+        if (WorkStartsAtDay() && endWorkDateNormalized > nightStart && endWorkDateNormalized <= nightEnd)
+            return new WorkTimePeriod(nightStart, endWorkDateNormalized);
+        
+        // Praca zaczyna się w ciągu dnia i kończy następnego dnia w ciągu dnia.
+        if (WorkStartsAtDay() && endWorkDateNormalized > nightStart && endWorkDateNormalized > nightEnd)
+            return new WorkTimePeriod(nightStart, nightEnd);
+        
+        // Praca zaczyna się i kończy w ciągu dnia.
+        if (WorkStartsAtDay() && WorkEndsAtDay())
+            return null;
+        
+        // Przypadek domyślny - powinien być obsłużony przez powyższe warunki.
+        return new WorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized);
+
+        bool WorkStartsAtNight()
+        {
+            return startWorkDateNormalized >= nightStart && startWorkDateNormalized < nightEnd;
+        }
+
+        bool WorkEndsAtNight()
+        {
+            return endWorkDateNormalized <= nightEnd && endWorkDateNormalized > nightStart;
+        }
+
+        bool WorkStartsAtDay()
+        {
+            return startWorkDateNormalized >= nightEnd.AddDays(-1);
+        }
+
+        bool WorkEndsAtDay()
+        {
+            return endWorkDateNormalized <= nightStart;
+        }
+    }
+
     private WorkingTimeRecordAggregatedViewModel CreateWorkingTimeRecord(
         double aggregatedMinutesForDayNormalized,
         DateTime endWorkDateNormalized,
@@ -377,6 +486,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             Date = startWorkDateNormalized.Date,
             WorkTimePeriodOriginal = new WorkTimePeriod(startWorkDateOriginal, endWorkDateOriginal),
             WorkTimePeriodNormalized = new WorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized),
+            DayWorkTimePeriodNormalized = GetDayWorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized),
+            NightWorkTimePeriodNormalized = GetNightWorkTimePeriod(startWorkDateNormalized, endWorkDateNormalized),
             WorkedMinutes = aggregatedMinutesForDayNormalized,
             WorkedHoursRounded = startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday ? 0 : allWorkedHoursRounded,
             BaseNormativeHours = GetBaseNormativeHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
