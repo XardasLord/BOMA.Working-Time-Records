@@ -15,46 +15,69 @@ internal class GratyfikantService : IGratyfikantService
         _gratyfikantOptions = gratyfikantSettings.Value;
     }
 
-    public async Task SetWorkingHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> records)
+    public async Task SetWorkingHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> employeesRecords)
     {
         await RunSTATask<bool>(() =>
         {
             var gratyfikant = RunGratyfikant();
 
-            if (!gratyfikant.PracownicyManager.Istnieje("86100917703"))
-                return false;
+            var employeesWorkingTimeRecordViewModels = employeesRecords.ToList();
             
-            var employee = gratyfikant.PracownicyManager.WczytajPracownika("86100917703");
+            foreach (var employeeRecord in employeesWorkingTimeRecordViewModels)
+            {
+                // TODO: Here we should check for record.Employee data
+                if (!gratyfikant.PracownicyManager.Istnieje("86100917703"))
+                    return false;
+            
+                var employee = gratyfikant.PracownicyManager.WczytajPracownika("86100917703");
 
-            var rcp = gratyfikant.ECP.RCP(employee.Identyfikator, "2023-10-30") as RCP;
+                foreach (var workingTimeData in employeeRecord.WorkingTimeRecordsAggregated)
+                {
+                    var rcp = gratyfikant.ECP.RCP(employee.Identyfikator, workingTimeData.Date) as RCP 
+                        ?? throw new GratyfikantOperationException($"Cannot instantiate RCP Gratyfikant object for {workingTimeData.Date} date for {employee.Imie} {employee.Nazwisko} employee");
+                    
+                    if (workingTimeData.DayWorkTimePeriodNormalized?.To is not null)
+                    {
+                        var startTime = workingTimeData.DayWorkTimePeriodNormalized.From;
+                        var endTime = workingTimeData.DayWorkTimePeriodNormalized.To;
 
-            var employeeWorkingRecordDetails = records
-                .Single(x => x.Employee.LastName == "Bondarieva")
-                .WorkingTimeRecordsAggregated;
+                        rcp.UsunZapisyZDnia();
+                        rcp.DodajOkresPracy(TotalMinutesSinceMidnight(startTime), TotalMinutesSinceMidnight(endTime.Value), GodzinyEnum.gtaGodzinyDzienne);
+                        rcp.PrzeliczycGodzinyPracy = true;
 
-            // var recordDetails = employeeWorkingRecordDetails.Single(x => x.Date.Day == 27);
-            // var startTime = recordDetails.StartNormalizedAt;
-            // var endTime = recordDetails.FinishNormalizedAt;
-            //
-            // if (!endTime.HasValue)
-            //     return false;
-            //
-            // rcp.DodajOkresPracy(TotalMinutesSinceMidnight(startTime), TotalMinutesSinceMidnight(endTime.Value), GodzinyEnum.gtaGodzinyDzienne);
-            //
-            // rcp.PrzeliczycGodzinyPracy = true;
-            // rcp.Zapisz();
+                        try
+                        {
+                            rcp.Zapisz();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new GratyfikantOperationException($"Error for date - {workingTimeData.Date} - for {employee.Imie} {employee.Nazwisko} employee - {ex.Message}");
+                        }
+                    }
+                    
+                    if (workingTimeData.NightWorkTimePeriodNormalized?.To is not null)
+                    {
+                        var startTime = workingTimeData.NightWorkTimePeriodNormalized.From;
+                        var endTime = workingTimeData.NightWorkTimePeriodNormalized.To;
+
+                        rcp.UsunZapisyZDnia();
+                        rcp.DodajOkresPracy(TotalMinutesSinceMidnight(startTime), TotalMinutesSinceMidnight(endTime.Value), GodzinyEnum.gtaGodzinyNocne);
+                        rcp.PrzeliczycGodzinyPracy = true;
+
+                        try
+                        {
+                            rcp.Zapisz();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new GratyfikantOperationException($"Error for date - {workingTimeData.Date} - for {employee.Imie} {employee.Nazwisko} employee - {ex.Message}");
+                        }
+                    }
+                }
+            }
 
             return true;
         });
-    }
-
-    private long TotalMinutesSinceMidnight(DateTime startDate)
-    {
-        var timeSinceMidnight = startDate - startDate.Date;
-        
-        var minutes = (long)timeSinceMidnight.TotalMinutes;
-
-        return minutes;
     }
     
     private static Task<T> RunSTATask<T>(Func<T> function)
@@ -76,20 +99,29 @@ internal class GratyfikantService : IGratyfikantService
 
     private InsERT.Gratyfikant RunGratyfikant()
     {
-        var gt = new InsERT.GT
+        var gt = new GT
         {
-            Produkt = InsERT.ProduktEnum.gtaProduktGratyfikant,
+            Produkt = ProduktEnum.gtaProduktGratyfikant,
             Serwer = _gratyfikantOptions.Server,
             Baza = _gratyfikantOptions.Database,
-            Autentykacja = InsERT.AutentykacjaEnum.gtaAutentykacjaWindows,
+            Autentykacja = AutentykacjaEnum.gtaAutentykacjaWindows,
             Uzytkownik = _gratyfikantOptions.User,
             Operator = _gratyfikantOptions.Operator,
             OperatorHaslo = _gratyfikantOptions.OperatorPassword
         };
 
-        if (gt.Uruchom((int)InsERT.UruchomDopasujEnum.gtaUruchomDopasuj, (int)InsERT.UruchomEnum.gtaUruchom) is not InsERT.Gratyfikant gratyfikant)
+        if (gt.Uruchom((int)UruchomDopasujEnum.gtaUruchomDopasuj, (int)UruchomEnum.gtaUruchom) is not InsERT.Gratyfikant gratyfikant)
             throw new GratyfikantOperationException("Gratyfikant cannot be opened");
 
         return gratyfikant;
+    }
+
+    private static long TotalMinutesSinceMidnight(DateTime startDate)
+    {
+        var timeSinceMidnight = startDate - startDate.Date;
+        
+        var minutes = (long)timeSinceMidnight.TotalMinutes;
+
+        return minutes;
     }
 }

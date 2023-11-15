@@ -7,7 +7,7 @@ namespace BOMA.WTR.Api.Controllers;
 public class GratyfikantTestController : ApiBaseController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetRecordsQueryModel queryModel)
+    public async Task<IActionResult> SendToGratyfikant([FromQuery] GetRecordsQueryModel queryModel)
     {
         await Mediator.Send(new SetWorkingTimeRecordsInGratyfikantCommand(queryModel));
 

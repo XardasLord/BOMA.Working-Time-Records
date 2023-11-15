@@ -24,8 +24,8 @@ public class WorkingTimeRecordAggregatedViewModel
     public DateTime Date { get; set; }
     public WorkTimePeriod WorkTimePeriodNormalized { get; set; }
     public WorkTimePeriod WorkTimePeriodOriginal { get; set; }
-    public WorkTimePeriod DayWorkTimePeriodNormalized { get; set; }
-    public WorkTimePeriod NightWorkTimePeriodNormalized { get; set; }
+    public WorkTimePeriod? DayWorkTimePeriodNormalized { get; set; }
+    public WorkTimePeriod? NightWorkTimePeriodNormalized { get; set; }
     public double WorkedMinutes { get; set; }
     public double WorkedHoursRounded { get; set; }
     public double BaseNormativeHours { get; set; }
