@@ -80,7 +80,7 @@
 			<ng-container matColumnDef="bonus">
 				<th mat-header-cell *matHeaderCellDef>Premia</th>
 				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getBonusCssClass(i)">
-					<span *ngIf="i % 6 === 0">{{ record?.employee?.salaryBonusPercentage | number: '1.2-2' }} % </span>
+					<span *ngIf="i % 6 === 0">{{ record?.salaryInformation?.percentageBonusSalary | number: '1.2-2' }} % </span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.bonusBase50PercentageSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 3">{{ record?.salaryInformation?.bonusBase100PercentageSalary | currency: 'PLN' }}</span>

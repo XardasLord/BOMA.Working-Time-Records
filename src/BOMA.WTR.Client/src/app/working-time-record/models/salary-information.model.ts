@@ -1,4 +1,6 @@
 export interface SalaryInformationModel {
+	percentageBonusSalary: number;
+
 	// Base rate
 	baseSalary: number;
 	base50PercentageSalary: number;

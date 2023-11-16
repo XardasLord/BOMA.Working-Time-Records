@@ -68,11 +68,24 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
         // Clear all records without any entry
         result = result.Where(x => x.WorkingTimeRecordsAggregated.Any()).ToList();
 
+        // Set historical percentage bonus salary for employee
+        result.ForEach(entry =>
+        {
+            var baseEmployeeHistoryRecord = employeesWithWorkingTimeRecords
+                .Single(employee => employee.Id == entry.Employee.Id)
+                .WorkingTimeRecordAggregatedHistories
+                .First();
+
+            // This is the current value of the Employees percentage bonus.
+            // Because of this we firstly change this SalaryBonusPercentage on the employee to the historical value so rest of the salary is calculated properly below using the Mapper
+            entry.Employee.SalaryBonusPercentage = baseEmployeeHistoryRecord.SalaryInformation.PercentageBonusSalary;
+        });
+        
         result.ForEach(x =>
         {
             x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(x);
         });
-        
+
         // Extend AutoMapper logic
         result.ForEach(entry =>
         {
@@ -80,7 +93,8 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
                 .Single(employee => employee.Id == entry.Employee.Id)
                 .WorkingTimeRecordAggregatedHistories
                 .First();
-            
+
+            entry.SalaryInformation.PercentageBonusSalary = baseEmployeeHistoryRecord.SalaryInformation.PercentageBonusSalary;
             entry.SalaryInformation.HolidaySalary = baseEmployeeHistoryRecord.SalaryInformation.HolidaySalary;
             entry.SalaryInformation.SicknessSalary = baseEmployeeHistoryRecord.SalaryInformation.SicknessSalary;
             entry.SalaryInformation.AdditionalSalary = baseEmployeeHistoryRecord.SalaryInformation.AdditionalSalary;
