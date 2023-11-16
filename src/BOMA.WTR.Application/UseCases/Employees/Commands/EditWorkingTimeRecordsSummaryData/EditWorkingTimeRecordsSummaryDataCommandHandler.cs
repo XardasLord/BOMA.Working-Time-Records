@@ -27,7 +27,7 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
         var sicknessSalary = new Money(command.SicknessSalary);
         var additionalSalary = new Money(command.AdditionalSalary);
         
-        employee.UpdateSummaryData(command.Year, command.Month, holidaySalary, sicknessSalary, additionalSalary);
+        employee.UpdateSummaryData(command.Year, command.Month, command.PercentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
         

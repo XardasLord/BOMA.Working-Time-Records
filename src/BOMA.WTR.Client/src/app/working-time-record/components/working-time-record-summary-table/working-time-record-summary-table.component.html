@@ -25,7 +25,14 @@
 
 			<ng-container matColumnDef="bonusPercentage">
 				<th mat-header-cell *matHeaderCellDef>Premia</th>
-				<td mat-cell *matCellDef="let record">{{ record?.salaryInformation?.percentageBonusSalary | number: '1.2-2' }} %</td>
+				<td mat-cell *matCellDef="let record">
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" matInput formControlName="percentageBonusSalary" />
+						</mat-form-field>
+					</ng-template>
+					<ng-template #readOnlyMode> {{ record?.salaryInformation?.percentageBonusSalary | number: '1.2-2' }} % </ng-template>
+				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
@@ -139,7 +146,7 @@
 			<ng-container matColumnDef="actions">
 				<th mat-header-cell *matHeaderCellDef></th>
 				<td mat-cell *matCellDef="let record">
-					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="notEditing">
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
 						<button mat-icon-button type="submit" matTooltip="Zapisz">
 							<mat-icon>save</mat-icon>
 						</button>
@@ -147,7 +154,7 @@
 							<mat-icon>cancel</mat-icon>
 						</button>
 					</ng-template>
-					<ng-template #notEditing>
+					<ng-template #readOnlyMode>
 						<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
 							<mat-icon>edit</mat-icon>
 						</button>

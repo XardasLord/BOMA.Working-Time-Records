@@ -24,6 +24,7 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 
 	salaryForm: FormGroup;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
+	percentageBonusSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 	holidaySalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 	sicknessSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 	additionalSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
@@ -49,6 +50,11 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 	constructor(private store: Store, private fb: FormBuilder, private toastService: ToastrService) {
 		this.salaryForm = fb.group({
 			employeeId: new FormControl<number>(0),
+			percentageBonusSalary: new FormControl<number>(0, [
+				Validators.required,
+				Validators.min(0),
+				createValueChangedValidator(this.percentageBonusSalaryOriginalValue)
+			]),
 			holidaySalary: new FormControl<number>(0, [
 				Validators.required,
 				Validators.min(0),
@@ -88,10 +94,18 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 		}
 
 		this.editingRow = record;
+		this.percentageBonusSalaryOriginalValue.originalValue = record.salaryInformation.percentageBonusSalary;
 		this.holidaySalaryOriginalValue.originalValue = record.salaryInformation.holidaySalary;
 		this.sicknessSalaryOriginalValue.originalValue = record.salaryInformation.sicknessSalary;
 		this.additionalSalaryOriginalValue.originalValue = record.salaryInformation.additionalSalary;
 
+		this.store.dispatch(
+			new UpdateFormValue({
+				path: 'workingTimeRecord.summaryForm',
+				value: record.salaryInformation.percentageBonusSalary,
+				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('percentageBonusSalary')
+			})
+		);
 		this.store.dispatch(
 			new UpdateFormValue({
 				path: 'workingTimeRecord.summaryForm',

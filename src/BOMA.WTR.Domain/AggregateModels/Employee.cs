@@ -64,7 +64,7 @@ public class Employee : Entity<int>, IAggregateRoot
         _departmentId = departmentId;
     }
     
-    public void UpdateSummaryData(int year, int month, Money holidaySalary, Money sicknessSalary, Money additionalSalary)
+    public void UpdateSummaryData(int year, int month, decimal percentageBonusSalary, Money holidaySalary, Money sicknessSalary, Money additionalSalary)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
@@ -73,6 +73,7 @@ public class Employee : Entity<int>, IAggregateRoot
         
         recordsToUpdate.ForEach(record =>
         {
+            record.SalaryInformation.PercentageBonusSalary = percentageBonusSalary;
             record.SalaryInformation.HolidaySalary = holidaySalary.Amount;
             record.SalaryInformation.SicknessSalary = sicknessSalary.Amount;
             record.SalaryInformation.AdditionalSalary = additionalSalary.Amount;
