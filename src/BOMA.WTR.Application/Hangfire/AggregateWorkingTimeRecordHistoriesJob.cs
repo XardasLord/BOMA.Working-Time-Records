@@ -57,7 +57,7 @@ public class AggregateWorkingTimeRecordHistoriesJob
             
             foreach (var wtr in model.WorkingTimeRecordsAggregated)
             {
-                currentEmployee.AddWorkingTimeRecordAggregatedHistory(new WorkingTimeRecordAggregatedHistory
+                var historyEntry = new WorkingTimeRecordAggregatedHistory
                 {
                     Date = wtr.Date,
                     StartNormalizedAt = wtr.WorkTimePeriodNormalized.From,
@@ -72,7 +72,11 @@ public class AggregateWorkingTimeRecordHistoriesJob
                     SaturdayHours = wtr.SaturdayHours,
                     NightHours = wtr.NightHours,
                     SalaryInformation = _mapper.Map<EmployeeSalaryAggregatedHistory>(model.SalaryInformation)
-                });
+                };
+
+                historyEntry.SalaryInformation.PercentageBonusSalary = model.Employee.SalaryBonusPercentage;
+                
+                currentEmployee.AddWorkingTimeRecordAggregatedHistory(historyEntry);
             }
         }
         
