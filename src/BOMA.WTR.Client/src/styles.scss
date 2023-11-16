@@ -47,6 +47,13 @@ button.print-table {
 	z-index: 100;
 }
 
+button.send-hours-to-gratyfikant {
+	position: fixed;
+	bottom: 40px;
+	right: 110px;
+	z-index: 100;
+}
+
 #print-content {
 	-webkit-print-color-adjust: exact;
 	color-adjust: exact;

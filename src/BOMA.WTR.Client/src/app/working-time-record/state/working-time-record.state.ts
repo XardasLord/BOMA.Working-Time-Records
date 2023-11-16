@@ -27,6 +27,7 @@ import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 import ChangeShift = WorkingTimeRecord.ChangeShift;
 import { EmployeeWorkingTimeRecordAbsentsModel } from '../models/employee-working-time-record-absents.model';
 import { WorkingTimeRecordAbsentAggregatedModel } from '../models/working-time-record-details-aggregated.model';
+import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -294,6 +295,29 @@ export class WorkingTimeRecordState {
 			}),
 			catchError((e: HttpErrorResponse) => {
 				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				return throwError(() => e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
+			})
+		);
+	}
+
+	@Action(SendHoursToGratyfikant)
+	sendHoursToGratyfikant(ctx: StateContext<WorkingTimeRecordStateModel>): Observable<void> {
+		this.progressSpinnerService.showProgressSpinner();
+
+		return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query).pipe(
+			tap(() => {
+				this.toastService.success('Dane zostały wysłane do Gratyfikanta', 'Synchronizacja danych', {
+					onActivateTick: true
+				});
+			}),
+			catchError((e: HttpErrorResponse) => {
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`, 'Synchronizacja danych', {
+					onActivateTick: true
+				});
+
 				return throwError(() => e);
 			}),
 			finalize(() => {

@@ -47,4 +47,10 @@ export namespace WorkingTimeRecord {
 
 		static readonly type = `${prefix} ${UpdateDetailedData.name}`;
 	}
+
+	export class SendHoursToGratyfikant {
+		constructor() {}
+
+		static readonly type = `${prefix} ${SendHoursToGratyfikant.name}`;
+	}
 }

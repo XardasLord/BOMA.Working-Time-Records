@@ -16,15 +16,7 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 	}
 
 	getAll(queryModel: QueryModel): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
-		let queryParams = new HttpParams()
-			.set('year', queryModel.year)
-			.set('month', queryModel.month)
-			.set('departmentId', queryModel.departmentId)
-			.set('shiftId', queryModel.shiftId);
-
-		if (queryModel.searchText) {
-			queryParams = queryParams.set('searchText', queryModel.searchText);
-		}
+		const queryParams = this.getQueryParams(queryModel);
 
 		return this.httpClient.get<EmployeeWorkingTimeRecordDetailsModel[]>(`${this.apiEndpoint}/workingTimeRecords`, {
 			params: queryParams
@@ -37,5 +29,27 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 
 	updateDetailedData(employeeId: number, updateModel: WorkingTimeRecordDetailedDataFormModel): Observable<void> {
 		return this.httpClient.patch<void>(`${this.apiEndpoint}/employees/${employeeId}/workingTimeRecordsDetails`, updateModel);
+	}
+
+	sendHoursToGratyfikant(queryModel: QueryModel): Observable<void> {
+		const queryParams = this.getQueryParams(queryModel);
+
+		return this.httpClient.post<void>(`${this.apiEndpoint}/workingTimeRecords/gratyfikant`, null, {
+			params: queryParams
+		});
+	}
+
+	private getQueryParams(queryModel: QueryModel): HttpParams {
+		let queryParams = new HttpParams()
+			.set('year', queryModel.year)
+			.set('month', queryModel.month)
+			.set('departmentId', queryModel.departmentId)
+			.set('shiftId', queryModel.shiftId);
+
+		if (queryModel.searchText) {
+			queryParams = queryParams.set('searchText', queryModel.searchText);
+		}
+
+		return queryParams;
 	}
 }
