@@ -4,6 +4,7 @@ using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 
 namespace BOMA.WTR.Application.AutoMapper;
 
@@ -35,7 +36,11 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.MissingRecordEventType, opt => opt.MapFrom(src => src.MissingRecordEventType));
 
         CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>();
-        CreateMap<WorkingTimeRecordAggregatedHistory, WorkingTimeRecordAggregatedViewModel>();
+        CreateMap<WorkingTimeRecordAggregatedHistory, WorkingTimeRecordAggregatedViewModel>()
+            .ForMember(dest => dest.WorkTimePeriodOriginal, opt => opt.MapFrom(src => new WorkTimePeriod(src.StartOriginalAt, src.FinishOriginalAt)))
+            .ForMember(dest => dest.WorkTimePeriodNormalized, opt => opt.MapFrom(src => new WorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
+            .ForMember(dest => dest.DayWorkTimePeriodNormalized, opt => opt.MapFrom(src => _calculationDomainService.GetDayWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
+            .ForMember(dest => dest.NightWorkTimePeriodNormalized, opt => opt.MapFrom(src => _calculationDomainService.GetNightWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)));
 
         CreateMap<EmployeeWorkingTimeRecordViewModel, EmployeeSalaryViewModel>()
             .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary))
