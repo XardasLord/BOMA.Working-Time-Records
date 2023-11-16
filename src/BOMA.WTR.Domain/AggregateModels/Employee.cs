@@ -133,9 +133,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public void AddWorkingTimeRecordAggregatedHistory(WorkingTimeRecordAggregatedHistory record)
     {
         if (WorkingTimeRecordAggregatedHistories.Any(x => x.Date == record.Date))
-        {
             return;
-        }
         
         _workingTimeRecordAggregatedHistories.Add(record);
     }

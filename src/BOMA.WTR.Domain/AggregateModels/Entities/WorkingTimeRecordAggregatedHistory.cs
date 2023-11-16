@@ -23,6 +23,8 @@ public class WorkingTimeRecordAggregatedHistory : Entity<int>
 
 public class EmployeeSalaryAggregatedHistory
 {
+    public decimal PercentageBonusSalary { get; set; }
+    
     // Base rate
     public decimal BaseSalary { get; set; }
     public decimal Base50PercentageSalary { get; set; }

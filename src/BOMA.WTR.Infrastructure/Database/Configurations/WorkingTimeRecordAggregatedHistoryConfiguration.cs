@@ -26,6 +26,7 @@ public class WorkingTimeRecordAggregatedHistoryConfiguration : IEntityTypeConfig
 
         builder.OwnsOne(x => x.SalaryInformation, salary =>
         {
+            salary.Property(x => x.PercentageBonusSalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.BaseSalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.Base50PercentageSalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.Base100PercentageSalary).HasColumnType("decimal(10,2)");
