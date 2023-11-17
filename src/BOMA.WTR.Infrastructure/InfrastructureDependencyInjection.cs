@@ -41,7 +41,9 @@ public static class InfrastructureDependencyInjection
                 opt => opt.EnableRetryOnFailure()));
         services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
         services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
+        
         services.AddTransient<IEmployeeWorkingTimeRecordCalculationDomainService, EmployeeWorkingTimeRecordCalculationDomainService>();
+        services.AddTransient<ISalaryCalculationDomainService, SalaryCalculationDomainServiceHandler>();
 
         // services.AddGraphQL();
         services.AddGratyfikant(configuration);

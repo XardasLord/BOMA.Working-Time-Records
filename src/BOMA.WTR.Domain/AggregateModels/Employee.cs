@@ -64,7 +64,7 @@ public class Employee : Entity<int>, IAggregateRoot
         _departmentId = departmentId;
     }
     
-    public void UpdateSummaryData(int year, int month, decimal percentageBonusSalary, Money holidaySalary, Money sicknessSalary, Money additionalSalary)
+    public void UpdateSummaryData(int year, int month, decimal percentageBonusSalary, Money holidaySalary, Money sicknessSalary, Money additionalSalary, ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
@@ -78,6 +78,8 @@ public class Employee : Entity<int>, IAggregateRoot
             record.SalaryInformation.SicknessSalary = sicknessSalary.Amount;
             record.SalaryInformation.AdditionalSalary = additionalSalary.Amount;
         });
+        
+        salaryCalculationDomainService.RecalculateSalary(recordsToUpdate);
     }
 
     public void UpdateDetailsData(

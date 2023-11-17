@@ -35,17 +35,17 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.DepartmentId))
             .ForMember(dest => dest.MissingRecordEventType, opt => opt.MapFrom(src => src.MissingRecordEventType));
         
-        CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>();
+        CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>()
+            .ReverseMap();
         
         CreateMap<WorkingTimeRecordAggregatedHistory, WorkingTimeRecordAggregatedViewModel>()
+            .ForMember(dest => dest.IsWeekendDay, opt => opt.MapFrom(src => src.Date.DayOfWeek == DayOfWeek.Saturday || src.Date.DayOfWeek == DayOfWeek.Sunday))
             .ForMember(dest => dest.WorkTimePeriodOriginal, opt => opt.MapFrom(src => new WorkTimePeriod(src.StartOriginalAt, src.FinishOriginalAt)))
             .ForMember(dest => dest.WorkTimePeriodNormalized, opt => opt.MapFrom(src => new WorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
             .ForMember(dest => dest.DayWorkTimePeriodNormalized, opt => opt.MapFrom(src => _calculationDomainService.GetDayWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
             .ForMember(dest => dest.NightWorkTimePeriodNormalized, opt => opt.MapFrom(src => _calculationDomainService.GetNightWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)));
 
         CreateMap<EmployeeWorkingTimeRecordViewModel, EmployeeSalaryViewModel>()
-            // This is the current value of the Employees percentage bonus.
-            // Because of this in the Query Handler for Historical data we firstly change this SalaryBonusPercentage on the employee to the historical value so rest of the salary is calculated properly
             .ForMember(dest => dest.PercentageBonusSalary, opt => opt.MapFrom(src => src.Employee.SalaryBonusPercentage))
             .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary))
             .ForMember(dest => dest.Base50PercentageSalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 1.5m, 2)))
@@ -176,10 +176,10 @@ public class AutoMapperProfile : Profile
                CalculateGrossSumBase50PercentageSalary(src) +
                CalculateGrossSumBase100PercentageSalary(src) +
                CalculateGrossSumBaseSaturdaySalary(src) +
-               CalculateNightSumSalary(src);
-        // src.SalaryInformation.HolidaySalary +
-        // src.SalaryInformation.SicknessSalary +
-        // src.SalaryInformation.AdditionalSalary;
+               CalculateNightSumSalary(src) +
+               src.SalaryInformation.HolidaySalary +
+               src.SalaryInformation.SicknessSalary +
+               src.SalaryInformation.AdditionalSalary;
     }
 
     private static double CalculateAllNightWorkedHours(EmployeeWorkingTimeRecordViewModel src)

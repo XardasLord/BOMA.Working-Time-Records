@@ -1,6 +1,7 @@
 ﻿using BOMA.WTR.Application.Abstractions.Messaging;
 using BOMA.WTR.Application.Exceptions;
 using BOMA.WTR.Domain.AggregateModels;
+using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Domain.AggregateModels.Specifications;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SharedKernel;
@@ -11,10 +12,14 @@ namespace BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecord
 public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<EditWorkingTimeRecordsSummaryDataCommand>
 {
     private readonly IAggregateRepository<Employee> _employeeRepository;
+    private readonly ISalaryCalculationDomainService _salaryCalculationDomainService;
 
-    public EditWorkingTimeRecordsSummaryDataCommandHandler(IAggregateRepository<Employee> employeeRepository)
+    public EditWorkingTimeRecordsSummaryDataCommandHandler(
+        IAggregateRepository<Employee> employeeRepository,
+        ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         _employeeRepository = employeeRepository;
+        _salaryCalculationDomainService = salaryCalculationDomainService;
     }
 
     public async Task<Unit> Handle(EditWorkingTimeRecordsSummaryDataCommand command, CancellationToken cancellationToken)
@@ -27,7 +32,7 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
         var sicknessSalary = new Money(command.SicknessSalary);
         var additionalSalary = new Money(command.AdditionalSalary);
         
-        employee.UpdateSummaryData(command.Year, command.Month, command.PercentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary);
+        employee.UpdateSummaryData(command.Year, command.Month, command.PercentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, _salaryCalculationDomainService);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
         
