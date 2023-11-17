@@ -6,5 +6,20 @@ namespace BOMA.WTR.Domain.AggregateModels.Interfaces;
 
 public interface ISalaryCalculationDomainService
 {
-    public void RecalculateSalary(List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth);
+    // TODO: Maybe we can somehow merge those into one function since they are doing pretty the same but on a different models
+    public EmployeeSalaryAggregatedHistory RecalculateHistoricalSalary(
+        decimal baseSalary,
+        decimal percentageBonusSalary,
+        decimal holidaySalary,
+        decimal sicknessSalary,
+        decimal additionalSalary,
+        List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth);
+    
+    public EmployeeSalaryAggregatedHistory GetRecalculatedCurrentMonthSalary(
+        decimal baseSalary,
+        decimal percentageBonusSalary,
+        decimal holidaySalary,
+        decimal sicknessSalary,
+        decimal additionalSalary,
+        List<WorkingTimeRecordAggregatedViewModel> aggregatedCurrentRecordsForMonth);
 }

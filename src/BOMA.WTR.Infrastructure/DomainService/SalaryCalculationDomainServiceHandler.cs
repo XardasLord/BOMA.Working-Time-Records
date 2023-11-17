@@ -1,122 +1,158 @@
-﻿using BOMA.WTR.Domain.AggregateModels.Entities;
+﻿using AutoMapper;
+using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 
 namespace BOMA.WTR.Infrastructure.DomainService;
 
 public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainService
 {
+    private readonly IMapper _mapper;
     private readonly IEmployeeWorkingTimeRecordCalculationDomainService _employeeWorkingTimeRecordCalculationDomainService;
 
-    public SalaryCalculationDomainServiceHandler(IEmployeeWorkingTimeRecordCalculationDomainService employeeWorkingTimeRecordCalculationDomainService)
+    public SalaryCalculationDomainServiceHandler(
+        IMapper mapper,
+        IEmployeeWorkingTimeRecordCalculationDomainService employeeWorkingTimeRecordCalculationDomainService)
     {
+        _mapper = mapper;
         _employeeWorkingTimeRecordCalculationDomainService = employeeWorkingTimeRecordCalculationDomainService;
     }
     
-    public void RecalculateSalary(List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth)
+    public EmployeeSalaryAggregatedHistory RecalculateHistoricalSalary(
+        decimal baseSalary,
+        decimal percentageBonusSalary,
+        decimal holidaySalary,
+        decimal sicknessSalary,
+        decimal additionalSalary,
+        List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth)
     {
-        var baseSalary = aggregatedHistoryRecordsForMonth.First().SalaryInformation.BaseSalary;
-        var percentageBonusSalary = aggregatedHistoryRecordsForMonth.First().SalaryInformation.PercentageBonusSalary;
-
-        foreach (var historyRecord in aggregatedHistoryRecordsForMonth)
-        {
-            historyRecord.SalaryInformation.Base50PercentageSalary = Math.Round(baseSalary * 1.5m, 2);
-            historyRecord.SalaryInformation.Base100PercentageSalary = Math.Round(baseSalary * 2m, 2);
-            historyRecord.SalaryInformation.BaseSaturdaySalary = Math.Round(baseSalary * 2m, 2);
-            
-            historyRecord.SalaryInformation.GrossBaseSalary = CalculateGrossBaseSalary(baseSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.GrossBase50PercentageSalary = CalculateGrossBase50PercentageSalary(baseSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.GrossBase100PercentageSalary = CalculateGrossBase100PercentageSalary(baseSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.GrossBaseSaturdaySalary = CalculateGrossBaseSaturdaySalary(baseSalary, aggregatedHistoryRecordsForMonth);
-            
-            historyRecord.SalaryInformation.BonusBaseSalary = CalculateBonusBaseSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.BonusBase50PercentageSalary = CalculateBonusBase50PercentageSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.BonusBase100PercentageSalary = CalculateBonusBase100PercentageSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.BonusBaseSaturdaySalary = CalculateBonusBaseSaturdaySalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            
-            historyRecord.SalaryInformation.GrossSumBaseSalary = CalculateGrossSumBaseSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.GrossSumBase50PercentageSalary = CalculateGrossSumBase50PercentageSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.GrossSumBase100PercentageSalary = CalculateGrossSumBase100PercentageSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.GrossSumBaseSaturdaySalary = CalculateGrossSumBaseSaturdaySalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            
-            historyRecord.SalaryInformation.BonusSumSalary = CalculateBonusSumSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.NightBaseSalary = CalculateNightSumSalary(aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.NightWorkedHours = CalculateAllNightWorkedHours(aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.FinalSumSalary = CalculateFinalSumSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-        }
+        var records = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(aggregatedHistoryRecordsForMonth);
+        
+        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, records);
     }
 
-    private static decimal CalculateGrossBaseSalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    public EmployeeSalaryAggregatedHistory GetRecalculatedCurrentMonthSalary(
+        decimal baseSalary,
+        decimal percentageBonusSalary,
+        decimal holidaySalary,
+        decimal sicknessSalary,
+        decimal additionalSalary,
+        List<WorkingTimeRecordAggregatedViewModel> aggregatedCurrentRecordsForMonth)
+    {
+        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, aggregatedCurrentRecordsForMonth);
+    }
+
+    private EmployeeSalaryAggregatedHistory RecalculateRecord(
+        decimal baseSalary,
+        decimal percentageBonusSalary,
+        decimal holidaySalary,
+        decimal sicknessSalary,
+        decimal additionalSalary,
+        IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> recordsForMonth)
+    {
+        return new EmployeeSalaryAggregatedHistory
+        {
+            BaseSalary = baseSalary,
+            PercentageBonusSalary = percentageBonusSalary,
+            Base50PercentageSalary = Math.Round(baseSalary * 1.5m, 2),
+            Base100PercentageSalary = Math.Round(baseSalary * 2m, 2),
+            BaseSaturdaySalary = Math.Round(baseSalary * 2m, 2),
+            GrossBaseSalary = CalculateGrossBaseSalary(baseSalary, recordsForMonth),
+            GrossBase50PercentageSalary = CalculateGrossBase50PercentageSalary(baseSalary, recordsForMonth),
+            GrossBase100PercentageSalary = CalculateGrossBase100PercentageSalary(baseSalary, recordsForMonth),
+            GrossBaseSaturdaySalary = CalculateGrossBaseSaturdaySalary(baseSalary, recordsForMonth),
+            BonusBaseSalary = CalculateBonusBaseSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            BonusBase50PercentageSalary = CalculateBonusBase50PercentageSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            BonusBase100PercentageSalary = CalculateBonusBase100PercentageSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            BonusBaseSaturdaySalary = CalculateBonusBaseSaturdaySalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            GrossSumBaseSalary = CalculateGrossSumBaseSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            GrossSumBase50PercentageSalary = CalculateGrossSumBase50PercentageSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            GrossSumBase100PercentageSalary = CalculateGrossSumBase100PercentageSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            GrossSumBaseSaturdaySalary = CalculateGrossSumBaseSaturdaySalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            BonusSumSalary = CalculateBonusSumSalary(baseSalary, percentageBonusSalary, recordsForMonth),
+            NightBaseSalary = CalculateNightSumSalary(recordsForMonth),
+            NightWorkedHours = CalculateAllNightWorkedHours(recordsForMonth),
+            HolidaySalary = holidaySalary,
+            SicknessSalary = sicknessSalary,
+            AdditionalSalary = additionalSalary,
+            FinalSumSalary = CalculateFinalSumSalary(
+                baseSalary, percentageBonusSalary, 
+                holidaySalary, sicknessSalary, additionalSalary,
+                recordsForMonth)
+        };
+    }
+
+    private static decimal CalculateGrossBaseSalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(baseSalary * (decimal)records.Sum(x => x.BaseNormativeHours), 2);
     }
 
-    private static decimal CalculateGrossBase50PercentageSalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossBase50PercentageSalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(baseSalary * 1.5m * (decimal)records.Sum(x => x.FiftyPercentageBonusHours), 2);
     }
 
-    private static decimal CalculateGrossBase100PercentageSalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossBase100PercentageSalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(baseSalary * 2m * (decimal)records.Sum(x => x.HundredPercentageBonusHours), 2);
     }
 
-    private static decimal CalculateGrossBaseSaturdaySalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossBaseSaturdaySalary(decimal baseSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(baseSalary * 2m * (decimal)records.Sum(x => x.SaturdayHours), 2);
     }
 
-    private static decimal CalculateBonusBaseSalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateBonusBaseSalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(CalculateGrossBaseSalary(baseSalary, records) * bonusPercentageSalary / 100, 2);
     }
 
-    private static decimal CalculateBonusBase50PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateBonusBase50PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(CalculateGrossBase50PercentageSalary(baseSalary, records) * bonusPercentageSalary / 100, 2);
     }
 
-    private static decimal CalculateBonusBase100PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateBonusBase100PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(CalculateGrossBase100PercentageSalary(baseSalary, records) * bonusPercentageSalary / 100, 2);
     }
 
-    private static decimal CalculateBonusBaseSaturdaySalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateBonusBaseSaturdaySalary(decimal baseSalary, decimal bonusPercentageSalary, IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return Math.Round(CalculateGrossBaseSaturdaySalary(baseSalary, records) * bonusPercentageSalary / 100, 2);
     }
 
-    private static decimal CalculateGrossSumBaseSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossSumBaseSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         return CalculateGrossBaseSalary(baseSalary, records) + 
                CalculateBonusBaseSalary(baseSalary, bonusPercentageSalary, records);
     }
 
-    private static decimal CalculateGrossSumBase50PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossSumBase50PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         return CalculateGrossBase50PercentageSalary(baseSalary, records) + 
                CalculateBonusBase50PercentageSalary(baseSalary, bonusPercentageSalary, records);
     }
 
-    private static decimal CalculateGrossSumBase100PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossSumBase100PercentageSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         return CalculateGrossBase100PercentageSalary(baseSalary, records) + 
                CalculateBonusBase100PercentageSalary(baseSalary, bonusPercentageSalary, records);
     }
 
-    private static decimal CalculateGrossSumBaseSaturdaySalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateGrossSumBaseSaturdaySalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         return CalculateGrossBaseSaturdaySalary(baseSalary, records) + 
                CalculateBonusBaseSaturdaySalary(baseSalary, bonusPercentageSalary, records);
     }
 
-    private static decimal CalculateBonusSumSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private static decimal CalculateBonusSumSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         return CalculateGrossBase50PercentageSalary(baseSalary, records) + 
                CalculateGrossBase100PercentageSalary(baseSalary, records) + 
                CalculateGrossBaseSaturdaySalary(baseSalary, records);
     }
 
-    private decimal CalculateNightSumSalary(IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private decimal CalculateNightSumSalary(IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         var period = records.FirstOrDefault();
         if (period is null)
@@ -129,21 +165,19 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         return Math.Round(nightSumSalary, 2);
     }
 
-    private decimal CalculateFinalSumSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private decimal CalculateFinalSumSalary(decimal baseSalary, decimal bonusPercentageSalary, decimal holidaySalary, decimal sicknessSalary, decimal additionalSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
-        var firstRecord = records.First();
-        
         return CalculateGrossSumBaseSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBase50PercentageSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBase100PercentageSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBaseSaturdaySalary(baseSalary, bonusPercentageSalary, records) +
                CalculateNightSumSalary(records) +
-               firstRecord.SalaryInformation.HolidaySalary +
-               firstRecord.SalaryInformation.SicknessSalary +
-               firstRecord.SalaryInformation.AdditionalSalary;
+               holidaySalary +
+               sicknessSalary +
+               additionalSalary;
     }
 
-    private static double CalculateAllNightWorkedHours(IEnumerable<WorkingTimeRecordAggregatedHistory> records)
+    private static double CalculateAllNightWorkedHours(IEnumerable<WorkingTimeRecordAggregatedViewModel> records)
     {
         return records.Sum(x => x.NightHours);
     }

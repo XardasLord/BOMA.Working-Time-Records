@@ -10,12 +10,8 @@ namespace BOMA.WTR.Application.AutoMapper;
 
 public class AutoMapperProfile : Profile
 {
-    private readonly IEmployeeWorkingTimeRecordCalculationDomainService _calculationDomainService;
-    
     public AutoMapperProfile(IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
     {
-        _calculationDomainService = calculationDomainService;
-        
         CreateMap<Employee, EmployeeViewModel>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Name.FirstName))
@@ -28,162 +24,23 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.ShiftTypeId, opt => opt.MapFrom(src => src.JobInformation.ShiftType))
             .ForMember(dest => dest.ShiftTypeName, opt => opt.MapFrom(src => (int?)src.JobInformation.ShiftType))
             .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.JobInformation.Position.Name));
-        
+
         CreateMap<WorkingTimeRecord, WorkingTimeRecordDetailsViewModel>()
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType))
             .ForMember(dest => dest.OccudedAt, opt => opt.MapFrom(src => src.OccuredAt))
             .ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.DepartmentId))
             .ForMember(dest => dest.MissingRecordEventType, opt => opt.MapFrom(src => src.MissingRecordEventType));
-        
+
         CreateMap<EmployeeSalaryViewModel, EmployeeSalaryAggregatedHistory>()
             .ReverseMap();
-        
+
         CreateMap<WorkingTimeRecordAggregatedHistory, WorkingTimeRecordAggregatedViewModel>()
             .ForMember(dest => dest.IsWeekendDay, opt => opt.MapFrom(src => src.Date.DayOfWeek == DayOfWeek.Saturday || src.Date.DayOfWeek == DayOfWeek.Sunday))
             .ForMember(dest => dest.WorkTimePeriodOriginal, opt => opt.MapFrom(src => new WorkTimePeriod(src.StartOriginalAt, src.FinishOriginalAt)))
             .ForMember(dest => dest.WorkTimePeriodNormalized, opt => opt.MapFrom(src => new WorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
-            .ForMember(dest => dest.DayWorkTimePeriodNormalized, opt => opt.MapFrom(src => _calculationDomainService.GetDayWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
-            .ForMember(dest => dest.NightWorkTimePeriodNormalized, opt => opt.MapFrom(src => _calculationDomainService.GetNightWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)));
+            .ForMember(dest => dest.DayWorkTimePeriodNormalized, opt => opt.MapFrom(src => calculationDomainService.GetDayWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)))
+            .ForMember(dest => dest.NightWorkTimePeriodNormalized, opt => opt.MapFrom(src => calculationDomainService.GetNightWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)));
 
-        CreateMap<EmployeeWorkingTimeRecordViewModel, EmployeeSalaryViewModel>()
-            .ForMember(dest => dest.PercentageBonusSalary, opt => opt.MapFrom(src => src.Employee.SalaryBonusPercentage))
-            .ForMember(dest => dest.BaseSalary, opt => opt.MapFrom(src => src.Employee.BaseSalary))
-            .ForMember(dest => dest.Base50PercentageSalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 1.5m, 2)))
-            .ForMember(dest => dest.Base100PercentageSalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 2m, 2)))
-            .ForMember(dest => dest.BaseSaturdaySalary, opt => opt.MapFrom(src => Math.Round(src.Employee.BaseSalary * 2m, 2)))
-
-            .ForMember(dest => dest.GrossBaseSalary,
-                opt => opt.MapFrom(src => CalculateGrossBaseSalary(src)))
-            .ForMember(dest => dest.GrossBase50PercentageSalary,
-                opt => opt.MapFrom(src => CalculateGrossBase50PercentageSalary(src)))
-            .ForMember(dest => dest.GrossBase100PercentageSalary,
-                opt => opt.MapFrom(src => CalculateGrossBase100PercentageSalary(src)))
-            .ForMember(dest => dest.GrossBaseSaturdaySalary,
-                opt => opt.MapFrom(src => CalculateGrossBaseSaturdaySalary(src)))
-
-            .ForMember(dest => dest.BonusBaseSalary,
-                opt => opt.MapFrom(src => CalculateBonusBaseSalary(src)))
-            .ForMember(dest => dest.BonusBase50PercentageSalary,
-                opt => opt.MapFrom(src => CalculateBonusBase50PercentageSalary(src)))
-            .ForMember(dest => dest.BonusBase100PercentageSalary,
-                opt => opt.MapFrom(src => CalculateBonusBase100PercentageSalary(src)))
-            .ForMember(dest => dest.BonusBaseSaturdaySalary,
-                opt => opt.MapFrom(src => CalculateBonusBaseSaturdaySalary(src)))
-            
-            .ForMember(dest => dest.GrossSumBaseSalary,
-                opt => opt.MapFrom(src => CalculateGrossSumBaseSalary(src)))
-            .ForMember(dest => dest.GrossSumBase50PercentageSalary,
-                opt => opt.MapFrom(src => CalculateGrossSumBase50PercentageSalary(src)))
-            .ForMember(dest => dest.GrossSumBase100PercentageSalary,
-                opt => opt.MapFrom(src => CalculateGrossSumBase100PercentageSalary(src)))
-            .ForMember(dest => dest.GrossSumBaseSaturdaySalary,
-                opt => opt.MapFrom(src => CalculateGrossSumBaseSaturdaySalary(src)))
-            
-            .ForMember(dest => dest.BonusSumSalary,
-                opt => opt.MapFrom(src => CalculateBonusSumSalary(src)))
-            
-            .ForMember(dest => dest.NightBaseSalary,
-                opt => opt.MapFrom(src => CalculateNightSumSalary(src)))
-            
-            .ForMember(dest => dest.NightWorkedHours,
-                opt => opt.MapFrom(src => CalculateAllNightWorkedHours(src)))
-            
-            .ForMember(dest => dest.FinalSumSalary,
-                opt => opt.MapFrom(src => CalculateFinalSumSalary(src)));
-    }
-
-    private static decimal CalculateGrossBaseSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(src.Employee.BaseSalary * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.BaseNormativeHours), 2);
-    }
-
-    private static decimal CalculateGrossBase50PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(src.Employee.BaseSalary * 1.5m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.FiftyPercentageBonusHours), 2);
-    }
-
-    private static decimal CalculateGrossBase100PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.HundredPercentageBonusHours), 2);
-    }
-
-    private static decimal CalculateGrossBaseSaturdaySalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(src.Employee.BaseSalary * 2m * (decimal)src.WorkingTimeRecordsAggregated.Sum(x => x.SaturdayHours), 2);
-    }
-
-    private static decimal CalculateBonusBaseSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(CalculateGrossBaseSalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
-    }
-
-    private static decimal CalculateBonusBase50PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(CalculateGrossBase50PercentageSalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
-    }
-
-    private static decimal CalculateBonusBase100PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(CalculateGrossBase100PercentageSalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
-    }
-
-    private static decimal CalculateBonusBaseSaturdaySalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return Math.Round(CalculateGrossBaseSaturdaySalary(src) * src.Employee.SalaryBonusPercentage / 100, 2);
-    }
-
-    private static decimal CalculateGrossSumBaseSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return CalculateGrossBaseSalary(src) + CalculateBonusBaseSalary(src);
-    }
-
-    private static decimal CalculateGrossSumBase50PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return CalculateGrossBase50PercentageSalary(src) + CalculateBonusBase50PercentageSalary(src);
-    }
-
-    private static decimal CalculateGrossSumBase100PercentageSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return CalculateGrossBase100PercentageSalary(src) + CalculateBonusBase100PercentageSalary(src);
-    }
-
-    private static decimal CalculateGrossSumBaseSaturdaySalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return CalculateGrossBaseSaturdaySalary(src) + CalculateBonusBaseSaturdaySalary(src);
-    }
-
-    private static decimal CalculateBonusSumSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return CalculateGrossBase50PercentageSalary(src) + CalculateGrossBase100PercentageSalary(src) + CalculateGrossBaseSaturdaySalary(src);
-    }
-
-    private decimal CalculateNightSumSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        var period = src.WorkingTimeRecordsAggregated.FirstOrDefault();
-        if (period is null)
-            return 0;
-        
-        var nightFactor = _calculationDomainService.GetNightFactorBonus(period.Date.Year, period.Date.Month);
-        var nightWorkedHours = (decimal)CalculateAllNightWorkedHours(src);
-        var nightSumSalary =  (decimal)nightFactor * nightWorkedHours;
-
-        return Math.Round(nightSumSalary, 2);
-    }
-
-    private decimal CalculateFinalSumSalary(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return CalculateGrossSumBaseSalary(src) +
-               CalculateGrossSumBase50PercentageSalary(src) +
-               CalculateGrossSumBase100PercentageSalary(src) +
-               CalculateGrossSumBaseSaturdaySalary(src) +
-               CalculateNightSumSalary(src) +
-               src.SalaryInformation.HolidaySalary +
-               src.SalaryInformation.SicknessSalary +
-               src.SalaryInformation.AdditionalSalary;
-    }
-
-    private static double CalculateAllNightWorkedHours(EmployeeWorkingTimeRecordViewModel src)
-    {
-        return src.WorkingTimeRecordsAggregated.Sum(x => x.NightHours);
+        CreateMap<EmployeeSalaryAggregatedHistory, EmployeeSalaryViewModel>();
     }
 }

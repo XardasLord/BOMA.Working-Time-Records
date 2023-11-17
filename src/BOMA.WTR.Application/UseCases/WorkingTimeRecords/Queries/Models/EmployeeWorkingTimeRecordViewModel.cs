@@ -20,45 +20,6 @@ public class WorkingTimeRecordDetailsViewModel
     public int GroupId { get; set; }
 }
 
-public class EmployeeSalaryViewModel
+public class EmployeeSalaryViewModel: EmployeeSalaryAggregatedHistory
 {
-    public decimal PercentageBonusSalary { get; set; }
-    
-    // Base rate
-    public decimal BaseSalary { get; set; }
-    public decimal Base50PercentageSalary { get; set; }
-    public decimal Base100PercentageSalary { get; set; }
-    public decimal BaseSaturdaySalary { get; set; }
-    
-    // Gross
-    public decimal GrossBaseSalary { get; set; }
-    public decimal GrossBase50PercentageSalary { get; set; }
-    public decimal GrossBase100PercentageSalary { get; set; }
-    public decimal GrossBaseSaturdaySalary { get; set; }
-    
-    // Bonus
-    public decimal BonusBaseSalary { get; set; }
-    public decimal BonusBase50PercentageSalary { get; set; }
-    public decimal BonusBase100PercentageSalary { get; set; }
-    public decimal BonusBaseSaturdaySalary { get; set; }
-    
-    // Gross Sum
-    public decimal GrossSumBaseSalary { get; set; }
-    public decimal GrossSumBase50PercentageSalary { get; set; }
-    public decimal GrossSumBase100PercentageSalary { get; set; }
-    public decimal GrossSumBaseSaturdaySalary { get; set; }
-    
-    // Bonus Sum
-    public decimal BonusSumSalary { get; set; }
-    
-    // Night
-    public decimal NightBaseSalary { get; set; }
-    public double NightWorkedHours { get; set; }
-    
-    // Additional
-    public decimal HolidaySalary { get; set; }
-    public decimal SicknessSalary { get; set; }
-    public decimal AdditionalSalary { get; set; }
-
-    public decimal FinalSumSalary { get; set; }
 }

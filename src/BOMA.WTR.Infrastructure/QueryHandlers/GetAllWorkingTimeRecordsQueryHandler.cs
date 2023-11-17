@@ -18,17 +18,20 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
     private readonly IEmployeeWorkingTimeRecordCalculationDomainService _employeeWorkingTimeRecordCalculationDomainService;
+    private readonly ISalaryCalculationDomainService _salaryCalculationDomainService;
 
     public GetAllWorkingTimeRecordsQueryHandler(
         BomaDbContext dbContext,
         IMapper mapper,
         IMediator mediator,
-        IEmployeeWorkingTimeRecordCalculationDomainService employeeWorkingTimeRecordCalculationDomainService)
+        IEmployeeWorkingTimeRecordCalculationDomainService employeeWorkingTimeRecordCalculationDomainService,
+        ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _mediator = mediator;
         _employeeWorkingTimeRecordCalculationDomainService = employeeWorkingTimeRecordCalculationDomainService;
+        _salaryCalculationDomainService = salaryCalculationDomainService;
     }
     
     public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordsQuery query, CancellationToken cancellationToken)
@@ -92,10 +95,11 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         
         // Clear all records without any entry
         result = result.Where(x => x.WorkingTimeRecordsAggregated.Any()).ToList();
-
+        
         result.ForEach(x =>
         {
-            x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(x);
+            var salary = _salaryCalculationDomainService.GetRecalculatedCurrentMonthSalary(x.Employee.BaseSalary, x.Employee.SalaryBonusPercentage, 0, 0, 0, x.WorkingTimeRecordsAggregated);
+            x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(salary);
         });
         
         result.ForEach(entry =>

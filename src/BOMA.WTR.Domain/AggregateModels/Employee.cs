@@ -71,15 +71,47 @@ public class Employee : Entity<int>, IAggregateRoot
             .Where(x => x.Date.Year == year)
             .ToList();
         
+        // TODO: This will not be needed when updating historical base salary will be possible (will be passed as an argument of this method)
+        var baseSalary = recordsToUpdate.First().SalaryInformation.BaseSalary;
+        
+        var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
+            baseSalary, percentageBonusSalary, 
+            holidaySalary.Amount, sicknessSalary.Amount, additionalSalary.Amount, 
+            recordsToUpdate);
+        
         recordsToUpdate.ForEach(record =>
         {
-            record.SalaryInformation.PercentageBonusSalary = percentageBonusSalary;
-            record.SalaryInformation.HolidaySalary = holidaySalary.Amount;
-            record.SalaryInformation.SicknessSalary = sicknessSalary.Amount;
-            record.SalaryInformation.AdditionalSalary = additionalSalary.Amount;
+            record.SalaryInformation.BaseSalary = recalculatedRecord.BaseSalary;
+            record.SalaryInformation.PercentageBonusSalary = recalculatedRecord.PercentageBonusSalary;
+            
+            record.SalaryInformation.Base50PercentageSalary = recalculatedRecord.Base50PercentageSalary;
+            record.SalaryInformation.Base100PercentageSalary = recalculatedRecord.Base100PercentageSalary;
+            record.SalaryInformation.BaseSaturdaySalary = recalculatedRecord.BaseSaturdaySalary;
+            
+            record.SalaryInformation.GrossBaseSalary = recalculatedRecord.GrossBaseSalary;
+            record.SalaryInformation.GrossBase50PercentageSalary = recalculatedRecord.GrossBase50PercentageSalary;
+            record.SalaryInformation.GrossBase100PercentageSalary = recalculatedRecord.GrossBase100PercentageSalary;
+            record.SalaryInformation.GrossBaseSaturdaySalary = recalculatedRecord.GrossBaseSaturdaySalary;
+            
+            record.SalaryInformation.BonusBaseSalary = recalculatedRecord.BonusBaseSalary;
+            record.SalaryInformation.BonusBase50PercentageSalary = recalculatedRecord.BonusBase50PercentageSalary;
+            record.SalaryInformation.BonusBase100PercentageSalary = recalculatedRecord.BonusBase100PercentageSalary;
+            record.SalaryInformation.BonusBaseSaturdaySalary = recalculatedRecord.BonusBaseSaturdaySalary;
+            
+            record.SalaryInformation.GrossSumBaseSalary = recalculatedRecord.GrossSumBaseSalary;
+            record.SalaryInformation.GrossSumBase50PercentageSalary = recalculatedRecord.GrossSumBase50PercentageSalary;
+            record.SalaryInformation.GrossSumBase100PercentageSalary = recalculatedRecord.GrossSumBase100PercentageSalary;
+            record.SalaryInformation.GrossSumBaseSaturdaySalary = recalculatedRecord.GrossSumBaseSaturdaySalary;
+            
+            record.SalaryInformation.BonusSumSalary = recalculatedRecord.BonusSumSalary;
+            record.SalaryInformation.NightBaseSalary = recalculatedRecord.NightBaseSalary;
+            record.SalaryInformation.NightWorkedHours = recalculatedRecord.NightWorkedHours;
+            
+            record.SalaryInformation.HolidaySalary = recalculatedRecord.HolidaySalary;
+            record.SalaryInformation.SicknessSalary = recalculatedRecord.SicknessSalary;
+            record.SalaryInformation.AdditionalSalary = recalculatedRecord.AdditionalSalary;
+            record.SalaryInformation.FinalSumSalary = recalculatedRecord.FinalSumSalary;
         });
-        
-        salaryCalculationDomainService.RecalculateSalary(recordsToUpdate);
     }
 
     public void UpdateDetailsData(
