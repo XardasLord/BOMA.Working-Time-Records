@@ -64,15 +64,16 @@ public class Employee : Entity<int>, IAggregateRoot
         _departmentId = departmentId;
     }
     
-    public void UpdateSummaryData(int year, int month, decimal percentageBonusSalary, Money holidaySalary, Money sicknessSalary, Money additionalSalary, ISalaryCalculationDomainService salaryCalculationDomainService)
+    public void UpdateSummaryData(
+        int year, int month,
+        decimal baseSalary, decimal percentageBonusSalary,
+        Money holidaySalary, Money sicknessSalary, Money additionalSalary,
+        ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
             .Where(x => x.Date.Year == year)
             .ToList();
-        
-        // TODO: This will not be needed when updating historical base salary will be possible (will be passed as an argument of this method)
-        var baseSalary = recordsToUpdate.First().SalaryInformation.BaseSalary;
         
         var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
             baseSalary, percentageBonusSalary, 

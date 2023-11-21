@@ -267,7 +267,7 @@ export class WorkingTimeRecordState {
 
 		return this.workingTimeRecordService.updateSummaryData(action.employeeId, action.updateModel).pipe(
 			tap(() => {
-				// This is not needed to update state, because we need to recalculate the sums that API does only
+				// Update state is not needed, because we need to recalculate the volumes that are done by API
 
 				ctx.dispatch(new GetAll());
 				this.toastService.success('Dane zostały zapisane');

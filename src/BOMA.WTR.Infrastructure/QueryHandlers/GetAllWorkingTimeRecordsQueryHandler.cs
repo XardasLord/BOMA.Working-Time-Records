@@ -58,24 +58,16 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
 
 
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
-        {
             databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
-        }
 
         if (query.QueryModel.DepartmentId is > 0)
-        {
             databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
-        }
 
         if (query.QueryModel.DepartmentId is > 0)
-        {
             databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
-        }
 
         if (query.QueryModel.ShiftId is > 0)
-        {
             databaseQuery = databaseQuery.Where(x => x.JobInformation.ShiftType == (ShiftType)query.QueryModel.ShiftId);
-        }
 
         var employeesWithWorkingTimeRecords = await databaseQuery
             .OrderBy(x => x.Name.LastName)

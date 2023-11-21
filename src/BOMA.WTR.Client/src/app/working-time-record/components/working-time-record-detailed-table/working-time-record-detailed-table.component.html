@@ -49,11 +49,11 @@
 				</td>
 			</ng-container>
 
-			<ng-container matColumnDef="rate">
+			<ng-container matColumnDef="baseSalary">
 				<th mat-header-cell *matHeaderCellDef>Stawka</th>
 				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getRateCssClass(i)">
 					<ng-container *ngIf="i % 6 === 0"></ng-container>
-					<ng-container *ngIf="i % 6 === 1">{{ record?.employee?.baseSalary | currency: 'PLN' }}</ng-container>
+					<ng-container *ngIf="i % 6 === 1">{{ record?.salaryInformation?.baseSalary | currency: 'PLN' }}</ng-container>
 					<ng-container *ngIf="i % 6 === 2">{{
 						record?.salaryInformation?.base50PercentageSalary | currency: 'PLN'
 					}}</ng-container>

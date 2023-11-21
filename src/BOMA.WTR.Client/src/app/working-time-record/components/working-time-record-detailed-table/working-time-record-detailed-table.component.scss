@@ -25,7 +25,7 @@ td.mat-footer-cell:first-of-type {
 	border-bottom: 2px solid black;
 }
 
-.mat-header-cell.mat-column-rate,
+.mat-header-cell.mat-column-baseSalary,
 .mat-header-cell.mat-column-gross,
 .mat-header-cell.mat-column-bonus,
 .mat-header-cell.mat-column-sumValue,
@@ -109,7 +109,7 @@ tr.mat-row:nth-child(6n) > .mat-cell {
 }
 
 // Rate column
-.mat-cell.base-rate {
+.mat-cell.base-salary {
 	background-color: $base-rate-color;
 }
 

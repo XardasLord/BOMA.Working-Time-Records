@@ -412,7 +412,7 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 
 	getRateCssClass(i: number): string {
 		if (i % 6 === 0 || i % 6 === 5) return this.cssEmptyValueClass;
-		if (i % 6 === 1) return 'base-rate';
+		if (i % 6 === 1) return 'base-salary';
 		if (i % 6 === 2 || i % 6 === 3 || i % 6 === 4) return this.cssDefaultValueClass;
 
 		return '';

@@ -6,6 +6,7 @@ public record EditWorkingTimeRecordsSummaryDataCommand(
     int EmployeeId,
     int Year, 
     int Month,
+    decimal BaseSalary,
     decimal PercentageBonusSalary,
     decimal HolidaySalary,
     decimal SicknessSalary,

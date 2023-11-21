@@ -23,7 +23,7 @@ export const DefaultColumnsToDisplayForDetailedTable: string[] = [
 	'actions',
 	'index',
 	'fullName',
-	'rate',
+	'baseSalary',
 	'gross',
 	'bonus',
 	'sumValue',

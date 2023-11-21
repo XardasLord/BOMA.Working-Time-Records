@@ -2,6 +2,7 @@ import { FormControl } from '@angular/forms';
 
 export interface WorkingTimeRecordSummaryDataFormModel {
 	employeeId: number;
+	baseSalary: number;
 	percentageBonusSalary: number;
 	holidaySalary: number;
 	sicknessSalary: number;

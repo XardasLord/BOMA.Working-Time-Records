@@ -15,10 +15,15 @@
 				<td mat-footer-cell *matFooterCellDef rowspan="2">Podsumowanie</td>
 			</ng-container>
 
-			<ng-container matColumnDef="rate">
+			<ng-container matColumnDef="baseSalary">
 				<th mat-header-cell *matHeaderCellDef>Stawka</th>
 				<td mat-cell *matCellDef="let record">
-					{{ record?.employee?.baseSalary | currency: 'PLN' }}
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<mat-form-field appearance="outline" class="number-input">
+							<input type="number" min="0" matInput formControlName="baseSalary" />
+						</mat-form-field>
+					</ng-template>
+					<ng-template #readOnlyMode> {{ record?.salaryInformation?.baseSalary | currency: 'PLN' }} </ng-template>
 				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
