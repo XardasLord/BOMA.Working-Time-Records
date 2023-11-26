@@ -1,6 +1,6 @@
-<div id="print-content" class="table-container">
+<div id="print-content" class="table-container mat-elevation-z3">
 	<form [formGroup]="detailedHoursForm" (ngSubmit)="onFormSubmit()">
-		<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackDetailedRecord">
+		<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackDetailedRecord">
 			<ng-container matColumnDef="actions">
 				<th mat-header-cell *matHeaderCellDef></th>
 				<td

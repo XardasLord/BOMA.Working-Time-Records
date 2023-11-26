@@ -1,5 +1,5 @@
-<div id="print-content" class="table-container">
-	<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackRecord">
+<div id="print-content" class="table-container mat-elevation-z3">
+	<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackRecord">
 		<ng-container matColumnDef="index">
 			<th mat-header-cell *matHeaderCellDef>Lp</th>
 			<td mat-cell *matCellDef="let record; let i = index">

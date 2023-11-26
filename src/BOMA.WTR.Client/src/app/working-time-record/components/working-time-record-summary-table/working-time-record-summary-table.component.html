@@ -1,6 +1,6 @@
-<div id="print-content" class="table-container">
+<div id="print-content" class="table-container mat-elevation-z3">
 	<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" [ngxsFormClearOnDestroy]="true" ngxsForm="workingTimeRecord.summaryForm">
-		<table mat-table class="mat-elevation-z6" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
+		<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
 			<ng-container matColumnDef="index">
 				<th mat-header-cell *matHeaderCellDef>Lp</th>
 				<td mat-cell *matCellDef="let record; let i = index">
