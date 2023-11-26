@@ -17,7 +17,7 @@ internal class GratyfikantService : IGratyfikantService
 
     public async Task SetWorkingHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> employeesRecords)
     {
-        await RunSTATask<bool>(() =>
+        await RunSTATask(() =>
         {
             var gratyfikant = RunGratyfikant();
 
@@ -25,11 +25,10 @@ internal class GratyfikantService : IGratyfikantService
             
             foreach (var employeeRecord in employeesWorkingTimeRecordViewModels)
             {
-                // TODO: Here we should check for record.Employee data
-                if (!gratyfikant.PracownicyManager.Istnieje("86100917703"))
+                if (!gratyfikant.PracownicyManager.Istnieje(employeeRecord.Employee.PersonalIdentityNumber))
                     return false;
             
-                var employee = gratyfikant.PracownicyManager.WczytajPracownika("86100917703");
+                var employee = gratyfikant.PracownicyManager.WczytajPracownika(employeeRecord.Employee.PersonalIdentityNumber);
 
                 foreach (var workingTimeData in employeeRecord.WorkingTimeRecordsAggregated)
                 {
@@ -79,7 +78,17 @@ internal class GratyfikantService : IGratyfikantService
             return true;
         });
     }
-    
+
+    public async Task OpenGratyfikant()
+    {
+        await RunSTATask(() =>
+        {
+            var gratyfikant = RunGratyfikant();
+
+            return true;
+        });
+    }
+
     private static Task<T> RunSTATask<T>(Func<T> function)
     {
         var task = new Task<T>(function, TaskCreationOptions.DenyChildAttach);
