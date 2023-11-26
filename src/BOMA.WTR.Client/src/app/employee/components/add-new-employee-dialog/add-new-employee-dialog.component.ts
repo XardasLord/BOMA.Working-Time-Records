@@ -32,7 +32,11 @@ export class AddNewEmployeeDialogComponent {
 			departmentName: new FormControl<string>(''),
 			shiftTypeId: new FormControl<number | null>(0, { nonNullable: true, validators: [Validators.required] }),
 			shiftTypeName: new FormControl<string | null>(''),
-			position: new FormControl<string>('', { nonNullable: true, validators: [Validators.max(64)] })
+			position: new FormControl<string>('', { nonNullable: true, validators: [Validators.max(64)] }),
+			personalIdentityNumber: new FormControl<string>('', {
+				nonNullable: true,
+				validators: [Validators.minLength(11), Validators.maxLength(11)]
+			})
 		});
 	}
 

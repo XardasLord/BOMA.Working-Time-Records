@@ -10,4 +10,5 @@ export interface EditEmployeeFormModel {
 	shiftTypeId: number | null;
 	shiftTypeName: string;
 	position: string;
+	personalIdentityNumber: string;
 }

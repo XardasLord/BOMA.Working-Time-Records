@@ -87,7 +87,8 @@ export class EmployeeState {
 								departmentName: action.employee.departmentName,
 								shiftTypeId: action.employee.shiftTypeId,
 								shiftTypeName: action.employee.shiftTypeName,
-								position: action.employee.position
+								position: action.employee.position,
+								personalIdentityNumber: action.employee.personalIdentityNumber
 							}
 						])
 					})
@@ -97,6 +98,7 @@ export class EmployeeState {
 					`Nowy pracownik został dodany - ${action.employee.firstName} ${action.employee.lastName}`,
 					'Sukces'
 				);
+
 				this.dialogRef.closeAll();
 			})
 		);
@@ -121,13 +123,15 @@ export class EmployeeState {
 								departmentName: action.employee.departmentName,
 								shiftTypeId: action.employee.shiftTypeId,
 								shiftTypeName: action.employee.shiftTypeName,
-								position: action.employee.position
+								position: action.employee.position,
+								personalIdentityNumber: action.employee.personalIdentityNumber
 							})
 						)
 					})
 				);
 
 				this.toastService.success(`Pracownik został edytowany`, 'Sukces');
+
 				this.dialogRef.closeAll();
 			})
 		);

@@ -1,5 +1,5 @@
-<div class="table-container">
-	<table mat-table matSort class="mat-elevation-z6" [dataSource]="dataSource">
+<div class="table-container mat-elevation-z3">
+	<table mat-table matSort class="mat-elevation-z3" [dataSource]="dataSource">
 		<ng-container matColumnDef="rcpId">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="rcpId">RCP ID</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.rcpId }}</td>
@@ -13,6 +13,11 @@
 		<ng-container matColumnDef="lastName">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="lastName">Nazwisko</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.lastName }}</td>
+		</ng-container>
+
+		<ng-container matColumnDef="personalIdentityNumber">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="departmentName">PESEL</th>
+			<td mat-cell *matCellDef="let employee">{{ employee?.personalIdentityNumber }}</td>
 		</ng-container>
 
 		<ng-container matColumnDef="departmentName">

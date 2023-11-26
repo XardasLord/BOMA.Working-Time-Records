@@ -9,4 +9,5 @@ export interface AddNewEmployeeFormModel {
 	shiftTypeId: number;
 	shiftTypeName: string;
 	position: string;
+	personalIdentityNumber: string;
 }
