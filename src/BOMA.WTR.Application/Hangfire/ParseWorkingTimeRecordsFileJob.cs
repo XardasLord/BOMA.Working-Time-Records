@@ -34,6 +34,9 @@ public class ParseWorkingTimeRecordsFileJob
             return;
         }
 
+        var addedNewEmployees = 0;
+        var addedNewRecords = 0;
+
         foreach (var file in files)
         {
             var rogerFileModels = ParseCsvToRogerFile(file).ToList();
@@ -75,12 +78,14 @@ public class ParseWorkingTimeRecordsFileJob
                         
                         currentEmployee = Employee.Add(name, salary, bonus, jobInformation, personalIdentityNumber, rogerFileModel.UserRcpId.Value, rogerFileModel.DepartmentId!.Value);
                         await _employeeRepository.AddAsync(currentEmployee, cancellationToken);
+
+                        addedNewEmployees++;
                     }
                     
                     employeesCache.Add(currentEmployee);
                 }
                 
-                currentEmployee.AddWorkingTimeRecord(WorkingTimeRecord.Create(
+                var addedRecord = currentEmployee.AddWorkingTimeRecord(WorkingTimeRecord.Create(
                     rogerFileModel.RogerEventType!.Value,
                     new DateTime(
                         rogerFileModel.Date!.Value.Year,
@@ -90,9 +95,17 @@ public class ParseWorkingTimeRecordsFileJob
                         rogerFileModel.Time.Value.Minutes, 
                         rogerFileModel.Time.Value.Seconds),
                     currentEmployee.DepartmentId));
+
+                if (addedRecord)
+                {
+                    addedNewRecords++;
+                }
             }
 
             await _employeeRepository.SaveChangesAsync(cancellationToken);
+            
+            context.WriteLine($"There are {addedNewEmployees} added new employees from the file - {file}");
+            context.WriteLine($"There are {addedNewRecords} added new records for employees from the file - {file}");
         }
     }
 

@@ -157,17 +157,19 @@ public class Employee : Entity<int>, IAggregateRoot
         });
     }
     
-    public void AddWorkingTimeRecord(WorkingTimeRecord record)
+    public bool AddWorkingTimeRecord(WorkingTimeRecord record)
     {
         if (WorkingTimeRecords
             .Where(x => x.EventType == record.EventType)
             .Where(x => x.OccuredAt == record.OccuredAt)
             .Any(x => x.DepartmentId == record.DepartmentId))
         {
-            return;
+            return false;
         }
         
         _workingTimeRecords.Add(record);
+
+        return true;
     }
     
     public void AddWorkingTimeRecordAggregatedHistory(WorkingTimeRecordAggregatedHistory record)
