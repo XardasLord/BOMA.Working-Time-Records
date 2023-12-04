@@ -5,4 +5,5 @@ public class RogerFileConfiguration
     public const string Position = "Roger";
 
     public string FileLocation { get; set; }
+    public string ProcessedFileLocation { get; set; }
 }
