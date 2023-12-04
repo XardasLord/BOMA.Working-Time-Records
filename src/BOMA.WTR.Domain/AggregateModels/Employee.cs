@@ -125,7 +125,8 @@ public class Employee : Entity<int>, IAggregateRoot
         IDictionary<int, double?> dayHoursDictionary,
         IDictionary<int, double?> saturdayHoursDictionary,
         IDictionary<int, double?> nightHoursDictionary,
-        IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
+        IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService,
+        ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
@@ -155,8 +156,53 @@ public class Employee : Entity<int>, IAggregateRoot
             record.SaturdayHours = saturdayHours;
             record.NightHours = nightHours;
         });
+
+        var first = recordsToUpdate.First();
+        var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
+            first.SalaryInformation.BaseSalary, first.SalaryInformation.PercentageBonusSalary, 
+            first.SalaryInformation.HolidaySalary, first.SalaryInformation.SicknessSalary, first.SalaryInformation.AdditionalSalary, 
+            recordsToUpdate);
+        
+        UpdateAllHistorySalaryInformation(recordsToUpdate, recalculatedRecord);
     }
-    
+
+    private static void UpdateAllHistorySalaryInformation(List<WorkingTimeRecordAggregatedHistory> recordsToUpdate, EmployeeSalaryAggregatedHistory recalculatedRecord)
+    {
+        recordsToUpdate.ForEach(record =>
+        {
+            record.SalaryInformation.BaseSalary = recalculatedRecord.BaseSalary;
+            record.SalaryInformation.PercentageBonusSalary = recalculatedRecord.PercentageBonusSalary;
+            
+            record.SalaryInformation.Base50PercentageSalary = recalculatedRecord.Base50PercentageSalary;
+            record.SalaryInformation.Base100PercentageSalary = recalculatedRecord.Base100PercentageSalary;
+            record.SalaryInformation.BaseSaturdaySalary = recalculatedRecord.BaseSaturdaySalary;
+            
+            record.SalaryInformation.GrossBaseSalary = recalculatedRecord.GrossBaseSalary;
+            record.SalaryInformation.GrossBase50PercentageSalary = recalculatedRecord.GrossBase50PercentageSalary;
+            record.SalaryInformation.GrossBase100PercentageSalary = recalculatedRecord.GrossBase100PercentageSalary;
+            record.SalaryInformation.GrossBaseSaturdaySalary = recalculatedRecord.GrossBaseSaturdaySalary;
+            
+            record.SalaryInformation.BonusBaseSalary = recalculatedRecord.BonusBaseSalary;
+            record.SalaryInformation.BonusBase50PercentageSalary = recalculatedRecord.BonusBase50PercentageSalary;
+            record.SalaryInformation.BonusBase100PercentageSalary = recalculatedRecord.BonusBase100PercentageSalary;
+            record.SalaryInformation.BonusBaseSaturdaySalary = recalculatedRecord.BonusBaseSaturdaySalary;
+            
+            record.SalaryInformation.GrossSumBaseSalary = recalculatedRecord.GrossSumBaseSalary;
+            record.SalaryInformation.GrossSumBase50PercentageSalary = recalculatedRecord.GrossSumBase50PercentageSalary;
+            record.SalaryInformation.GrossSumBase100PercentageSalary = recalculatedRecord.GrossSumBase100PercentageSalary;
+            record.SalaryInformation.GrossSumBaseSaturdaySalary = recalculatedRecord.GrossSumBaseSaturdaySalary;
+            
+            record.SalaryInformation.BonusSumSalary = recalculatedRecord.BonusSumSalary;
+            record.SalaryInformation.NightBaseSalary = recalculatedRecord.NightBaseSalary;
+            record.SalaryInformation.NightWorkedHours = recalculatedRecord.NightWorkedHours;
+            
+            record.SalaryInformation.HolidaySalary = recalculatedRecord.HolidaySalary;
+            record.SalaryInformation.SicknessSalary = recalculatedRecord.SicknessSalary;
+            record.SalaryInformation.AdditionalSalary = recalculatedRecord.AdditionalSalary;
+            record.SalaryInformation.FinalSumSalary = recalculatedRecord.FinalSumSalary;
+        });
+    }
+
     public bool AddWorkingTimeRecord(WorkingTimeRecord record)
     {
         if (WorkingTimeRecords

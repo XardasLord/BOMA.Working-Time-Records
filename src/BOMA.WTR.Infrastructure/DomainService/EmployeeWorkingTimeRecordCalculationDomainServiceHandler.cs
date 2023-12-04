@@ -287,7 +287,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
     public double GetFiftyPercentageBonusHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded)
     {
-        if (startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday || endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday)
+        if (startWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday || (startWorkDateNormalized.DayOfWeek is DayOfWeek.Friday && endWorkDateNormalized.DayOfWeek is DayOfWeek.Saturday && endWorkDateNormalized.Hour > 0))
             return 0;
             
         return workedHoursRounded > 8 ? (workedHoursRounded - 8 > 2 ? 2 : workedHoursRounded - 8) : 0;

@@ -12,11 +12,16 @@ public class EditWorkingTimeRecordsDetailsDataCommandHandler : ICommandHandler<E
 {
     private readonly IAggregateRepository<Employee> _employeeRepository;
     private readonly IEmployeeWorkingTimeRecordCalculationDomainService _calculationDomainService;
+    private readonly ISalaryCalculationDomainService _salaryCalculationDomainService;
 
-    public EditWorkingTimeRecordsDetailsDataCommandHandler(IAggregateRepository<Employee> employeeRepository, IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
+    public EditWorkingTimeRecordsDetailsDataCommandHandler(
+        IAggregateRepository<Employee> employeeRepository,
+        IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService,
+        ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         _employeeRepository = employeeRepository;
         _calculationDomainService = calculationDomainService;
+        _salaryCalculationDomainService = salaryCalculationDomainService;
     }
     
     public async Task<Unit> Handle(EditWorkingTimeRecordsDetailsDataCommand command, CancellationToken cancellationToken)
@@ -25,7 +30,7 @@ public class EditWorkingTimeRecordsDetailsDataCommandHandler : ICommandHandler<E
         var employee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken)
                        ?? throw new NotFoundException($"Employee with ID = {command.EmployeeId} was not found");
 
-        employee.UpdateDetailsData(command.Year, command.Month, command.DayHours, command.SaturdayHours, command.NightHours, _calculationDomainService);
+        employee.UpdateDetailsData(command.Year, command.Month, command.DayHours, command.SaturdayHours, command.NightHours, _calculationDomainService, _salaryCalculationDomainService);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
         
