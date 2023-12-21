@@ -33,6 +33,7 @@ export const DefaultColumnsToDisplayForDetailedTable: string[] = [
 ];
 
 export const DefaultColumnsToDisplayForReportHoursTable: string[] = [
+	'actions',
 	'index',
 	'fullName',
 	'shiftType',

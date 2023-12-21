@@ -1,135 +1,171 @@
 <div id="print-content" class="table-container mat-elevation-z3">
-	<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackRecord">
-		<ng-container matColumnDef="actions">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 3 === 0 ? '3' : null"
-				[style.display]="i % 3 ? 'none' : null"
-			></td>
-		</ng-container>
+	<form [formGroup]="reportHoursForm" (ngSubmit)="onFormSubmit()">
+		<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackRecord">
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef></th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 3 === 0 ? '3' : null"
+					[style.display]="i % 3 ? 'none' : null"
+				>
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="notEditing">
+						<button mat-icon-button type="submit" matTooltip="Zapisz">
+							<mat-icon>save</mat-icon>
+						</button>
+						<button mat-icon-button (click)="cancelEditMode()" matTooltip="Anuluj">
+							<mat-icon>cancel</mat-icon>
+						</button>
+					</ng-template>
+					<ng-template #notEditing>
+						<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
+							<mat-icon>edit</mat-icon>
+						</button>
+					</ng-template>
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
 
-		<ng-container matColumnDef="index">
-			<th mat-header-cell *matHeaderCellDef>Lp</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 3 === 0 ? '3' : null"
-				[style.display]="i % 3 ? 'none' : null"
-			>
-				{{ i / 3 + 1 }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef></td>
-		</ng-container>
+			<ng-container matColumnDef="index">
+				<th mat-header-cell *matHeaderCellDef>Lp</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 3 === 0 ? '3' : null"
+					[style.display]="i % 3 ? 'none' : null"
+				>
+					{{ i / 3 + 1 }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
 
-		<ng-container matColumnDef="fullName">
-			<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 3 === 0 ? '3' : null"
-				[style.display]="i % 3 ? 'none' : null"
-			>
-				{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef rowspan="2">Podsumowanie</td>
-		</ng-container>
+			<ng-container matColumnDef="fullName">
+				<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 3 === 0 ? '3' : null"
+					[style.display]="i % 3 ? 'none' : null"
+				>
+					{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef rowspan="2">Podsumowanie</td>
+			</ng-container>
 
-		<ng-container matColumnDef="shiftType">
-			<th mat-header-cell *matHeaderCellDef>Zmiana</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 3 === 0 ? '3' : null"
-				[style.display]="i % 3 ? 'none' : null"
-			>
-				{{ record?.employee?.shiftTypeName }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef></td>
-		</ng-container>
+			<ng-container matColumnDef="shiftType">
+				<th mat-header-cell *matHeaderCellDef>Zmiana</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 3 === 0 ? '3' : null"
+					[style.display]="i % 3 ? 'none' : null"
+				>
+					{{ record?.employee?.shiftTypeName }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
 
-		<ng-container matColumnDef="position">
-			<th mat-header-cell *matHeaderCellDef>Stanowisko</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 3 === 0 ? '3' : null"
-				[style.display]="i % 3 ? 'none' : null"
-			>
-				{{ record?.employee?.position }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef></td>
-		</ng-container>
+			<ng-container matColumnDef="position">
+				<th mat-header-cell *matHeaderCellDef>Stanowisko</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 3 === 0 ? '3' : null"
+					[style.display]="i % 3 ? 'none' : null"
+				>
+					{{ record?.employee?.position }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
 
-		<ng-container matColumnDef="sumHours">
-			<th mat-header-cell *matHeaderCellDef>Suma [h]</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[attr.rowspan]="i % 3 === 0 ? '3' : null"
-				[style.display]="i % 3 ? 'none' : null"
-			>
-				{{ getAllHoursSum(record?.workingTimeRecordsAggregated) }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>{{ getTotalHoursSum() | async }}</td>
-		</ng-container>
+			<ng-container matColumnDef="sumHours">
+				<th mat-header-cell *matHeaderCellDef>Suma [h]</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[attr.rowspan]="i % 3 === 0 ? '3' : null"
+					[style.display]="i % 3 ? 'none' : null"
+				>
+					{{ getAllHoursSum(record?.workingTimeRecordsAggregated) }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>{{ getTotalHoursSum() | async }}</td>
+			</ng-container>
 
-		<ng-container matColumnDef="emptyLabel">
-			<th mat-header-cell *matHeaderCellDef></th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'none-value': i % 3 === 0,
-					'default-value-hours': i % 3 === 1 || i % 3 === 2
-				}"
-			>
-				<span *ngIf="i % 3 === 0">Godziny</span>
-				<span *ngIf="i % 3 === 1">wejście</span>
-				<span *ngIf="i % 3 === 2">wyjście</span>
-			</td>
-			<td mat-footer-cell *matFooterCellDef></td>
-		</ng-container>
+			<ng-container matColumnDef="emptyLabel">
+				<th mat-header-cell *matHeaderCellDef></th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'none-value': i % 3 === 0,
+						'default-value-hours': i % 3 === 1 || i % 3 === 2
+					}"
+				>
+					<span *ngIf="i % 3 === 0">Godziny</span>
+					<span *ngIf="i % 3 === 1">wejście</span>
+					<span *ngIf="i % 3 === 2">wyjście</span>
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
 
-		<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
-			<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
-			<td
-				mat-cell
-				*matCellDef="let record; let i = index"
-				[ngClass]="{
-					'none-value': i % 3 === 0,
-					'default-value-hours': i % 3 === 1 || i % 3 === 2,
-					'weekend-day': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isWeekendDay
-				}"
-			>
-				<span *ngIf="i % 3 === 0">
-					{{
-						record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded +
-							record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero
-					}}
-					<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
-					<!--							<mat-icon>error</mat-icon>-->
-					<!--						</span>-->
-				</span>
-				<span *ngIf="i % 3 === 1">{{
-					(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.from | date: 'mediumTime') === '00:00:00'
-						? ''
-						: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.from | date: 'shortTime')
-				}}</span>
-				<span *ngIf="i % 3 === 2">{{
-					(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.to | date: 'mediumTime') === '00:00:00'
-						? ''
-						: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.to | date: 'shortTime')
-				}}</span>
-			</td>
-			<td mat-footer-cell *matFooterCellDef></td>
-		</ng-container>
+			<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
+				<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					[ngClass]="{
+						'none-value': i % 3 === 0,
+						'default-value-hours': i % 3 === 1 || i % 3 === 2,
+						'weekend-day': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isWeekendDay
+					}"
+				>
+					<span *ngIf="i % 3 === 0">
+						{{
+							record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded +
+								record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero
+						}}
+						<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
+						<!--							<mat-icon>error</mat-icon>-->
+						<!--						</span>-->
+					</span>
 
-		<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async; sticky: true"></tr>
-		<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async"></tr>
-		<tr mat-footer-row *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
-	</table>
+					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
+						<span *ngIf="i % 3 === 1">
+							<mat-form-field appearance="outline" class="number-input">
+								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}Entry" />
+							</mat-form-field>
+						</span>
+
+						<span *ngIf="i % 3 === 2">
+							<mat-form-field appearance="outline" class="number-input">
+								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}Exit" />
+							</mat-form-field>
+						</span>
+					</ng-template>
+
+					<ng-template #readOnlyMode>
+						<span *ngIf="i % 3 === 1">{{
+							(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.from | date: 'mediumTime') ===
+							'00:00:00'
+								? ''
+								: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.from | date: 'shortTime')
+						}}</span>
+						<span *ngIf="i % 3 === 2">{{
+							(record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.to | date: 'mediumTime') ===
+							'00:00:00'
+								? ''
+								: (record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workTimePeriodOriginal?.to | date: 'shortTime')
+						}}</span>
+					</ng-template>
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async; sticky: true"></tr>
+			<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async"></tr>
+			<tr mat-footer-row *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
+		</table>
+	</form>
 </div>
 
 <!--<button-->

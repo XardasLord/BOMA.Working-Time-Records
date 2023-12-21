@@ -135,7 +135,7 @@ export class WorkingTimeRecordState {
 				employee: x.employee,
 				salaryInformation: x.salaryInformation,
 				workingTimeRecordsAggregated: x.workingTimeRecordsAggregated,
-				isEditable: x.isEditable
+				isEditable: !x.isEditable // `x.isEditable` describe if it is ready for historical changes. We should rename it to be more descriptive
 			};
 
 			for (let i = 0; i < 3; i++) {
