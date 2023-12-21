@@ -28,6 +28,7 @@ import ChangeShift = WorkingTimeRecord.ChangeShift;
 import { EmployeeWorkingTimeRecordAbsentsModel } from '../models/employee-working-time-record-absents.model';
 import { WorkingTimeRecordAbsentAggregatedModel } from '../models/working-time-record-details-aggregated.model';
 import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
+import UpdateReportHoursData = WorkingTimeRecord.UpdateReportHoursData;
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -289,6 +290,27 @@ export class WorkingTimeRecordState {
 		return this.workingTimeRecordService.updateDetailedData(action.employeeId, action.updateModel).pipe(
 			tap(() => {
 				// This is not needed to update state, because we need to recalculate the sums that API does only
+
+				ctx.dispatch(new GetAll());
+				this.toastService.success('Dane zostały zapisane');
+			}),
+			catchError((e: HttpErrorResponse) => {
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				return throwError(() => e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
+			})
+		);
+	}
+
+	@Action(UpdateReportHoursData)
+	updateReportHoursData(ctx: StateContext<WorkingTimeRecordStateModel>, action: UpdateReportHoursData): Observable<void> {
+		this.progressSpinnerService.showProgressSpinner();
+
+		return this.workingTimeRecordService.updateReportHoursData(action.employeeId, action.updateModel).pipe(
+			tap(() => {
+				// This is not needed to update state, because we need to recalculate hours that API does only
 
 				ctx.dispatch(new GetAll());
 				this.toastService.success('Dane zostały zapisane');

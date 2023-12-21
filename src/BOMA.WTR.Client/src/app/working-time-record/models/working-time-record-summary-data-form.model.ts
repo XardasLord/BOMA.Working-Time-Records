@@ -28,8 +28,8 @@ export class WorkingTimeRecordReportHoursDataFormModel {
 	year!: number;
 	month!: number;
 	employeeId!: number;
-	reportEntryHours!: Record<number, number>;
-	reportExitHours!: Record<number, number>;
+	reportEntryHours!: Record<number, string>;
+	reportExitHours!: Record<number, string>;
 
 	constructor(init?: Partial<WorkingTimeRecordReportHoursDataFormModel>) {
 		Object.assign(this, { ...init });

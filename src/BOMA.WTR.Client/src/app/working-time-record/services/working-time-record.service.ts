@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { QueryModel } from '../models/query.model';
 import {
 	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordReportHoursDataFormModel,
 	WorkingTimeRecordSummaryDataFormModel
 } from '../models/working-time-record-summary-data-form.model';
 
@@ -29,6 +30,10 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 
 	updateDetailedData(employeeId: number, updateModel: WorkingTimeRecordDetailedDataFormModel): Observable<void> {
 		return this.httpClient.patch<void>(`${this.apiEndpoint}/employees/${employeeId}/workingTimeRecordsDetails`, updateModel);
+	}
+
+	updateReportHoursData(employeeId: number, updateModel: WorkingTimeRecordReportHoursDataFormModel): Observable<void> {
+		return this.httpClient.patch<void>(`${this.apiEndpoint}/employees/${employeeId}/workingTimeRecordsReportHours`, updateModel);
 	}
 
 	sendHoursToGratyfikant(queryModel: QueryModel): Observable<void> {
