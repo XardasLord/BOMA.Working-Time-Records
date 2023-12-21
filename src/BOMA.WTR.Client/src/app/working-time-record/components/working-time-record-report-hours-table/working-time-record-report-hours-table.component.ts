@@ -9,12 +9,8 @@ import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-	WorkingTimeRecordDetailedDataFormModel,
-	WorkingTimeRecordDetailedFormGroup,
-	WorkingTimeRecordReportHoursDataFormModel,
-	WorkingTimeRecordReportHoursFormGroup
-} from '../../models/working-time-record-summary-data-form.model';
+import { WorkingTimeRecordReportHoursFormGroup } from '../../models/working-time-record-summary-data-form.model';
+import moment from 'moment';
 
 @Component({
 	selector: 'app-working-time-record-report-hours-table',
@@ -30,73 +26,73 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
 
 	constructor(private store: Store, private toastService: ToastrService, private fb: FormBuilder) {
-		this.reportHoursForm = fb.group<WorkingTimeRecordReportHoursFormGroup>({
+		this.reportHoursForm = this.fb.group<WorkingTimeRecordReportHoursFormGroup>({
 			year: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			month: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			employeeId: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day1Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day2Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day3Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day4Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day5Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day6Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day7Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day8Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day9Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day10Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day11Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day12Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day13Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day14Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day15Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day16Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day17Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day18Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day19Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day20Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day21Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day22Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day23Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day24Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day25Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day26Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day27Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day28Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day29Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day30Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day31Entry: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
+			day1Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day2Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day3Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day4Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day5Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day6Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day7Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day8Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day9Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day10Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day11Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day12Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day13Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day14Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day15Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day16Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day17Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day18Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day19Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day20Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day21Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day22Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day23Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day24Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day25Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day26Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day27Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day28Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day29Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day30Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day31Entry: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
 
-			day1Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day2Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day3Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day4Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day5Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day6Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day7Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day8Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day9Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day10Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day11Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day12Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day13Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day14Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day15Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day16Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day17Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day18Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day19Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day20Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day21Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day22Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day23Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day24Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day25Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day26Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day27Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day28Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day29Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day30Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
-			day31Exit: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] })
+			day1Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day2Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day3Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day4Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day5Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day6Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day7Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day8Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day9Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day10Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day11Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day12Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day13Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day14Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day15Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day16Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day17Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day18Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day19Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day20Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day21Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day22Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day23Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day24Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day25Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day26Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day27Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day28Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day29Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day30Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] }),
+			day31Exit: new FormControl('', { nonNullable: true, validators: [Validators.min(0)] })
 		});
 	}
 
@@ -148,72 +144,98 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 
 		this.editingRow = record;
 
+		const emptyTimeFormat = '';
+
 		// Set initial value for all days
+		for (let day = 1; day <= 31; day++) {
+			const entry = `day${day}Entry`;
+			const exit = `day${day}Exit`;
+
+			const workTimeRecord = this.editingRow?.workingTimeRecordsAggregated[day - 1];
+
+			if (workTimeRecord) {
+				this.reportHoursForm.patchValue({
+					[entry]:
+						workTimeRecord.workTimePeriodOriginal.duration != '00:00:00'
+							? moment(workTimeRecord.workTimePeriodOriginal.from).format('hh:mm')
+							: emptyTimeFormat,
+					[exit]:
+						workTimeRecord.workTimePeriodOriginal.duration != '00:00:00'
+							? moment(workTimeRecord.workTimePeriodOriginal.to).format('hh:mm')
+							: emptyTimeFormat
+				});
+			}
+		}
+
+		this.reportHoursForm.patchValue({
+			employeeId: this.editingRow?.employee.id
+		});
+
 		// this.reportHoursForm.patchValue({
 		// 	employeeId: this.editingRow?.employee.id,
-		// 	day1Entry: this.editingRow?.workingTimeRecordsAggregated[0]?.workTimePeriodOriginal.from,
-		// 	day2Entry: this.editingRow?.workingTimeRecordsAggregated[1]?.workTimePeriodOriginal.from,
-		// 	day3Entry: this.editingRow?.workingTimeRecordsAggregated[2]?.workTimePeriodOriginal.from,
-		// 	day4Entry: this.editingRow?.workingTimeRecordsAggregated[3]?.workTimePeriodOriginal.from,
-		// 	day5Entry: this.editingRow?.workingTimeRecordsAggregated[4]?.workTimePeriodOriginal.from,
-		// 	day6Entry: this.editingRow?.workingTimeRecordsAggregated[5]?.workTimePeriodOriginal.from,
-		// 	day7Entry: this.editingRow?.workingTimeRecordsAggregated[6]?.workTimePeriodOriginal.from,
-		// 	day8Entry: this.editingRow?.workingTimeRecordsAggregated[7]?.workTimePeriodOriginal.from,
-		// 	day9Entry: this.editingRow?.workingTimeRecordsAggregated[8]?.workTimePeriodOriginal.from,
-		// 	day10Entry: this.editingRow?.workingTimeRecordsAggregated[9]?.workTimePeriodOriginal.from,
-		// 	day11Entry: this.editingRow?.workingTimeRecordsAggregated[10]?.workTimePeriodOriginal.from,
-		// 	day12Entry: this.editingRow?.workingTimeRecordsAggregated[11]?.workTimePeriodOriginal.from,
-		// 	day13Entry: this.editingRow?.workingTimeRecordsAggregated[12]?.workTimePeriodOriginal.from,
-		// 	day14Entry: this.editingRow?.workingTimeRecordsAggregated[13]?.workTimePeriodOriginal.from,
-		// 	day15Entry: this.editingRow?.workingTimeRecordsAggregated[14]?.workTimePeriodOriginal.from,
-		// 	day16Entry: this.editingRow?.workingTimeRecordsAggregated[15]?.workTimePeriodOriginal.from,
-		// 	day17Entry: this.editingRow?.workingTimeRecordsAggregated[16]?.workTimePeriodOriginal.from,
-		// 	day18Entry: this.editingRow?.workingTimeRecordsAggregated[17]?.workTimePeriodOriginal.from,
-		// 	day19Entry: this.editingRow?.workingTimeRecordsAggregated[18]?.workTimePeriodOriginal.from,
-		// 	day20Entry: this.editingRow?.workingTimeRecordsAggregated[19]?.workTimePeriodOriginal.from,
-		// 	day21Entry: this.editingRow?.workingTimeRecordsAggregated[20]?.workTimePeriodOriginal.from,
-		// 	day22Entry: this.editingRow?.workingTimeRecordsAggregated[21]?.workTimePeriodOriginal.from,
-		// 	day23Entry: this.editingRow?.workingTimeRecordsAggregated[22]?.workTimePeriodOriginal.from,
-		// 	day24Entry: this.editingRow?.workingTimeRecordsAggregated[23]?.workTimePeriodOriginal.from,
-		// 	day25Entry: this.editingRow?.workingTimeRecordsAggregated[24]?.workTimePeriodOriginal.from,
-		// 	day26Entry: this.editingRow?.workingTimeRecordsAggregated[25]?.workTimePeriodOriginal.from,
-		// 	day27Entry: this.editingRow?.workingTimeRecordsAggregated[26]?.workTimePeriodOriginal.from,
-		// 	day28Entry: this.editingRow?.workingTimeRecordsAggregated[27]?.workTimePeriodOriginal.from,
-		// 	day29Entry: this.editingRow?.workingTimeRecordsAggregated[28]?.workTimePeriodOriginal.from,
-		// 	day30Entry: this.editingRow?.workingTimeRecordsAggregated[29]?.workTimePeriodOriginal.from,
-		// 	day31Entry: this.editingRow?.workingTimeRecordsAggregated[30]?.workTimePeriodOriginal.from,
+		// 	day1Entry: moment(this.editingRow?.workingTimeRecordsAggregated[0]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day2Entry: moment(this.editingRow?.workingTimeRecordsAggregated[1]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day3Entry: moment(this.editingRow?.workingTimeRecordsAggregated[2]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day4Entry: moment(this.editingRow?.workingTimeRecordsAggregated[3]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day5Entry: moment(this.editingRow?.workingTimeRecordsAggregated[4]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day6Entry: moment(this.editingRow?.workingTimeRecordsAggregated[5]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day7Entry: moment(this.editingRow?.workingTimeRecordsAggregated[6]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day8Entry: moment(this.editingRow?.workingTimeRecordsAggregated[7]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day9Entry: moment(this.editingRow?.workingTimeRecordsAggregated[8]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day10Entry: moment(this.editingRow?.workingTimeRecordsAggregated[9]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day11Entry: moment(this.editingRow?.workingTimeRecordsAggregated[10]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day12Entry: moment(this.editingRow?.workingTimeRecordsAggregated[11]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day13Entry: moment(this.editingRow?.workingTimeRecordsAggregated[12]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day14Entry: moment(this.editingRow?.workingTimeRecordsAggregated[13]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day15Entry: moment(this.editingRow?.workingTimeRecordsAggregated[14]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day16Entry: moment(this.editingRow?.workingTimeRecordsAggregated[15]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day17Entry: moment(this.editingRow?.workingTimeRecordsAggregated[16]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day18Entry: moment(this.editingRow?.workingTimeRecordsAggregated[17]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day19Entry: moment(this.editingRow?.workingTimeRecordsAggregated[18]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day20Entry: moment(this.editingRow?.workingTimeRecordsAggregated[19]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day21Entry: moment(this.editingRow?.workingTimeRecordsAggregated[20]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day22Entry: moment(this.editingRow?.workingTimeRecordsAggregated[21]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day23Entry: moment(this.editingRow?.workingTimeRecordsAggregated[22]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day24Entry: moment(this.editingRow?.workingTimeRecordsAggregated[23]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day25Entry: moment(this.editingRow?.workingTimeRecordsAggregated[24]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day26Entry: moment(this.editingRow?.workingTimeRecordsAggregated[25]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day27Entry: moment(this.editingRow?.workingTimeRecordsAggregated[26]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day28Entry: moment(this.editingRow?.workingTimeRecordsAggregated[27]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day29Entry: moment(this.editingRow?.workingTimeRecordsAggregated[28]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day30Entry: moment(this.editingRow?.workingTimeRecordsAggregated[29]?.workTimePeriodOriginal.from).format('hh:mm'),
+		// 	day31Entry: moment(this.editingRow?.workingTimeRecordsAggregated[30]?.workTimePeriodOriginal.from).format('hh:mm'),
 		//
-		// 	day1Exit: this.editingRow?.workingTimeRecordsAggregated[0]?.workTimePeriodOriginal.to,
-		// 	day2Exit: this.editingRow?.workingTimeRecordsAggregated[1]?.workTimePeriodOriginal.to,
-		// 	day3Exit: this.editingRow?.workingTimeRecordsAggregated[2]?.workTimePeriodOriginal.to,
-		// 	day4Exit: this.editingRow?.workingTimeRecordsAggregated[3]?.workTimePeriodOriginal.to,
-		// 	day5Exit: this.editingRow?.workingTimeRecordsAggregated[4]?.workTimePeriodOriginal.to,
-		// 	day6Exit: this.editingRow?.workingTimeRecordsAggregated[5]?.workTimePeriodOriginal.to,
-		// 	day7Exit: this.editingRow?.workingTimeRecordsAggregated[6]?.workTimePeriodOriginal.to,
-		// 	day8Exit: this.editingRow?.workingTimeRecordsAggregated[7]?.workTimePeriodOriginal.to,
-		// 	day9Exit: this.editingRow?.workingTimeRecordsAggregated[8]?.workTimePeriodOriginal.to,
-		// 	day10Exit: this.editingRow?.workingTimeRecordsAggregated[9]?.workTimePeriodOriginal.to,
-		// 	day11Exit: this.editingRow?.workingTimeRecordsAggregated[10]?.workTimePeriodOriginal.to,
-		// 	day12Exit: this.editingRow?.workingTimeRecordsAggregated[11]?.workTimePeriodOriginal.to,
-		// 	day13Exit: this.editingRow?.workingTimeRecordsAggregated[12]?.workTimePeriodOriginal.to,
-		// 	day14Exit: this.editingRow?.workingTimeRecordsAggregated[13]?.workTimePeriodOriginal.to,
-		// 	day15Exit: this.editingRow?.workingTimeRecordsAggregated[14]?.workTimePeriodOriginal.to,
-		// 	day16Exit: this.editingRow?.workingTimeRecordsAggregated[15]?.workTimePeriodOriginal.to,
-		// 	day17Exit: this.editingRow?.workingTimeRecordsAggregated[16]?.workTimePeriodOriginal.to,
-		// 	day18Exit: this.editingRow?.workingTimeRecordsAggregated[17]?.workTimePeriodOriginal.to,
-		// 	day19Exit: this.editingRow?.workingTimeRecordsAggregated[18]?.workTimePeriodOriginal.to,
-		// 	day20Exit: this.editingRow?.workingTimeRecordsAggregated[19]?.workTimePeriodOriginal.to,
-		// 	day21Exit: this.editingRow?.workingTimeRecordsAggregated[20]?.workTimePeriodOriginal.to,
-		// 	day22Exit: this.editingRow?.workingTimeRecordsAggregated[21]?.workTimePeriodOriginal.to,
-		// 	day23Exit: this.editingRow?.workingTimeRecordsAggregated[22]?.workTimePeriodOriginal.to,
-		// 	day24Exit: this.editingRow?.workingTimeRecordsAggregated[23]?.workTimePeriodOriginal.to,
-		// 	day25Exit: this.editingRow?.workingTimeRecordsAggregated[24]?.workTimePeriodOriginal.to,
-		// 	day26Exit: this.editingRow?.workingTimeRecordsAggregated[25]?.workTimePeriodOriginal.to,
-		// 	day27Exit: this.editingRow?.workingTimeRecordsAggregated[26]?.workTimePeriodOriginal.to,
-		// 	day28Exit: this.editingRow?.workingTimeRecordsAggregated[27]?.workTimePeriodOriginal.to,
-		// 	day29Exit: this.editingRow?.workingTimeRecordsAggregated[28]?.workTimePeriodOriginal.to,
-		// 	day30Exit: this.editingRow?.workingTimeRecordsAggregated[29]?.workTimePeriodOriginal.to,
-		// 	day31Exit: this.editingRow?.workingTimeRecordsAggregated[30]?.workTimePeriodOriginal.to
+		// 	day1Exit: moment(this.editingRow?.workingTimeRecordsAggregated[0]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day2Exit: moment(this.editingRow?.workingTimeRecordsAggregated[1]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day3Exit: moment(this.editingRow?.workingTimeRecordsAggregated[2]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day4Exit: moment(this.editingRow?.workingTimeRecordsAggregated[3]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day5Exit: moment(this.editingRow?.workingTimeRecordsAggregated[4]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day6Exit: moment(this.editingRow?.workingTimeRecordsAggregated[5]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day7Exit: moment(this.editingRow?.workingTimeRecordsAggregated[6]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day8Exit: moment(this.editingRow?.workingTimeRecordsAggregated[7]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day9Exit: moment(this.editingRow?.workingTimeRecordsAggregated[8]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day10Exit: moment(this.editingRow?.workingTimeRecordsAggregated[9]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day11Exit: moment(this.editingRow?.workingTimeRecordsAggregated[10]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day12Exit: moment(this.editingRow?.workingTimeRecordsAggregated[11]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day13Exit: moment(this.editingRow?.workingTimeRecordsAggregated[12]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day14Exit: moment(this.editingRow?.workingTimeRecordsAggregated[13]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day15Exit: moment(this.editingRow?.workingTimeRecordsAggregated[14]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day16Exit: moment(this.editingRow?.workingTimeRecordsAggregated[15]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day17Exit: moment(this.editingRow?.workingTimeRecordsAggregated[16]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day18Exit: moment(this.editingRow?.workingTimeRecordsAggregated[17]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day19Exit: moment(this.editingRow?.workingTimeRecordsAggregated[18]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day20Exit: moment(this.editingRow?.workingTimeRecordsAggregated[19]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day21Exit: moment(this.editingRow?.workingTimeRecordsAggregated[20]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day22Exit: moment(this.editingRow?.workingTimeRecordsAggregated[21]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day23Exit: moment(this.editingRow?.workingTimeRecordsAggregated[22]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day24Exit: moment(this.editingRow?.workingTimeRecordsAggregated[23]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day25Exit: moment(this.editingRow?.workingTimeRecordsAggregated[24]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day26Exit: moment(this.editingRow?.workingTimeRecordsAggregated[25]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day27Exit: moment(this.editingRow?.workingTimeRecordsAggregated[26]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day28Exit: moment(this.editingRow?.workingTimeRecordsAggregated[27]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day29Exit: moment(this.editingRow?.workingTimeRecordsAggregated[28]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day30Exit: moment(this.editingRow?.workingTimeRecordsAggregated[29]?.workTimePeriodOriginal.to).format('hh:mm'),
+		// 	day31Exit: moment(this.editingRow?.workingTimeRecordsAggregated[30]?.workTimePeriodOriginal.to).format('hh:mm')
 		// });
 	}
 
@@ -231,6 +253,7 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 		});
 
 		const formModel = this.reportHoursForm.getRawValue();
+		console.warn(formModel);
 		//   const updateModel = new WorkingTimeRecordDetailedDataFormModel({
 		//     employeeId: formModel.employeeId,
 		//     year: formModel.year,

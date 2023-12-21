@@ -34,6 +34,7 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 @NgModule({
 	imports: [
@@ -74,6 +75,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 		MatTreeModule,
 		CdkTreeModule,
 		MatBadgeModule,
+		NgxMaterialTimepickerModule.setOpts('pl-PL')
 	],
 	exports: [
 		MatAutocompleteModule,
@@ -113,6 +115,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 		MatTreeModule,
 		CdkTreeModule,
 		MatBadgeModule,
-	],
+		NgxMaterialTimepickerModule
+	]
 })
 export class AppMaterialModule {}

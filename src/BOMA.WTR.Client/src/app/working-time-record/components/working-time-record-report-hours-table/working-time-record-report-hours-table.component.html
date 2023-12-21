@@ -131,15 +131,13 @@
 
 					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
 						<span *ngIf="i % 3 === 1">
-							<mat-form-field appearance="outline" class="number-input">
-								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}Entry" />
-							</mat-form-field>
+							<input [ngxTimepicker]="picker" [format]="24" formControlName="day{{ dayNumber }}Entry" />
+							<ngx-material-timepicker #picker></ngx-material-timepicker>
 						</span>
 
 						<span *ngIf="i % 3 === 2">
-							<mat-form-field appearance="outline" class="number-input">
-								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}Exit" />
-							</mat-form-field>
+							<input [ngxTimepicker]="picker" [format]="24" formControlName="day{{ dayNumber }}Exit" />
+							<ngx-material-timepicker #picker></ngx-material-timepicker>
 						</span>
 					</ng-template>
 

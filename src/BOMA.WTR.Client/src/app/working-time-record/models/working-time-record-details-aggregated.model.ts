@@ -1,3 +1,5 @@
+import { Duration } from 'moment';
+
 export class WorkingTimeRecordDetailsAggregatedModel {
 	date!: Date;
 	workTimePeriodNormalized!: WorkTimePeriod;
@@ -23,4 +25,5 @@ export class WorkingTimeRecordAbsentAggregatedModel {
 export interface WorkTimePeriod {
 	from: Date;
 	to: Date | null;
+	duration: string;
 }
