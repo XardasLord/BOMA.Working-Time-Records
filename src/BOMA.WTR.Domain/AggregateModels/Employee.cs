@@ -240,4 +240,95 @@ public class Employee : Entity<int>, IAggregateRoot
         _isActive = false;
         _rcpId = InactiveRcpId;
     }
+
+    public void UpdateWorkingHours(int year, int month, IDictionary<int, string> reportEntryHours, IDictionary<int, string> reportExitHours)
+    {
+        if (WorkingTimeRecordAggregatedHistories.Any(x => x.Date.Month == month && x.Date.Year == year))
+            throw new InvalidOperationException("Nie można edytować godzin pracy za zakończony już miesiąc");
+
+        UpdateEntryRecords(year, month, reportEntryHours);
+        UpdateExitRecords(year, month, reportExitHours);
+    }
+
+    private void UpdateEntryRecords(int year, int month, IDictionary<int, string> reportHours)
+    {
+        foreach (var reportHourDay in reportHours)
+        {
+            var entryRecord = WorkingTimeRecords
+                .Where(x => x.OccuredAt.Month == month)
+                .Where(x => x.OccuredAt.Year == year)
+                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
+                .FirstOrDefault(x => x.EventType == RecordEventType.Entry);
+            
+            if (string.IsNullOrWhiteSpace(reportHourDay.Value))
+                continue;
+            
+            var timeSpan = TimeSpan.Parse(reportHourDay.Value);
+            var hours = timeSpan.Hours;
+            var minutes = timeSpan.Minutes;
+            var day = reportHourDay.Key;
+            
+            if (!IsDateValid(year, month, day))
+                continue;
+            
+            var newOccuredAt = new DateTime(year, month, reportHourDay.Key, hours, minutes, 0);
+
+            if (entryRecord is null)
+            {
+                var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
+            
+                AddWorkingTimeRecord(entry);
+            }
+            else
+            {
+                if (entryRecord.OccuredAt.Hour != newOccuredAt.Hour || entryRecord.OccuredAt.Minute != newOccuredAt.Minute)
+                {
+                    entryRecord.OccuredAt = newOccuredAt;
+                }
+            }
+        }
+    }
+
+    private void UpdateExitRecords(int year, int month, IDictionary<int, string> reportHours)
+    {
+        foreach (var reportHourDay in reportHours)
+        {
+            var exitRecord = WorkingTimeRecords
+                .Where(x => x.OccuredAt.Month == month)
+                .Where(x => x.OccuredAt.Year == year)
+                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
+                .LastOrDefault(x => x.EventType == RecordEventType.Exit);
+            
+            if (string.IsNullOrWhiteSpace(reportHourDay.Value))
+                continue;
+            
+            var timeSpan = TimeSpan.Parse(reportHourDay.Value);
+            var hours = timeSpan.Hours;
+            var minutes = timeSpan.Minutes;
+            var day = timeSpan.Hours is >= 0 and < 4 ? reportHourDay.Key + 1 : reportHourDay.Key;
+            
+            if (!IsDateValid(year, month, day))
+                continue;
+                
+            var newOccuredAt = new DateTime(year, month, day, hours, minutes, 0);
+
+            if (exitRecord is null)
+            {
+                var entry = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+            
+                AddWorkingTimeRecord(entry);
+            }
+            else
+            {
+                if (exitRecord.OccuredAt.Hour != newOccuredAt.Hour || exitRecord.OccuredAt.Minute != newOccuredAt.Minute)
+                {
+                    exitRecord.OccuredAt = newOccuredAt;
+                }
+            }
+        }
+    }
+    
+    private bool IsDateValid(int year, int month, int day) {
+        return day <= DateTime.DaysInMonth(year, month);
+    }
 }
