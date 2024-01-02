@@ -24,6 +24,18 @@ export class WorkingTimeRecordDetailedDataFormModel {
 	}
 }
 
+export class WorkingTimeRecordReportHoursDataFormModel {
+	year!: number;
+	month!: number;
+	employeeId!: number;
+	reportEntryHours!: Record<number, string>;
+	reportExitHours!: Record<number, string>;
+
+	constructor(init?: Partial<WorkingTimeRecordReportHoursDataFormModel>) {
+		Object.assign(this, { ...init });
+	}
+}
+
 export interface WorkingTimeRecordDetailedFormGroup {
 	year: FormControl<number>;
 	month: FormControl<number>;
@@ -123,4 +135,73 @@ export interface WorkingTimeRecordDetailedFormGroup {
 	day29night: FormControl<number>;
 	day30night: FormControl<number>;
 	day31night: FormControl<number>;
+}
+
+export interface WorkingTimeRecordReportHoursFormGroup {
+	year: FormControl<number>;
+	month: FormControl<number>;
+	employeeId: FormControl<number>;
+	day1Entry: FormControl<string>;
+	day2Entry: FormControl<string>;
+	day3Entry: FormControl<string>;
+	day4Entry: FormControl<string>;
+	day5Entry: FormControl<string>;
+	day6Entry: FormControl<string>;
+	day7Entry: FormControl<string>;
+	day8Entry: FormControl<string>;
+	day9Entry: FormControl<string>;
+	day10Entry: FormControl<string>;
+	day11Entry: FormControl<string>;
+	day12Entry: FormControl<string>;
+	day13Entry: FormControl<string>;
+	day14Entry: FormControl<string>;
+	day15Entry: FormControl<string>;
+	day16Entry: FormControl<string>;
+	day17Entry: FormControl<string>;
+	day18Entry: FormControl<string>;
+	day19Entry: FormControl<string>;
+	day20Entry: FormControl<string>;
+	day21Entry: FormControl<string>;
+	day22Entry: FormControl<string>;
+	day23Entry: FormControl<string>;
+	day24Entry: FormControl<string>;
+	day25Entry: FormControl<string>;
+	day26Entry: FormControl<string>;
+	day27Entry: FormControl<string>;
+	day28Entry: FormControl<string>;
+	day29Entry: FormControl<string>;
+	day30Entry: FormControl<string>;
+	day31Entry: FormControl<string>;
+
+	day1Exit: FormControl<string>;
+	day2Exit: FormControl<string>;
+	day3Exit: FormControl<string>;
+	day4Exit: FormControl<string>;
+	day5Exit: FormControl<string>;
+	day6Exit: FormControl<string>;
+	day7Exit: FormControl<string>;
+	day8Exit: FormControl<string>;
+	day9Exit: FormControl<string>;
+	day10Exit: FormControl<string>;
+	day11Exit: FormControl<string>;
+	day12Exit: FormControl<string>;
+	day13Exit: FormControl<string>;
+	day14Exit: FormControl<string>;
+	day15Exit: FormControl<string>;
+	day16Exit: FormControl<string>;
+	day17Exit: FormControl<string>;
+	day18Exit: FormControl<string>;
+	day19Exit: FormControl<string>;
+	day20Exit: FormControl<string>;
+	day21Exit: FormControl<string>;
+	day22Exit: FormControl<string>;
+	day23Exit: FormControl<string>;
+	day24Exit: FormControl<string>;
+	day25Exit: FormControl<string>;
+	day26Exit: FormControl<string>;
+	day27Exit: FormControl<string>;
+	day28Exit: FormControl<string>;
+	day29Exit: FormControl<string>;
+	day30Exit: FormControl<string>;
+	day31Exit: FormControl<string>;
 }

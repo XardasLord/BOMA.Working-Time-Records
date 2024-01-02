@@ -125,7 +125,8 @@ public class Employee : Entity<int>, IAggregateRoot
         IDictionary<int, double?> dayHoursDictionary,
         IDictionary<int, double?> saturdayHoursDictionary,
         IDictionary<int, double?> nightHoursDictionary,
-        IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService)
+        IEmployeeWorkingTimeRecordCalculationDomainService calculationDomainService,
+        ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
             .Where(x => x.Date.Month == month)
@@ -155,8 +156,53 @@ public class Employee : Entity<int>, IAggregateRoot
             record.SaturdayHours = saturdayHours;
             record.NightHours = nightHours;
         });
+
+        var first = recordsToUpdate.First();
+        var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
+            first.SalaryInformation.BaseSalary, first.SalaryInformation.PercentageBonusSalary, 
+            first.SalaryInformation.HolidaySalary, first.SalaryInformation.SicknessSalary, first.SalaryInformation.AdditionalSalary, 
+            recordsToUpdate);
+        
+        UpdateAllHistorySalaryInformation(recordsToUpdate, recalculatedRecord);
     }
-    
+
+    private static void UpdateAllHistorySalaryInformation(List<WorkingTimeRecordAggregatedHistory> recordsToUpdate, EmployeeSalaryAggregatedHistory recalculatedRecord)
+    {
+        recordsToUpdate.ForEach(record =>
+        {
+            record.SalaryInformation.BaseSalary = recalculatedRecord.BaseSalary;
+            record.SalaryInformation.PercentageBonusSalary = recalculatedRecord.PercentageBonusSalary;
+            
+            record.SalaryInformation.Base50PercentageSalary = recalculatedRecord.Base50PercentageSalary;
+            record.SalaryInformation.Base100PercentageSalary = recalculatedRecord.Base100PercentageSalary;
+            record.SalaryInformation.BaseSaturdaySalary = recalculatedRecord.BaseSaturdaySalary;
+            
+            record.SalaryInformation.GrossBaseSalary = recalculatedRecord.GrossBaseSalary;
+            record.SalaryInformation.GrossBase50PercentageSalary = recalculatedRecord.GrossBase50PercentageSalary;
+            record.SalaryInformation.GrossBase100PercentageSalary = recalculatedRecord.GrossBase100PercentageSalary;
+            record.SalaryInformation.GrossBaseSaturdaySalary = recalculatedRecord.GrossBaseSaturdaySalary;
+            
+            record.SalaryInformation.BonusBaseSalary = recalculatedRecord.BonusBaseSalary;
+            record.SalaryInformation.BonusBase50PercentageSalary = recalculatedRecord.BonusBase50PercentageSalary;
+            record.SalaryInformation.BonusBase100PercentageSalary = recalculatedRecord.BonusBase100PercentageSalary;
+            record.SalaryInformation.BonusBaseSaturdaySalary = recalculatedRecord.BonusBaseSaturdaySalary;
+            
+            record.SalaryInformation.GrossSumBaseSalary = recalculatedRecord.GrossSumBaseSalary;
+            record.SalaryInformation.GrossSumBase50PercentageSalary = recalculatedRecord.GrossSumBase50PercentageSalary;
+            record.SalaryInformation.GrossSumBase100PercentageSalary = recalculatedRecord.GrossSumBase100PercentageSalary;
+            record.SalaryInformation.GrossSumBaseSaturdaySalary = recalculatedRecord.GrossSumBaseSaturdaySalary;
+            
+            record.SalaryInformation.BonusSumSalary = recalculatedRecord.BonusSumSalary;
+            record.SalaryInformation.NightBaseSalary = recalculatedRecord.NightBaseSalary;
+            record.SalaryInformation.NightWorkedHours = recalculatedRecord.NightWorkedHours;
+            
+            record.SalaryInformation.HolidaySalary = recalculatedRecord.HolidaySalary;
+            record.SalaryInformation.SicknessSalary = recalculatedRecord.SicknessSalary;
+            record.SalaryInformation.AdditionalSalary = recalculatedRecord.AdditionalSalary;
+            record.SalaryInformation.FinalSumSalary = recalculatedRecord.FinalSumSalary;
+        });
+    }
+
     public bool AddWorkingTimeRecord(WorkingTimeRecord record)
     {
         if (WorkingTimeRecords
@@ -193,5 +239,96 @@ public class Employee : Entity<int>, IAggregateRoot
         
         _isActive = false;
         _rcpId = InactiveRcpId;
+    }
+
+    public void UpdateWorkingHours(int year, int month, IDictionary<int, string> reportEntryHours, IDictionary<int, string> reportExitHours)
+    {
+        if (WorkingTimeRecordAggregatedHistories.Any(x => x.Date.Month == month && x.Date.Year == year))
+            throw new InvalidOperationException("Nie można edytować godzin pracy za zakończony już miesiąc");
+
+        UpdateEntryRecords(year, month, reportEntryHours);
+        UpdateExitRecords(year, month, reportExitHours);
+    }
+
+    private void UpdateEntryRecords(int year, int month, IDictionary<int, string> reportHours)
+    {
+        foreach (var reportHourDay in reportHours)
+        {
+            var entryRecord = WorkingTimeRecords
+                .Where(x => x.OccuredAt.Month == month)
+                .Where(x => x.OccuredAt.Year == year)
+                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
+                .FirstOrDefault(x => x.EventType == RecordEventType.Entry);
+            
+            if (string.IsNullOrWhiteSpace(reportHourDay.Value))
+                continue;
+            
+            var timeSpan = TimeSpan.Parse(reportHourDay.Value);
+            var hours = timeSpan.Hours;
+            var minutes = timeSpan.Minutes;
+            var day = reportHourDay.Key;
+            
+            if (!IsDateValid(year, month, day))
+                continue;
+            
+            var newOccuredAt = new DateTime(year, month, reportHourDay.Key, hours, minutes, 0);
+
+            if (entryRecord is null)
+            {
+                var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
+            
+                AddWorkingTimeRecord(entry);
+            }
+            else
+            {
+                if (entryRecord.OccuredAt.Hour != newOccuredAt.Hour || entryRecord.OccuredAt.Minute != newOccuredAt.Minute)
+                {
+                    entryRecord.OccuredAt = newOccuredAt;
+                }
+            }
+        }
+    }
+
+    private void UpdateExitRecords(int year, int month, IDictionary<int, string> reportHours)
+    {
+        foreach (var reportHourDay in reportHours)
+        {
+            var exitRecord = WorkingTimeRecords
+                .Where(x => x.OccuredAt.Month == month)
+                .Where(x => x.OccuredAt.Year == year)
+                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
+                .LastOrDefault(x => x.EventType == RecordEventType.Exit);
+            
+            if (string.IsNullOrWhiteSpace(reportHourDay.Value))
+                continue;
+            
+            var timeSpan = TimeSpan.Parse(reportHourDay.Value);
+            var hours = timeSpan.Hours;
+            var minutes = timeSpan.Minutes;
+            var day = timeSpan.Hours is >= 0 and < 4 ? reportHourDay.Key + 1 : reportHourDay.Key;
+            
+            if (!IsDateValid(year, month, day))
+                continue;
+                
+            var newOccuredAt = new DateTime(year, month, day, hours, minutes, 0);
+
+            if (exitRecord is null)
+            {
+                var entry = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+            
+                AddWorkingTimeRecord(entry);
+            }
+            else
+            {
+                if (exitRecord.OccuredAt.Hour != newOccuredAt.Hour || exitRecord.OccuredAt.Minute != newOccuredAt.Minute)
+                {
+                    exitRecord.OccuredAt = newOccuredAt;
+                }
+            }
+        }
+    }
+    
+    private bool IsDateValid(int year, int month, int day) {
+        return day <= DateTime.DaysInMonth(year, month);
     }
 }

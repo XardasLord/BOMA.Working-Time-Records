@@ -23,7 +23,7 @@ public class WorkingTimeRecord : Entity<int>
 
     public RecordEventType EventType { get; private set; }
     
-    public DateTime OccuredAt { get; private set; }
+    public DateTime OccuredAt { get; internal set; }
     
     public Department Department { get; private set; }
     public int DepartmentId { get; private set; }

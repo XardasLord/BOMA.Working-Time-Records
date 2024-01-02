@@ -4,6 +4,7 @@ import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-workin
 import { QueryModel } from '../models/query.model';
 import {
 	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordReportHoursDataFormModel,
 	WorkingTimeRecordSummaryDataFormModel
 } from '../models/working-time-record-summary-data-form.model';
 
@@ -11,5 +12,6 @@ export abstract class IWorkingTimeRecordService extends RemoteServiceBase {
 	public abstract getAll(queryModel: QueryModel): Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
 	public abstract updateSummaryData(employeeId: number, updateModel: WorkingTimeRecordSummaryDataFormModel): Observable<void>;
 	public abstract updateDetailedData(employeeId: number, updateModel: WorkingTimeRecordDetailedDataFormModel): Observable<void>;
+	public abstract updateReportHoursData(employeeId: number, updateModel: WorkingTimeRecordReportHoursDataFormModel): Observable<void>;
 	public abstract sendHoursToGratyfikant(queryModel: QueryModel): Observable<void>;
 }

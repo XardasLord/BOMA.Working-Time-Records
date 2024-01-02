@@ -2,6 +2,7 @@
 using BOMA.WTR.Application.UseCases.Employees.Commands.Deactivate;
 using BOMA.WTR.Application.UseCases.Employees.Commands.Edit;
 using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsDetailsData;
+using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsReportHoursData;
 using BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsSummaryData;
 using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,20 @@ public class EmployeesController : ApiBaseController
     [HttpPatch]
     [Route("{id}/workingTimeRecordsDetails")]
     public async Task<IActionResult> EditWorkingTimeRecordsDetailsData(int id, EditWorkingTimeRecordsDetailsDataCommand command)
+    {
+        command = command with
+        {
+            EmployeeId = id
+        };
+
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpPatch]
+    [Route("{id}/workingTimeRecordsReportHours")]
+    public async Task<IActionResult> EditWorkingTimeRecordsReportHoursData(int id, EditWorkingTimeRecordsReportHoursDataCommand command)
     {
         command = command with
         {

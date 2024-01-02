@@ -1,5 +1,6 @@
 import {
 	WorkingTimeRecordDetailedDataFormModel,
+	WorkingTimeRecordReportHoursDataFormModel,
 	WorkingTimeRecordSummaryDataFormModel
 } from '../models/working-time-record-summary-data-form.model';
 
@@ -46,6 +47,12 @@ export namespace WorkingTimeRecord {
 		constructor(public employeeId: number, public updateModel: WorkingTimeRecordDetailedDataFormModel) {}
 
 		static readonly type = `${prefix} ${UpdateDetailedData.name}`;
+	}
+
+	export class UpdateReportHoursData {
+		constructor(public employeeId: number, public updateModel: WorkingTimeRecordReportHoursDataFormModel) {}
+
+		static readonly type = `${prefix} ${UpdateReportHoursData.name}`;
 	}
 
 	export class SendHoursToGratyfikant {

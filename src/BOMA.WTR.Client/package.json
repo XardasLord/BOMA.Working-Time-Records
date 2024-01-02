@@ -1,6 +1,6 @@
 {
   "name": "boma.wtr.client",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -29,7 +29,9 @@
     "@ngxs/logger-plugin": "^3.7.5",
     "@ngxs/router-plugin": "^3.7.5",
     "@ngxs/store": "^3.7.5",
+    "luxon": "^3.4.4",
     "moment": "^2.29.4",
+    "ngx-material-timepicker": "^13.1.1",
     "ngx-print": "^1.2.1",
     "ngx-toastr": "^15.2.1",
     "rxjs": "~7.5.7",
