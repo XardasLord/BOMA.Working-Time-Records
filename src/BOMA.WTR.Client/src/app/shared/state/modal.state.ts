@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
 import { Modal } from './modal.action';
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
