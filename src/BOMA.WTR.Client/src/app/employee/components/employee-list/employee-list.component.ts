@@ -10,7 +10,7 @@ import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 import Deactivate = Employee.Deactivate;
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { Subscription } from 'rxjs';
 
 @Component({

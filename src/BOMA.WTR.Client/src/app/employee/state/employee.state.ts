@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
 import { catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
