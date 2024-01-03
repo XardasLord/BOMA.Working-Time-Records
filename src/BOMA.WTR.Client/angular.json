@@ -119,16 +119,16 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "BOMA.WTR.Client:build:production"
+              "browserTarget": "BOMA.WTR.Client:build:production"
             },
             "production-manager": {
-              "buildTarget": "BOMA.WTR.Client:build:production-manager"
+              "browserTarget": "BOMA.WTR.Client:build:production-manager"
             },
             "production-szef": {
-              "buildTarget": "BOMA.WTR.Client:build:production-szef"
+              "browserTarget": "BOMA.WTR.Client:build:production-szef"
             },
             "development": {
-              "buildTarget": "BOMA.WTR.Client:build:development"
+              "browserTarget": "BOMA.WTR.Client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -136,7 +136,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "BOMA.WTR.Client:build"
+            "browserTarget": "BOMA.WTR.Client:build"
           }
         },
         "test": {

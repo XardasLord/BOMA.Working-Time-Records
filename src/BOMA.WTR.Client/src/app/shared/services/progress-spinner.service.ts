@@ -1,4 +1,4 @@
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Injectable } from '@angular/core';
 import { IProgressSpinnerService } from './progress-spinner.base.service';
 import { ProgressSpinnerDialogComponent } from '../ui/components/progress-spinner/progress-spinner-dialog.component';
