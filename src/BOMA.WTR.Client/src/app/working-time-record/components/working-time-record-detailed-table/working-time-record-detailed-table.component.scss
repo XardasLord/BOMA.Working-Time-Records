@@ -87,7 +87,7 @@ tr.mat-mdc-row:nth-child(6n) > .mat-mdc-cell {
 }
 
 .mat-mdc-cell.default-value,
-.mat-cell.default-value-hours {
+.mat-mdc-cell.default-value-hours {
 	background-color: $standard-cell-color;
 }
 
@@ -129,15 +129,15 @@ tr.mat-mdc-row:nth-child(6n) > .mat-mdc-cell {
 
 // Gross sum column
 .mat-mdc-cell.fifty-percentage-gross-sum,
-.mat-cell.hundred-percentage-gross-sum,
-.mat-cell.saturday-gross-sum {
+.mat-mdc-cell.hundred-percentage-gross-sum,
+.mat-mdc-cell.saturday-gross-sum {
 	background-color: $red-color;
 }
 
 // Bonus sum column
 .mat-mdc-cell.fifty-percentage-bonus-sum,
-.mat-cell.hundred-percentage-bonus-sum,
-.mat-cell.saturday-bonus-sum {
+.mat-mdc-cell.hundred-percentage-bonus-sum,
+.mat-mdc-cell.saturday-bonus-sum {
 	background-color: $bonus-sum-color-background;
 }
 

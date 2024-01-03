@@ -25,21 +25,21 @@
 }
 
 .mat-column-gross.mat-mdc-cell,
-.mat-column-bonus.mat-cell,
-.mat-column-bonus10Percentage.mat-cell,
-.mat-column-overtimes.mat-cell,
-.mat-column-saturdays.mat-cell,
-.mat-column-nightHours.mat-cell,
-.mat-column-sum.mat-cell {
+.mat-column-bonus.mat-mdc-cell,
+.mat-column-bonus10Percentage.mat-mdc-cell,
+.mat-column-overtimes.mat-mdc-cell,
+.mat-column-saturdays.mat-mdc-cell,
+.mat-column-nightHours.mat-mdc-cell,
+.mat-column-sum.mat-mdc-cell {
 	background-color: $summary-table-base-color;
 }
 
 .mat-column-rate.mat-mdc-cell,
-.mat-column-bonusPercentage.mat-cell,
-.mat-column-night.mat-cell,
-.mat-column-holiday.mat-cell,
-.mat-column-sickness.mat-cell,
-.mat-column-additional.mat-cell {
+.mat-column-bonusPercentage.mat-mdc-cell,
+.mat-column-night.mat-mdc-cell,
+.mat-column-holiday.mat-mdc-cell,
+.mat-column-sickness.mat-mdc-cell,
+.mat-column-additional.mat-mdc-cell {
 	background-color: $summary-table-yellow-color;
 }
 

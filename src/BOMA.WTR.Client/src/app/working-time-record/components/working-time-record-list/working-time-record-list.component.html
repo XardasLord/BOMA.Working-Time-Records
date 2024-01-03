@@ -1,6 +1,6 @@
 <app-working-time-record-filters></app-working-time-record-filters>
 
-<mat-tab-group>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
 	<mat-tab label="Szczegóły" *ngIf="!managerMode">
 		<ng-template matTabContent>
 			<app-working-time-record-detailed-table></app-working-time-record-detailed-table>
