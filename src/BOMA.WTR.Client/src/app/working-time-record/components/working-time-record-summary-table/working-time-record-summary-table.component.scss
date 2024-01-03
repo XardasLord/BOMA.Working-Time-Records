@@ -6,25 +6,25 @@
 	overflow: auto;
 }
 
-.mat-header-cell,
-.mat-cell {
+.mat-mdc-header-cell,
+.mat-mdc-cell {
 	text-align: center;
 }
 
-.mat-row:hover {
+.mat-mdc-row:hover {
 	background-color: gray;
 
-	.mat-cell {
+	.mat-mdc-cell {
 		background-color: gray;
 	}
 }
 
-.mat-column-fullName.mat-cell {
+.mat-column-fullName.mat-mdc-cell {
 	font-size: 20px;
 	width: 220px;
 }
 
-.mat-column-gross.mat-cell,
+.mat-column-gross.mat-mdc-cell,
 .mat-column-bonus.mat-cell,
 .mat-column-bonus10Percentage.mat-cell,
 .mat-column-overtimes.mat-cell,
@@ -34,7 +34,7 @@
 	background-color: $summary-table-base-color;
 }
 
-.mat-column-rate.mat-cell,
+.mat-column-rate.mat-mdc-cell,
 .mat-column-bonusPercentage.mat-cell,
 .mat-column-night.mat-cell,
 .mat-column-holiday.mat-cell,
@@ -43,25 +43,25 @@
 	background-color: $summary-table-yellow-color;
 }
 
-tr.mat-footer-row {
+tr.mat-mdc-footer-row {
 	font-size: 22px;
 	font-weight: bold;
 	text-align: center;
 }
 
 // Inline form inputs
-.mat-form-field ::ng-deep {
+.mat-mdc-form-field ::ng-deep {
 	text-align: center;
-
+	/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 	.mat-form-field-flex {
 		width: 100px;
 	}
-
+	/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 	.mat-form-field-flex > .mat-form-field-infix {
 		padding: 0.4em 0px !important;
 		border-top: 0.4em solid transparent;
 	}
-
+	/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 	.mat-form-field-wrapper {
 		padding: 0;
 	}
