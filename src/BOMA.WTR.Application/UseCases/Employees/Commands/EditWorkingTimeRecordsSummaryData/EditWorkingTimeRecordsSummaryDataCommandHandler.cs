@@ -5,7 +5,6 @@ using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Domain.AggregateModels.Specifications;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SharedKernel;
-using MediatR;
 
 namespace BOMA.WTR.Application.UseCases.Employees.Commands.EditWorkingTimeRecordsSummaryData;
 
@@ -22,7 +21,7 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
         _salaryCalculationDomainService = salaryCalculationDomainService;
     }
 
-    public async Task<Unit> Handle(EditWorkingTimeRecordsSummaryDataCommand command, CancellationToken cancellationToken)
+    public async Task Handle(EditWorkingTimeRecordsSummaryDataCommand command, CancellationToken cancellationToken)
     {
         var spec = new EmployeeWithHistoryRecordsByDateSpec(command.EmployeeId, command.Year, command.Month);
         var employee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken)
@@ -39,7 +38,5 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
             _salaryCalculationDomainService);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
-        
-        return Unit.Value;
     }
 }

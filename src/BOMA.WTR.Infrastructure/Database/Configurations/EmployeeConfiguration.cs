@@ -1,6 +1,5 @@
 ﻿using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
-using BOMA.WTR.Domain.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

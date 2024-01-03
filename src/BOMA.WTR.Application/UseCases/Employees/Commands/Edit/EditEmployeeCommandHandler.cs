@@ -3,7 +3,6 @@ using BOMA.WTR.Application.Exceptions;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SharedKernel;
-using MediatR;
 
 namespace BOMA.WTR.Application.UseCases.Employees.Commands.Edit;
 
@@ -16,7 +15,7 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
         _employeeRepository = employeeRepository;
     }
     
-    public async Task<Unit> Handle(EditEmployeeCommand command, CancellationToken cancellationToken)
+    public async Task Handle(EditEmployeeCommand command, CancellationToken cancellationToken)
     {
         var employee = await _employeeRepository.GetByIdAsync(command.Id, cancellationToken) 
             ?? throw new NotFoundException($"Employee with ID = {command.Id} was not found");
@@ -34,7 +33,5 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
         employee.UpdateData(name, salary, salaryBonusPercentage, jobInformation, personalIdentityNumber, command.RcpId, command.DepartmentId);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
-        
-        return Unit.Value;
     }
 }

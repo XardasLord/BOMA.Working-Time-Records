@@ -1,5 +1,4 @@
-﻿using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Commands;
-using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
+﻿using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +11,5 @@ public class WorkingTimeRecordsController : ApiBaseController
     {
         var queryModel = new GetRecordsQueryModel(month, year, departmentId, shiftId, searchText);
         return Ok(await Mediator.Send(new GetAllWorkingTimeRecordsQuery(queryModel)));
-    }
-    
-    [HttpPost("gratyfikant")]
-    public async Task<IActionResult> SendToGratyfikant([FromQuery] GetRecordsQueryModel queryModel)
-    {
-        await Mediator.Send(new SetWorkingTimeRecordsInGratyfikantCommand(queryModel));
-
-        return NoContent();
     }
 }

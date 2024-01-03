@@ -2,7 +2,6 @@
 using BOMA.WTR.Application.Exceptions;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.SharedKernel;
-using MediatR;
 
 namespace BOMA.WTR.Application.UseCases.Employees.Commands.Deactivate;
 
@@ -15,7 +14,7 @@ public class DeactivateEmployeeCommandHandler : ICommandHandler<DeactivateEmploy
         _employeeRepository = employeeRepository;
     }
     
-    public async Task<Unit> Handle(DeactivateEmployeeCommand command, CancellationToken cancellationToken)
+    public async Task Handle(DeactivateEmployeeCommand command, CancellationToken cancellationToken)
     {
         var employee = await _employeeRepository.GetByIdAsync(command.Id, cancellationToken) 
                        ?? throw new NotFoundException($"Employee with ID = {command.Id} was not found");
@@ -23,7 +22,5 @@ public class DeactivateEmployeeCommandHandler : ICommandHandler<DeactivateEmploy
         employee.Deactivate();
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 }

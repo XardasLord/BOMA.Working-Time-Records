@@ -1,7 +1,4 @@
-﻿using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
-using BOMA.WTR.Infrastructure.Database;
-
-namespace BOMA.WTR.Infrastructure.GraphQL.Queries;
+﻿namespace BOMA.WTR.Infrastructure.GraphQL.Queries;
 
 public class BomaGraphQLQuery
 {

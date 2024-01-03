@@ -10,11 +10,9 @@ using BOMA.WTR.Infrastructure.Database.Repositories;
 using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
 using BOMA.WTR.Infrastructure.ErrorHandling.Exceptions;
-using BOMA.WTR.Infrastructure.InsertGT.Gratyfikant;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +44,6 @@ public static class InfrastructureDependencyInjection
         services.AddTransient<ISalaryCalculationDomainService, SalaryCalculationDomainServiceHandler>();
 
         // services.AddGraphQL();
-        services.AddGratyfikant(configuration);
         
         services.AddHangfire(config =>
         {
@@ -65,7 +62,10 @@ public static class InfrastructureDependencyInjection
         });
         services.AddHangfireServer();
         
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
 
         services.AddSingleton(provider => new MapperConfiguration(cfg =>
         {
