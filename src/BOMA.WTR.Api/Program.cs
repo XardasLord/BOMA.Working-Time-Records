@@ -9,7 +9,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseInfrastructure(app.Environment, app.Configuration);
-app.MapControllers();
+app.UseInfrastructure(app.Environment, app.Configuration, app);
 
 app.Run();
