@@ -28,8 +28,11 @@ body {
 }
 
 .transparent .mat-mdc-dialog-container {
-	box-shadow: none;
-	background: rgba(0, 0, 0, 0);
+	--mdc-dialog-container-color: rgba(0, 0, 0, 0);
+}
+
+.transparent .mat-mdc-dialog-surface {
+	box-shadow: none !important;
 }
 
 .mat-mdc-cell > .zero-hours {
