@@ -13,5 +13,4 @@ public class EmployeeViewModel
     public int? ShiftTypeId { get; set; }
     public string? ShiftTypeName { get; set; }
     public string? Position { get; set; }
-    public string? PersonalIdentityNumber { get; set; }
 }

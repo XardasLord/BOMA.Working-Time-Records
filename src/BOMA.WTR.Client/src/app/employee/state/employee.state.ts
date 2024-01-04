@@ -87,8 +87,7 @@ export class EmployeeState {
 								departmentName: action.employee.departmentName,
 								shiftTypeId: action.employee.shiftTypeId,
 								shiftTypeName: action.employee.shiftTypeName,
-								position: action.employee.position,
-								personalIdentityNumber: action.employee.personalIdentityNumber
+								position: action.employee.position
 							}
 						])
 					})
@@ -123,8 +122,7 @@ export class EmployeeState {
 								departmentName: action.employee.departmentName,
 								shiftTypeId: action.employee.shiftTypeId,
 								shiftTypeName: action.employee.shiftTypeName,
-								position: action.employee.position,
-								personalIdentityNumber: action.employee.personalIdentityNumber
+								position: action.employee.position
 							})
 						)
 					})

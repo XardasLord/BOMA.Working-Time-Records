@@ -37,6 +37,7 @@ public static class InfrastructureDependencyInjection
         services.AddDbContext<BomaDbContext>(x => 
             x.UseSqlServer(configuration.GetConnectionString("Boma"), 
                 opt => opt.EnableRetryOnFailure()));
+        
         services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
         services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
         

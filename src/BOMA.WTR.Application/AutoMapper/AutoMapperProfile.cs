@@ -23,8 +23,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.Department.Id))
             .ForMember(dest => dest.ShiftTypeId, opt => opt.MapFrom(src => src.JobInformation.ShiftType))
             .ForMember(dest => dest.ShiftTypeName, opt => opt.MapFrom(src => (int?)src.JobInformation.ShiftType))
-            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.JobInformation.Position.Name))
-            .ForMember(dest => dest.PersonalIdentityNumber, opt => opt.MapFrom(src => src.PersonalIdentityNumber.Number));
+            .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.JobInformation.Position.Name));
 
         CreateMap<WorkingTimeRecord, WorkingTimeRecordDetailsViewModel>()
             .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType))

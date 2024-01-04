@@ -22,7 +22,6 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
 
         var name = new Name(command.FirstName, command.LastName);
         var jobInformation = new JobInformation(new Position(command.Position), (ShiftType)command.ShiftTypeId);
-        var personalIdentityNumber = new PersonalIdentityNumber(command.PersonalIdentityNumber);
         var salaryBonusPercentage = new PercentageBonus(command.SalaryBonusPercentage);
         
         var salary = employee.Salary with
@@ -30,7 +29,7 @@ public sealed class EditEmployeeCommandHandler : ICommandHandler<EditEmployeeCom
             Amount = command.BaseSalary
         };
         
-        employee.UpdateData(name, salary, salaryBonusPercentage, jobInformation, personalIdentityNumber, command.RcpId, command.DepartmentId);
+        employee.UpdateData(name, salary, salaryBonusPercentage, jobInformation, command.RcpId, command.DepartmentId);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
     }

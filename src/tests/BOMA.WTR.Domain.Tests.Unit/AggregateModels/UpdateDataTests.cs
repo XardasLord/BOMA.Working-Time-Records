@@ -13,7 +13,6 @@ public class UpdateDataTests : TestBase
     private Money _salary;
     private PercentageBonus _percentageBonus;
     private JobInformation _jobInformation;
-    private PersonalIdentityNumber _personalIdentityNumber;
     private int _rcpId;
     private int _departmentId;
 
@@ -22,7 +21,7 @@ public class UpdateDataTests : TestBase
         _employee = Create<Employee>();
     }
     
-    private void Act() => _employee.UpdateData(_name, _salary, _percentageBonus, _jobInformation, _personalIdentityNumber, _rcpId, _departmentId);
+    private void Act() => _employee.UpdateData(_name, _salary, _percentageBonus, _jobInformation, _rcpId, _departmentId);
 
     [Fact]
     public void update_data_sets_new_values()
@@ -32,7 +31,6 @@ public class UpdateDataTests : TestBase
         _salary = Create<Money>();
         _percentageBonus = Create<PercentageBonus>();
         _jobInformation = Create<JobInformation>();
-        _personalIdentityNumber = Create<PersonalIdentityNumber>();
         _rcpId = CreateInt();
         _departmentId = CreateInt();
         
@@ -44,7 +42,6 @@ public class UpdateDataTests : TestBase
         _employee.Salary.Should().Be(_salary);
         _employee.SalaryBonusPercentage.Should().Be(_percentageBonus);
         _employee.JobInformation.Should().Be(_jobInformation);
-        _employee.PersonalIdentityNumber.Should().Be(_personalIdentityNumber);
         _employee.RcpId.Should().Be(_rcpId);
         _employee.DepartmentId.Should().Be(_departmentId);
     }

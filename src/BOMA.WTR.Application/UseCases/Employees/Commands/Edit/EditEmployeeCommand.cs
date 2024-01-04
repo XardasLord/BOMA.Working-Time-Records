@@ -11,5 +11,4 @@ public sealed record EditEmployeeCommand(
     int RcpId,
     int DepartmentId,
     int ShiftTypeId,
-    string Position,
-    string PersonalIdentityNumber) : ICommand;
+    string Position) : ICommand;

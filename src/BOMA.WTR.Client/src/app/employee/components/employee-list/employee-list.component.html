@@ -15,11 +15,6 @@
 			<td mat-cell *matCellDef="let employee">{{ employee?.lastName }}</td>
 		</ng-container>
 
-		<ng-container matColumnDef="personalIdentityNumber">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header="personalIdentityNumber">PESEL</th>
-			<td mat-cell *matCellDef="let employee">{{ employee?.personalIdentityNumber }}</td>
-		</ng-container>
-
 		<ng-container matColumnDef="departmentName">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header="departmentName">Dział</th>
 			<td mat-cell *matCellDef="let employee">{{ employee?.departmentName }}</td>

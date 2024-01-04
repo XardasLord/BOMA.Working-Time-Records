@@ -63,14 +63,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                 .IsRequired(false);
         });
 
-        builder.OwnsOne(x => x.PersonalIdentityNumber, identity =>
-        {
-            identity.Property(p => p.Number)
-                .HasColumnName("PersonalIdentityNumber")
-                .HasMaxLength(11)
-                .IsRequired(false);
-        });
-
         builder.Property(x => x.RcpId)
             .HasColumnName("RcpId")
             .IsRequired();
