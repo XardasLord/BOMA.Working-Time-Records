@@ -18,7 +18,13 @@
 						</button>
 					</ng-template>
 					<ng-template #notEditing>
-						<button mat-icon-button (click)="enableEditMode(record)" [disabled]="!record?.isEditable" matTooltip="Edytuj">
+						<button
+							mat-icon-button
+							(click)="enableEditMode(record)"
+							[disabled]="!record?.isEditable"
+							matTooltip="Edytuj"
+							*ngIf="(role$ | async) === 'Admin'"
+						>
 							<mat-icon>edit</mat-icon>
 						</button>
 					</ng-template>

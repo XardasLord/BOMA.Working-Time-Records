@@ -13,6 +13,7 @@ import { nameof } from '../../../shared/helpers/name-of.helper';
 import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time-record-summary-data-form.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
+import { AuthState } from '../../../shared/auth/state/auth.state';
 
 @Component({
 	selector: 'app-working-time-record-summary-table',
@@ -48,7 +49,13 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 		'actions'
 	];
 
-	constructor(private store: Store, private fb: FormBuilder, private toastService: ToastrService) {
+	role$ = this.store.select(AuthState.getRole);
+
+	constructor(
+		private store: Store,
+		private fb: FormBuilder,
+		private toastService: ToastrService
+	) {
 		this.salaryForm = this.fb.group({
 			employeeId: new FormControl<number>(0),
 			baseSalary: new FormControl<number>(0, [

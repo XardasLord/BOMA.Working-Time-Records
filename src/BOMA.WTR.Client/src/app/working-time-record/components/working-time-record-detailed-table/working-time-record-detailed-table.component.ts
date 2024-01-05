@@ -12,6 +12,7 @@ import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-wor
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
+import { AuthState } from '../../../shared/auth/state/auth.state';
 
 @Component({
 	selector: 'app-working-time-record-detailed-table',
@@ -26,7 +27,13 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	detailedHoursForm: FormGroup<WorkingTimeRecordDetailedFormGroup>;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
 
-	constructor(private store: Store, private fb: FormBuilder, private toastService: ToastrService) {
+	role$ = this.store.select(AuthState.getRole);
+
+	constructor(
+		private store: Store,
+		private fb: FormBuilder,
+		private toastService: ToastrService
+	) {
 		this.detailedHoursForm = fb.group<WorkingTimeRecordDetailedFormGroup>({
 			year: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			month: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
