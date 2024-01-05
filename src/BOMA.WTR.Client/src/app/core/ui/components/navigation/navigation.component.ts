@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
-import { AuthService } from '../../../../shared/auth/services/auth.service';
-import { Store } from '@ngxs/store';
-import { Navigate } from '@ngxs/router-plugin';
-import { RoutePaths } from '../../../modules/app-routing.module';
+import { Auth } from '../../../../shared/auth/state/auth.action';
+import Logout = Auth.Logout;
+import { AuthState } from '../../../../shared/auth/state/auth.state';
 
 @Component({
 	selector: 'app-navigation',
@@ -20,21 +20,14 @@ export class NavigationComponent {
 		shareReplay()
 	);
 
+	loggedIn = this.store.select(AuthState.isLoggedIn);
+
 	constructor(
 		private breakpointObserver: BreakpointObserver,
-		private authService: AuthService,
 		private store: Store
 	) {}
 
-	isLoggedIn(): boolean {
-		return !!localStorage.getItem('boma_ecp_token');
-	}
-
 	logout() {
-		this.authService.logout().subscribe(() => {
-			localStorage.removeItem('boma_ecp_token');
-
-			this.store.dispatch(new Navigate([RoutePaths.Login]));
-		});
+		this.store.dispatch(new Logout());
 	}
 }

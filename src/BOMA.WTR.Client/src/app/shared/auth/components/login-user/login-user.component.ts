@@ -3,12 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginCommand } from '../../models/login.command';
-import { LoginResponse } from '../../models/login.response';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
 import { RoutePaths } from '../../../../core/modules/app-routing.module';
+import { Auth } from '../../state/auth.action';
+import Login = Auth.Login;
 
 @Component({
 	selector: 'app-login-user',
@@ -51,15 +51,7 @@ export class LoginUserComponent implements OnInit {
 			password: login.password
 		};
 
-		this.authService.login(command).subscribe({
-			next: (response: LoginResponse) => {
-				localStorage.setItem('boma_ecp_token', response.accessToken);
-				this.router.navigate([this.returnUrl]);
-			},
-			error: (err: HttpErrorResponse) => {
-				this.toastService.error('Nieprawidłowe dane do logowania lub konto nieaktywne', 'Błąd podczas logowania');
-			}
-		});
+		this.store.dispatch(new Login(command));
 	}
 
 	redirectToRegister() {

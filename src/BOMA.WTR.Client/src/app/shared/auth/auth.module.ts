@@ -8,10 +8,18 @@ import { RegisterUserComponent } from './components/register-user/register-user.
 import { LoginUserComponent } from './components/login-user/login-user.component';
 import { CommonModule } from '@angular/common';
 import { AppMaterialModule } from '../modules/app-material.module';
+import { AuthState } from './state/auth.state';
 
 @NgModule({
 	declarations: [RegisterUserComponent, LoginUserComponent],
-	imports: [CommonModule, ReactiveFormsModule, AppMaterialModule, AuthRoutingModule, NgxsModule.forFeature([]), NgxsFormPluginModule],
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		AppMaterialModule,
+		AuthRoutingModule,
+		NgxsModule.forFeature([AuthState]),
+		NgxsFormPluginModule
+	],
 	exports: [CommonModule, ReactiveFormsModule, AppMaterialModule],
 	providers: [AuthService]
 })

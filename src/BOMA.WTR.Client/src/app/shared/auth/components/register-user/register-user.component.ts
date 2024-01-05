@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { Store } from '@ngxs/store';
 import { RegisterCommand } from '../../models/register.command';
-import { ToastrService } from 'ngx-toastr';
+import { Auth } from '../../state/auth.action';
+import Register = Auth.Register;
+import { Navigate } from '@ngxs/router-plugin';
+import { RoutePaths } from '../../../../core/modules/app-routing.module';
 
 @Component({
 	selector: 'app-register-user',
@@ -13,10 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterUserComponent implements OnInit {
 	registerForm!: FormGroup;
 
-	constructor(
-		private authService: AuthService,
-		private toastService: ToastrService
-	) {}
+	constructor(private store: Store) {}
 
 	ngOnInit(): void {
 		this.registerForm = new FormGroup({
@@ -37,16 +36,16 @@ export class RegisterUserComponent implements OnInit {
 	public registerUser(registerFormValue: any) {
 		const formValues = { ...registerFormValue };
 
-		const user: RegisterCommand = {
+		const command: RegisterCommand = {
 			email: formValues.email,
 			password: formValues.password,
 			confirmPassword: formValues.confirm
 		};
 
-		this.authService.register(user).subscribe({
-			next: (_) =>
-				this.toastService.success('Poczekaj, aż Admin systemu zatwierdzi konto i zaloguj się.', 'Konto zarejestowano pomyślnie'),
-			error: (err: HttpErrorResponse) => this.toastService.error(err.error.errors, 'Błąd podczas rejestracji konta')
-		});
+		this.store.dispatch(new Register(command));
+	}
+
+	public redirectToLogin() {
+		this.store.dispatch(new Navigate([RoutePaths.Login]));
 	}
 }
