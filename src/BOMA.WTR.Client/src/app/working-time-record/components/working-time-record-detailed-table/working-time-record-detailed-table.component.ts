@@ -27,7 +27,7 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 	detailedHoursForm: FormGroup<WorkingTimeRecordDetailedFormGroup>;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
 
-	role$ = this.store.select(AuthState.getRole);
+	user$ = this.store.select(AuthState.getUser);
 
 	constructor(
 		private store: Store,

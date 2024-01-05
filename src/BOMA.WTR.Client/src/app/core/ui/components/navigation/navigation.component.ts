@@ -20,7 +20,8 @@ export class NavigationComponent {
 		shareReplay()
 	);
 
-	loggedIn = this.store.select(AuthState.isLoggedIn);
+	loggedIn$ = this.store.select(AuthState.isLoggedIn);
+	user$ = this.store.select(AuthState.getUser);
 
 	constructor(
 		private breakpointObserver: BreakpointObserver,

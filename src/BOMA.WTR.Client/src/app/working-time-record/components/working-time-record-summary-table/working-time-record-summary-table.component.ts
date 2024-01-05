@@ -49,7 +49,7 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 		'actions'
 	];
 
-	role$ = this.store.select(AuthState.getRole);
+	user$ = this.store.select(AuthState.getUser);
 
 	constructor(
 		private store: Store,

@@ -36,7 +36,7 @@ export namespace Auth {
 		static readonly type = `${prefix} ${GetUsers.name}`;
 	}
 
-	export class GetMyRole {
-		static readonly type = `${prefix} ${GetMyRole.name}`;
+	export class GetMyAccountDetails {
+		static readonly type = `${prefix} ${GetMyAccountDetails.name}`;
 	}
 }

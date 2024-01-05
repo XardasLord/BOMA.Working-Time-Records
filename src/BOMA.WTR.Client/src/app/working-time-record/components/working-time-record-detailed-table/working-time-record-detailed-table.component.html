@@ -23,7 +23,7 @@
 							(click)="enableEditMode(record)"
 							[disabled]="!record?.isEditable"
 							matTooltip="Edytuj"
-							*ngIf="(role$ | async) === 'Admin'"
+							*ngIf="(user$ | async)?.role === 'Admin'"
 						>
 							<mat-icon>edit</mat-icon>
 						</button>

@@ -14,25 +14,26 @@ import Login = Auth.Login;
 import { LoginResponse } from '../models/login.response';
 import Logout = Auth.Logout;
 import { RoutePaths } from '../../../core/modules/app-routing.module';
-import GetMyRole = Auth.GetMyRole;
+import GetMyRole = Auth.GetMyAccountDetails;
+import GetMyAccountDetails = Auth.GetMyAccountDetails;
 
 export interface AuthStateModel {
 	loggedIn: boolean;
 	accessToken: string | null;
-	role: string | null;
+	user: UserModel | null;
 	users: UserModel[];
 }
 
 const AUTH_STATE_TOKEN = new StateToken<AuthStateModel>('auth');
 const accessTokenStorageKey = 'boma_ecp_token';
-const roleStorageKey = 'boma_ecp_role';
+const userInfoStorageKey = 'boma_ecp_user';
 
 @State<AuthStateModel>({
 	name: AUTH_STATE_TOKEN,
 	defaults: {
 		loggedIn: !!localStorage.getItem(accessTokenStorageKey),
 		accessToken: localStorage.getItem(accessTokenStorageKey),
-		role: localStorage.getItem(roleStorageKey),
+		user: JSON.parse(localStorage.getItem(userInfoStorageKey)!),
 		users: []
 	}
 })
@@ -60,8 +61,8 @@ export class AuthState {
 	}
 
 	@Selector([AUTH_STATE_TOKEN])
-	static getRole(state: AuthStateModel): string | null {
-		return state.role;
+	static getUser(state: AuthStateModel): UserModel | null {
+		return state.user;
 	}
 
 	@Action(GetUsers)
@@ -137,10 +138,12 @@ export class AuthState {
 		return this.authService.logout().pipe(
 			tap((response) => {
 				localStorage.removeItem(accessTokenStorageKey);
+				localStorage.removeItem(userInfoStorageKey);
 
 				ctx.patchState({
 					loggedIn: false,
-					accessToken: null
+					accessToken: null,
+					user: null
 				});
 
 				ctx.dispatch(new Navigate([RoutePaths.Login]));
@@ -154,14 +157,14 @@ export class AuthState {
 		);
 	}
 
-	@Action(GetMyRole)
-	getMyRole(ctx: StateContext<AuthStateModel>, _: GetMyRole): Observable<string> {
-		return this.authService.getMyRole().pipe(
+	@Action(GetMyAccountDetails)
+	getMyAccountDetails(ctx: StateContext<AuthStateModel>, _: GetMyAccountDetails): Observable<UserModel> {
+		return this.authService.getMyAccountDetails().pipe(
 			tap((response) => {
-				localStorage.setItem(roleStorageKey, response);
+				localStorage.setItem(userInfoStorageKey, JSON.stringify(response));
 
 				ctx.patchState({
-					role: response
+					user: response
 				});
 			}),
 			catchError((e) => {

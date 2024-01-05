@@ -30,11 +30,7 @@ export class AuthService extends RemoteServiceBase {
 		return this.httpClient.get<UserModel[]>(`${this.apiEndpoint}/auth/users`);
 	}
 
-	public getMyRole(): Observable<string> {
-		const requestOptions: Object = {
-			responseType: 'text'
-		};
-
-		return this.httpClient.get<string>(`${this.apiEndpoint}/auth/myRole`, requestOptions);
+	public getMyAccountDetails(): Observable<UserModel> {
+		return this.httpClient.get<UserModel>(`${this.apiEndpoint}/auth/me`);
 	}
 }

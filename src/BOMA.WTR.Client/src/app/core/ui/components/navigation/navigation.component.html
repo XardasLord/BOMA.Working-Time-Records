@@ -31,7 +31,9 @@
 
 			<span class="spacer"></span>
 
-			<button *ngIf="loggedIn | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj">
+			<span>{{ (user$ | async)?.email }}</span>
+
+			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj">
 				<mat-icon>logout</mat-icon>
 			</button>
 		</mat-toolbar>

@@ -1,12 +1,12 @@
 <app-working-time-record-filters></app-working-time-record-filters>
 
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-	<mat-tab label="Szczegóły" *ngIf="!managerMode && (role$ | async) === 'Admin'">
+	<mat-tab label="Szczegóły" *ngIf="!managerMode && (user$ | async)?.role === 'Admin'">
 		<ng-template matTabContent>
 			<app-working-time-record-detailed-table></app-working-time-record-detailed-table>
 		</ng-template>
 	</mat-tab>
-	<mat-tab label="Podsumowanie" *ngIf="!managerMode && (role$ | async) === 'Admin'">
+	<mat-tab label="Podsumowanie" *ngIf="!managerMode && (user$ | async)?.role === 'Admin'">
 		<ng-template matTabContent>
 			<app-working-time-record-summary-table></app-working-time-record-summary-table>
 		</ng-template>

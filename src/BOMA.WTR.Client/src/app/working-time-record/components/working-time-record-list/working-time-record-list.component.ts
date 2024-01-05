@@ -13,7 +13,7 @@ import { AuthState } from '../../../shared/auth/state/auth.state';
 export class WorkingTimeRecordListComponent implements OnInit {
 	managerMode = environment.managerMode;
 
-	role$ = this.store.select(AuthState.getRole);
+	user$ = this.store.select(AuthState.getUser);
 
 	constructor(private store: Store) {}
 

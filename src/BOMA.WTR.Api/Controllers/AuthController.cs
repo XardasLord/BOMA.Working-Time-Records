@@ -57,8 +57,8 @@ public class AuthController : ApiBaseController
         return Ok(roles);
     }
 
-    [HttpGet("myRole")]
-    public async Task<IActionResult> GetUserRole()
+    [HttpGet("me")]
+    public async Task<IActionResult> GetMyDetails()
     {
         var user = await _userManager.GetUserAsync(User);
 
@@ -66,8 +66,15 @@ public class AuthController : ApiBaseController
             return BadRequest("User is not logged in");
 
         var userRoles = await _userManager.GetRolesAsync(user);
+
+        var role = userRoles.FirstOrDefault();
         
-        return Ok(userRoles.FirstOrDefault());
+        return Ok(new
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Role = role
+        });
     }
 
     [HttpGet("users")]
