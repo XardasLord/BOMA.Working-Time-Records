@@ -1,0 +1,38 @@
+<div class="card">
+	<div class="card-body">
+		<h1 class="card-title">Rejestracja nowego konta w systemie ECP</h1>
+		<form [formGroup]="registerForm" autocomplete="off" novalidate (ngSubmit)="registerUser(registerForm.value)">
+			<div class="mb-3 row">
+				<label for="email" class="col-form-label col-sm-2">E-mail:</label>
+				<div class="col-md-5">
+					<input type="email" id="email" formControlName="email" class="form-control" />
+				</div>
+				<div class="col-md-5">
+					<em *ngIf="validateControl('email') && hasError('email', 'email')">Wprowadź poprawny adres e-mail</em>
+					<em *ngIf="validateControl('email') && hasError('email', 'required')">E-mail jest wymagany</em>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="password" class="col-form-label col-sm-2">Hasło:</label>
+				<div class="col-md-5">
+					<input type="password" id="password" formControlName="password" class="form-control" />
+				</div>
+				<div class="col-md-5">
+					<em *ngIf="validateControl('password') && hasError('password', 'required')">Hasło jest wymagane</em>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label for="confirm" class="col-form-label col-sm-2">Powtórz hasło:</label>
+				<div class="col-md-5">
+					<input type="password" id="confirm" formControlName="confirm" class="form-control" />
+				</div>
+			</div>
+			<br />
+			<div class="mb-3 row">
+				<div class="col-md-1">
+					<button mat-raised-button type="submit" color="primary" [disabled]="!registerForm.valid">Zarejestruj</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

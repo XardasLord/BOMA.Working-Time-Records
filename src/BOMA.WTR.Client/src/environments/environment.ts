@@ -7,6 +7,7 @@ import packageJson from '../../package.json';
 export const environment = {
 	production: false,
 	appVersion: `${packageJson.version}-dev`,
+	identityEndpoint: 'https://localhost:7055',
 	apiEndpoint: 'https://localhost:7055/api',
 	managerMode: false
 };

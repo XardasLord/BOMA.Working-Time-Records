@@ -3,6 +3,10 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../shared/auth/services/auth.service';
+import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
+import { RoutePaths } from '../../../modules/app-routing.module';
 
 @Component({
 	selector: 'app-navigation',
@@ -16,5 +20,21 @@ export class NavigationComponent {
 		shareReplay()
 	);
 
-	constructor(private breakpointObserver: BreakpointObserver) {}
+	constructor(
+		private breakpointObserver: BreakpointObserver,
+		private authService: AuthService,
+		private store: Store
+	) {}
+
+	isLoggedIn(): boolean {
+		return !!localStorage.getItem('boma_ecp_token');
+	}
+
+	logout() {
+		this.authService.logout().subscribe(() => {
+			localStorage.removeItem('boma_ecp_token');
+
+			this.store.dispatch(new Navigate([RoutePaths.Login]));
+		});
+	}
 }

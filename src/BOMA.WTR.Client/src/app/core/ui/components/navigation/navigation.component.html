@@ -25,9 +25,15 @@
 	<mat-sidenav-content>
 		<mat-toolbar color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()">
-				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+				<mat-icon>menu</mat-icon>
 			</button>
 			<span>BOMA - System Ewidencji Czasu Pracy</span>
+
+			<span class="spacer"></span>
+
+			<button *ngIf="isLoggedIn()" type="button" mat-icon-button (click)="logout()">
+				<mat-icon>logout</mat-icon>
+			</button>
 		</mat-toolbar>
 		<div class="content">
 			<router-outlet></router-outlet>

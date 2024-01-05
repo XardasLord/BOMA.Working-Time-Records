@@ -6,6 +6,10 @@ export abstract class RemoteServiceBase {
 
 	protected constructor(protected httpClient: HttpClient) {}
 
+	protected get identityEndpoint(): string {
+		return environment.identityEndpoint;
+	}
+
 	protected get apiEndpoint(): string {
 		return environment.apiEndpoint;
 	}
