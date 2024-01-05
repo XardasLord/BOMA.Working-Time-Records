@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -12,24 +11,19 @@ public static class IdentityDependencyInjection
 {
     public static IServiceCollection AddBomaIdentity(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication();
-        services.AddAuthorization();
-        
         services.AddDbContext<BomaIdentityDbContext>(opt => 
             opt.UseSqlServer(configuration.GetConnectionString("Identity"), 
                 x => x.EnableRetryOnFailure()));
 
-        services.AddIdentityApiEndpoints<IdentityUser>()
+        services.AddAuthorization();
+        
+        services.AddIdentityApiEndpoints<IdentityUser>(options => 
+            {
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<BomaIdentityDbContext>();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.User.RequireUniqueEmail = true;
-            options.SignIn.RequireConfirmedEmail = true;
-        });
-
-        // services.AddTransient<IEmailSender, EmailSender>();
-        // services.Configure<EmailServerConfiguration>(configuration.GetSection("EmailServer"));
 
         return services;
     }
