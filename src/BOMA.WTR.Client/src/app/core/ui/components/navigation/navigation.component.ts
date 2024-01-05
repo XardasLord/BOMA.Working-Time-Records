@@ -7,6 +7,7 @@ import { environment } from '../../../../../environments/environment';
 import { Auth } from '../../../../shared/auth/state/auth.action';
 import Logout = Auth.Logout;
 import { AuthState } from '../../../../shared/auth/state/auth.state';
+import { RoutePaths } from '../../../modules/app-routing.module';
 
 @Component({
 	selector: 'app-navigation',
@@ -31,4 +32,6 @@ export class NavigationComponent {
 	logout() {
 		this.store.dispatch(new Logout());
 	}
+
+	protected readonly RoutePaths = RoutePaths;
 }

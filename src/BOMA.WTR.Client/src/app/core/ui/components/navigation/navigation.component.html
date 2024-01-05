@@ -12,13 +12,17 @@
 			<span class="app-version">(v.{{ appVersion }})</span>
 		</mat-toolbar>
 		<mat-nav-list>
-			<mat-list-item routerLink="/employees" routerLinkActive="active-route">
+			<mat-list-item [routerLink]="RoutePaths.Employees" routerLinkActive="active-route">
 				<mat-icon matListItemIcon>person</mat-icon>
 				<div matListItemTitle>Pracownicy</div>
 			</mat-list-item>
-			<mat-list-item routerLink="/working-time-records" routerLinkActive="active-route">
+			<mat-list-item [routerLink]="RoutePaths.WorkingTimeRecords" routerLinkActive="active-route">
 				<mat-icon matListItemIcon>work_history</mat-icon>
 				<div matListItemTitle>ECP</div>
+			</mat-list-item>
+			<mat-list-item [routerLink]="RoutePaths.Users" routerLinkActive="active-route" *ngIf="(user$ | async)?.role === 'Admin'">
+				<mat-icon matListItemIcon>group</mat-icon>
+				<div matListItemTitle>Użytkownicy</div>
 			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>

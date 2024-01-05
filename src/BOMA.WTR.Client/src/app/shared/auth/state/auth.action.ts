@@ -20,22 +20,6 @@ export namespace Auth {
 		static readonly type = `${prefix} ${Logout.name}`;
 	}
 
-	export class Activate {
-		constructor(public userId: string) {}
-
-		static readonly type = `${prefix} ${Activate.name}`;
-	}
-
-	export class Deactivate {
-		constructor(public userId: string) {}
-
-		static readonly type = `${prefix} ${Deactivate.name}`;
-	}
-
-	export class GetUsers {
-		static readonly type = `${prefix} ${GetUsers.name}`;
-	}
-
 	export class GetMyAccountDetails {
 		static readonly type = `${prefix} ${GetMyAccountDetails.name}`;
 	}

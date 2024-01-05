@@ -67,13 +67,14 @@ public class AuthController : ApiBaseController
 
         var userRoles = await _userManager.GetRolesAsync(user);
 
-        var role = userRoles.FirstOrDefault();
+        var role = userRoles.FirstOrDefault() ?? "User";
         
-        return Ok(new
+        return Ok(new UserDetails
         {
             Id = user.Id,
             Email = user.Email,
-            Role = role
+            Role = role,
+            Activated = user.EmailConfirmed
         });
     }
 
@@ -81,8 +82,21 @@ public class AuthController : ApiBaseController
     public async Task<IActionResult> GetUsers()
     {
         var users = await _userManager.Users.ToListAsync();
+
+        var results = new List<UserDetails>();
         
-        return Ok(users);
+        foreach (var user in users)
+        {
+            results.Add(new UserDetails
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "User",
+                Activated = user.EmailConfirmed
+            });
+        }
+        
+        return Ok(results);
     }
 
     [HttpPatch("users/{id}/activation")]
@@ -105,4 +119,12 @@ public enum UserActivationStatus
 {
     Deactivate = 0,
     Activate = 1,
+}
+
+public class UserDetails
+{
+    public string Id { get; set; }
+    public string Email { get; set; }
+    public string Role { get; set; }
+    public bool Activated { get; set; }
 }

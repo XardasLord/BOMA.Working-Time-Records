@@ -6,6 +6,7 @@ export const RoutePaths = {
 	Employees: 'employees',
 	Groups: 'groups',
 	WorkingTimeRecords: 'working-time-records',
+	Users: 'users',
 	Auth: 'auth',
 	Register: 'auth/register',
 	Login: 'auth/login'
@@ -27,6 +28,10 @@ const routes: Routes = [
 			{
 				path: RoutePaths.Auth,
 				loadChildren: () => import('../../shared/auth/auth.module').then((m) => m.AuthModule)
+			},
+			{
+				path: RoutePaths.Users,
+				loadChildren: () => import('../../users/users.module').then((m) => m.UsersModule)
 			}
 		]
 	},

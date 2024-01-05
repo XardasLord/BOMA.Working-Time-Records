@@ -6,7 +6,7 @@ import { RegisterResponse } from '../models/register.response';
 import { Observable, of } from 'rxjs';
 import { LoginCommand } from '../models/login.command';
 import { LoginResponse } from '../models/login.response';
-import { UserModel } from '../models/user.model';
+import { UserDetails } from '../models/userDetails';
 
 @Injectable()
 export class AuthService extends RemoteServiceBase {
@@ -26,11 +26,11 @@ export class AuthService extends RemoteServiceBase {
 		return of({});
 	}
 
-	public getUsers(): Observable<UserModel[]> {
-		return this.httpClient.get<UserModel[]>(`${this.apiEndpoint}/auth/users`);
+	public getUsers(): Observable<UserDetails[]> {
+		return this.httpClient.get<UserDetails[]>(`${this.apiEndpoint}/auth/users`);
 	}
 
-	public getMyAccountDetails(): Observable<UserModel> {
-		return this.httpClient.get<UserModel>(`${this.apiEndpoint}/auth/me`);
+	public getMyAccountDetails(): Observable<UserDetails> {
+		return this.httpClient.get<UserDetails>(`${this.apiEndpoint}/auth/me`);
 	}
 }

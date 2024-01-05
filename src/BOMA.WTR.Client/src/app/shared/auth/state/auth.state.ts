@@ -6,8 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth.service';
 import { IProgressSpinnerService } from '../../services/progress-spinner.base.service';
 import { Auth } from './auth.action';
-import GetUsers = Auth.GetUsers;
-import { UserModel } from '../models/user.model';
+import { UserDetails } from '../models/userDetails';
 import Register = Auth.Register;
 import { RegisterResponse } from '../models/register.response';
 import Login = Auth.Login;
@@ -20,8 +19,7 @@ import GetMyAccountDetails = Auth.GetMyAccountDetails;
 export interface AuthStateModel {
 	loggedIn: boolean;
 	accessToken: string | null;
-	user: UserModel | null;
-	users: UserModel[];
+	user: UserDetails | null;
 }
 
 const AUTH_STATE_TOKEN = new StateToken<AuthStateModel>('auth');
@@ -33,8 +31,7 @@ const userInfoStorageKey = 'boma_ecp_user';
 	defaults: {
 		loggedIn: !!localStorage.getItem(accessTokenStorageKey),
 		accessToken: localStorage.getItem(accessTokenStorageKey),
-		user: JSON.parse(localStorage.getItem(userInfoStorageKey)!),
-		users: []
+		user: JSON.parse(localStorage.getItem(userInfoStorageKey)!)
 	}
 })
 @Injectable()
@@ -44,11 +41,6 @@ export class AuthState {
 		private toastService: ToastrService,
 		private progressSpinnerService: IProgressSpinnerService
 	) {}
-
-	@Selector([AUTH_STATE_TOKEN])
-	static getUsers(state: AuthStateModel): UserModel[] {
-		return state.users;
-	}
 
 	@Selector([AUTH_STATE_TOKEN])
 	static isLoggedIn(state: AuthStateModel): boolean {
@@ -61,27 +53,8 @@ export class AuthState {
 	}
 
 	@Selector([AUTH_STATE_TOKEN])
-	static getUser(state: AuthStateModel): UserModel | null {
+	static getUser(state: AuthStateModel): UserDetails | null {
 		return state.user;
-	}
-
-	@Action(GetUsers)
-	getUsers(ctx: StateContext<AuthStateModel>, _: GetUsers): Observable<UserModel[]> {
-		this.progressSpinnerService.showProgressSpinner();
-
-		return this.authService.getUsers().pipe(
-			tap((response) => {
-				ctx.patchState({
-					users: response
-				});
-			}),
-			catchError((e) => {
-				return throwError(e);
-			}),
-			finalize(() => {
-				this.progressSpinnerService.hideProgressSpinner();
-			})
-		);
 	}
 
 	@Action(Register)
@@ -158,7 +131,7 @@ export class AuthState {
 	}
 
 	@Action(GetMyAccountDetails)
-	getMyAccountDetails(ctx: StateContext<AuthStateModel>, _: GetMyAccountDetails): Observable<UserModel> {
+	getMyAccountDetails(ctx: StateContext<AuthStateModel>, _: GetMyAccountDetails): Observable<UserDetails> {
 		return this.authService.getMyAccountDetails().pipe(
 			tap((response) => {
 				localStorage.setItem(userInfoStorageKey, JSON.stringify(response));
