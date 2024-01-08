@@ -1,39 +1,39 @@
-<div class="table-container mat-elevation-z3">
-	<table mat-table matSort class="mat-elevation-z3" [dataSource]="users$">
-		<ng-container matColumnDef="email">
-			<th mat-header-cell *matHeaderCellDef>E-mail</th>
-			<td mat-cell *matCellDef="let user">{{ user?.email }}</td>
-		</ng-container>
+<table mat-table matSort class="mat-elevation-z3" [dataSource]="users$">
+	<ng-container matColumnDef="email">
+		<th mat-header-cell *matHeaderCellDef>E-mail</th>
+		<td mat-cell *matCellDef="let user">{{ user?.email }}</td>
+	</ng-container>
 
-		<ng-container matColumnDef="role">
-			<th mat-header-cell *matHeaderCellDef>Rola</th>
-			<td mat-cell *matCellDef="let user">{{ user?.role }}</td>
-		</ng-container>
+	<ng-container matColumnDef="role">
+		<th mat-header-cell *matHeaderCellDef>Rola</th>
+		<td mat-cell *matCellDef="let user">{{ user?.role }}</td>
+	</ng-container>
 
-		<ng-container matColumnDef="activated">
-			<th mat-header-cell *matHeaderCellDef>Konto aktywne</th>
-			<td mat-cell *matCellDef="let user">
-				<mat-icon *ngIf="user?.activated" class="color-green">check</mat-icon>
-				<mat-icon *ngIf="!user?.activated" class="color-red">close</mat-icon>
-			</td>
-		</ng-container>
+	<ng-container matColumnDef="activated">
+		<th mat-header-cell *matHeaderCellDef>Konto aktywne</th>
+		<td mat-cell *matCellDef="let user">
+			<mat-icon *ngIf="user?.activated" class="color-green">check</mat-icon>
+			<mat-icon *ngIf="!user?.activated" class="color-red">close</mat-icon>
+		</td>
+	</ng-container>
 
-		<ng-container matColumnDef="actions">
-			<th mat-header-cell *matHeaderCellDef>Akcje</th>
-			<td mat-cell *matCellDef="let user">
+	<ng-container matColumnDef="actions">
+		<th mat-header-cell *matHeaderCellDef>Akcje</th>
+		<td mat-cell *matCellDef="let user">
+			<ng-container *ngIf="user?.email !== (myAccount$ | async)?.email">
 				<button mat-icon-button class="action" matTooltip="Aktywuj" (click)="activate(user)">
 					<mat-icon>check</mat-icon>
 				</button>
 				<button mat-icon-button class="action" matTooltip="Deaktywuj" (click)="deactivate(user)">
 					<mat-icon>close</mat-icon>
 				</button>
-			</td>
-		</ng-container>
+			</ng-container>
+		</td>
+	</ng-container>
 
-		<tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
-		<tr mat-row *matRowDef="let employee; columns: columnsToDisplay"></tr>
-	</table>
-</div>
+	<tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+	<tr mat-row *matRowDef="let employee; columns: columnsToDisplay"></tr>
+</table>
 
 <button mat-fab color="primary" class="refresh" matTooltip="Odśwież" (click)="refresh()">
 	<mat-icon>refresh</mat-icon>

@@ -7,6 +7,7 @@ import { UsersState } from '../../state/users.state';
 import Deactivate = Users.Deactivate;
 import Activate = Users.Activate;
 import GetAll = Users.GetAll;
+import { AuthState } from '../../../shared/auth/state/auth.state';
 
 @Component({
 	selector: 'app-users-list',
@@ -15,6 +16,7 @@ import GetAll = Users.GetAll;
 })
 export class UsersListComponent implements OnInit {
 	users$ = this.store.select(UsersState.getUsers);
+	myAccount$ = this.store.select(AuthState.getUser);
 
 	columnsToDisplay: string[] = [nameof<UserDetails>('email'), nameof<UserDetails>('role'), nameof<UserDetails>('activated'), 'actions'];
 

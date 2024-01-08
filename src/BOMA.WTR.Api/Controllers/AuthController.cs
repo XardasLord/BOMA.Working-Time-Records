@@ -100,19 +100,24 @@ public class AuthController : ApiBaseController
     }
 
     [HttpPatch("users/{id}/activation")]
-    public async Task<IActionResult> GetUsers(Guid id, UserActivationStatus userActivationStatus)
+    public async Task<IActionResult> GetUsers(Guid id, UserActivationRequest request)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
         
         if (user is null)
             return BadRequest($"User with ID '{id}' does not exist.");
 
-        user.EmailConfirmed = userActivationStatus == UserActivationStatus.Activate;
+        user.EmailConfirmed = request.ActivationStatus == UserActivationStatus.Activate;
 
         await _userManager.UpdateAsync(user);
         
         return Ok();
     }
+}
+
+public class UserActivationRequest
+{
+    public UserActivationStatus ActivationStatus { get; set; }
 }
 
 public enum UserActivationStatus
