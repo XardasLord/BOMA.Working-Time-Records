@@ -7,6 +7,8 @@ import { AppNgxsModule } from './modules/app-ngxs.module';
 import { NavigationComponent } from './ui/components/navigation/navigation.component';
 import { GlobalHttpErrorsInterceptor } from '../shared/interceptors/global-http-errors.interceptor';
 import { SharedModule } from '../shared/shared.module';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { UnauthorizedInterceptor } from './interceptors/unauthorized.interceptor';
 
 @NgModule({
 	declarations: [NavigationComponent],
@@ -16,6 +18,16 @@ import { SharedModule } from '../shared/shared.module';
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: GlobalHttpErrorsInterceptor,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: AuthInterceptor,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: UnauthorizedInterceptor,
 			multi: true
 		}
 	]

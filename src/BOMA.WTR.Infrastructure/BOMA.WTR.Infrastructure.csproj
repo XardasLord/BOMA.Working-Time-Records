@@ -1,46 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ADODB" Version="7.10.3077" />
-      <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
-      <PackageReference Include="AutoMapper" Version="11.0.1" />
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-      <PackageReference Include="Hangfire.AspNetCore" Version="1.8.3" />
-      <PackageReference Include="Hangfire.Console" Version="1.4.2" />
-      <PackageReference Include="Hangfire.Core" Version="1.8.3" />
-      <PackageReference Include="Hangfire.SqlServer" Version="1.8.3" />
-      <PackageReference Include="HotChocolate.Abstractions" Version="12.12.1" />
-      <PackageReference Include="HotChocolate.AspNetCore" Version="12.12.1" />
-      <PackageReference Include="HotChocolate.Data" Version="12.12.1" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.8">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.8" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="6.0.8" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+        <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="AutoMapper" Version="12.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.7" />
+        <PackageReference Include="Hangfire.Console" Version="1.4.2" />
+        <PackageReference Include="Hangfire.Core" Version="1.8.7" />
+        <PackageReference Include="Hangfire.SqlServer" Version="1.8.7" />
+        <PackageReference Include="HotChocolate.Abstractions" Version="13.8.1" />
+        <PackageReference Include="HotChocolate.AspNetCore" Version="13.8.1" />
+        <PackageReference Include="HotChocolate.Data" Version="13.8.1" />
+        <PackageReference Include="MailKit" Version="4.3.0" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.0" />
+        <PackageReference Include="SendGrid" Version="9.28.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\BOMA.WTR.Application\BOMA.WTR.Application.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Interop.InsERT">
-        <HintPath>DLL\Interop.InsERT.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

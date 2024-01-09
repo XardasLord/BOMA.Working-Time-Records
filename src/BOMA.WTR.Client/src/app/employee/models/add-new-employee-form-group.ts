@@ -11,5 +11,4 @@ export interface AddNewEmployeeFormGroup {
 	shiftTypeId: FormControl<number | null>;
 	shiftTypeName: FormControl<string | null>;
 	position: FormControl<string>;
-	personalIdentityNumber: FormControl<string>;
 }

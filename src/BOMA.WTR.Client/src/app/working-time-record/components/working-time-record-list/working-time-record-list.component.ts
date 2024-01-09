@@ -3,6 +3,7 @@ import { environment } from '../../../../environments/environment';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import GetAll = WorkingTimeRecord.GetAll;
 import { Store } from '@ngxs/store';
+import { AuthState } from '../../../shared/auth/state/auth.state';
 
 @Component({
 	selector: 'app-working-time-record-list',
@@ -11,6 +12,8 @@ import { Store } from '@ngxs/store';
 })
 export class WorkingTimeRecordListComponent implements OnInit {
 	managerMode = environment.managerMode;
+
+	user$ = this.store.select(AuthState.getUser);
 
 	constructor(private store: Store) {}
 

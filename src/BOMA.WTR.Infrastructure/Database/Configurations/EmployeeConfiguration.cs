@@ -1,6 +1,5 @@
 ﻿using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
-using BOMA.WTR.Domain.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -61,14 +60,6 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             information.Property(i => i.ShiftType)
                 .HasColumnName("ShiftType")
                 .HasConversion(new EnumToNumberConverter<ShiftType, byte>())
-                .IsRequired(false);
-        });
-
-        builder.OwnsOne(x => x.PersonalIdentityNumber, identity =>
-        {
-            identity.Property(p => p.Number)
-                .HasColumnName("PersonalIdentityNumber")
-                .HasMaxLength(11)
                 .IsRequired(false);
         });
 

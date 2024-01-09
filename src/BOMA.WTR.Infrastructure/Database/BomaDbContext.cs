@@ -11,6 +11,9 @@ namespace BOMA.WTR.Infrastructure.Database;
 public class BomaDbContext : DbContext
 {
     private readonly IWebHostEnvironment _webHostEnvironment;
+    
+    public virtual DbSet<WorkingTimeRecord> WorkingTimeRecords => Set<WorkingTimeRecord>();
+    public virtual DbSet<Employee> Employees => Set<Employee>();
 
     public BomaDbContext(DbContextOptions<BomaDbContext> options, IWebHostEnvironment webHostEnvironment) 
         : base(options)
@@ -29,9 +32,6 @@ public class BomaDbContext : DbContext
         
         optionsBuilder.UseSqlServer(configuration.GetConnectionString("Boma"));
     }
-
-    public virtual DbSet<WorkingTimeRecord> WorkingTimeRecords => Set<WorkingTimeRecord>();
-    public virtual DbSet<Employee> Employees => Set<Employee>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

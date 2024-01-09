@@ -22,7 +22,11 @@ export class EditEmployeeDialogComponent {
 	departments = DepartmentsArray;
 	shiftTypes = ShiftTypesArray;
 
-	constructor(fb: FormBuilder, private store: Store, @Inject(MAT_DIALOG_DATA) employee: EmployeeModel) {
+	constructor(
+		fb: FormBuilder,
+		private store: Store,
+		@Inject(MAT_DIALOG_DATA) employee: EmployeeModel
+	) {
 		this.editEmployeeForm = fb.group<EditEmployeeFormGroup>({
 			id: new FormControl<number>(employee.id, { nonNullable: true, validators: [Validators.required] }),
 			firstName: new FormControl<string>(employee.firstName, {
@@ -46,11 +50,7 @@ export class EditEmployeeDialogComponent {
 			departmentName: new FormControl<string | null>(employee.departmentName),
 			shiftTypeId: new FormControl<number | null>(employee.shiftTypeId, { nonNullable: true, validators: [Validators.required] }),
 			shiftTypeName: new FormControl<string | null>(employee.shiftTypeName),
-			position: new FormControl<string>(employee.position, { nonNullable: true, validators: [Validators.max(64)] }),
-			personalIdentityNumber: new FormControl<string>(employee.personalIdentityNumber, {
-				nonNullable: true,
-				validators: [Validators.minLength(11), Validators.maxLength(11)]
-			})
+			position: new FormControl<string>(employee.position, { nonNullable: true, validators: [Validators.max(64)] })
 		});
 
 		this.store.dispatch(new ResetForm({ path: 'employee.editEmployeeForm', value: this.editEmployeeForm.value }));

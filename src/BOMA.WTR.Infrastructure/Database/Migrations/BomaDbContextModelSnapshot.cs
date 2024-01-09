@@ -17,10 +17,10 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("BOMA.WTR.Domain.AggregateModels.Employee", b =>
                 {
@@ -29,7 +29,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
@@ -58,7 +58,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -119,7 +119,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int")
@@ -156,7 +156,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("BaseNormativeHours")
                         .HasColumnType("decimal(10,2)");
@@ -322,33 +322,12 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                                 .HasForeignKey("EmployeeId");
                         });
 
-                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.ValueObjects.PersonalIdentityNumber", "PersonalIdentityNumber", b1 =>
-                        {
-                            b1.Property<int>("EmployeeId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Number")
-                                .HasMaxLength(11)
-                                .HasColumnType("nvarchar(11)")
-                                .HasColumnName("PersonalIdentityNumber");
-
-                            b1.HasKey("EmployeeId");
-
-                            b1.ToTable("Employees");
-
-                            b1.WithOwner()
-                                .HasForeignKey("EmployeeId");
-                        });
-
                     b.Navigation("Department");
 
                     b.Navigation("JobInformation")
                         .IsRequired();
 
                     b.Navigation("Name")
-                        .IsRequired();
-
-                    b.Navigation("PersonalIdentityNumber")
                         .IsRequired();
 
                     b.Navigation("Salary")

@@ -1,6 +1,12 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+  "cli": {
+    "packageManager": "yarn",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
+  },
   "newProjectRoot": "projects",
   "projects": {
     "BOMA.WTR.Client": {
@@ -113,16 +119,16 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "BOMA.WTR.Client:build:production"
+              "buildTarget": "BOMA.WTR.Client:build:production"
             },
             "production-manager": {
-              "browserTarget": "BOMA.WTR.Client:build:production-manager"
+              "buildTarget": "BOMA.WTR.Client:build:production-manager"
             },
             "production-szef": {
-              "browserTarget": "BOMA.WTR.Client:build:production-szef"
+              "buildTarget": "BOMA.WTR.Client:build:production-szef"
             },
             "development": {
-              "browserTarget": "BOMA.WTR.Client:build:development"
+              "buildTarget": "BOMA.WTR.Client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -130,7 +136,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "BOMA.WTR.Client:build"
+            "buildTarget": "BOMA.WTR.Client:build"
           }
         },
         "test": {
@@ -164,10 +170,5 @@
         }
       }
     }
-  },
-  "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
   }
 }

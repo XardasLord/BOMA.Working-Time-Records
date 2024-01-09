@@ -1,22 +1,22 @@
 @import '../../../../assets/scss/variabless.scss';
 
-.mat-header-cell,
-.mat-cell {
+.mat-mdc-header-cell,
+.mat-mdc-cell {
 	text-align: center;
 	border-right: 1px solid black;
 }
 
-th.mat-header-cell:first-of-type,
-td.mat-cell:first-of-type,
-td.mat-footer-cell:first-of-type {
+th.mat-mdc-header-cell:first-of-type,
+td.mat-mdc-cell:first-of-type,
+td.mat-mdc-footer-cell:first-of-type {
 	padding-left: 0;
 }
 
-.mat-header-cell.mat-column-index {
+.mat-mdc-header-cell.mat-column-index {
 	width: 50px;
 }
 
-.mat-column-fullName.mat-cell {
+.mat-column-fullName.mat-mdc-cell {
 	width: 220px;
 	text-align: center;
 	font-size: 20px;
@@ -24,12 +24,12 @@ td.mat-footer-cell:first-of-type {
 	text-transform: uppercase;
 }
 
-.mat-header-cell.mat-column-shiftType,
+.mat-mdc-header-cell.mat-column-shiftType,
 .mat-header-cell.mat-column-absentDaysCount {
 	width: 90px;
 }
 
-.mat-header-cell.mat-column-1,
+.mat-mdc-header-cell.mat-column-1,
 .mat-header-cell.mat-column-2,
 .mat-header-cell.mat-column-3,
 .mat-header-cell.mat-column-4,
@@ -63,35 +63,35 @@ td.mat-footer-cell:first-of-type {
 	width: 50px;
 }
 
-tr.mat-row {
+tr.mat-mdc-row {
 	height: 24px;
 }
 
-.mat-cell.default-value,
-.mat-cell.default-value-hours {
+.mat-mdc-cell.default-value,
+.mat-mdc-cell.default-value-hours {
 	background-color: $standard-cell-color;
 }
 
-.mat-header-cell.weekend-day,
-.mat-cell.weekend-day {
+.mat-mdc-header-cell.weekend-day,
+.mat-mdc-cell.weekend-day {
 	background-color: $weekend-day-color !important;
 }
 
-.mat-header-cell.is-absent,
-.mat-cell.is-absent {
+.mat-mdc-header-cell.is-absent,
+.mat-mdc-cell.is-absent {
 	background-color: $absent-day-color !important;
 }
 
-.mat-cell.none-value {
+.mat-mdc-cell.none-value {
 	background-color: $none-cell-color;
 }
 
-tr.mat-footer-row {
+tr.mat-mdc-footer-row {
 	font-size: 22px;
 	font-weight: bold;
 	text-align: center;
 }
 
-.mat-table-sticky {
+.mat-mdc-table-sticky {
 	border-top: 1px solid #e0e0e0;
 }

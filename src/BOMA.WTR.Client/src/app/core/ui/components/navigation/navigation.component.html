@@ -12,22 +12,34 @@
 			<span class="app-version">(v.{{ appVersion }})</span>
 		</mat-toolbar>
 		<mat-nav-list>
-			<mat-list-item routerLink="/employees" routerLinkActive="active-route">
-				<mat-icon class="material-icons-outlined" matListIcon>person</mat-icon>
-				<span matLine>Pracownicy</span>
+			<mat-list-item [routerLink]="RoutePaths.Employees" routerLinkActive="active-route">
+				<mat-icon matListItemIcon>person</mat-icon>
+				<div matListItemTitle>Pracownicy</div>
 			</mat-list-item>
-			<mat-list-item routerLink="/working-time-records" routerLinkActive="active-route">
-				<mat-icon class="material-icons-outlined" matListIcon>work_history</mat-icon>
-				<span matLine>ECP</span>
+			<mat-list-item [routerLink]="RoutePaths.WorkingTimeRecords" routerLinkActive="active-route">
+				<mat-icon matListItemIcon>work_history</mat-icon>
+				<div matListItemTitle>ECP</div>
+			</mat-list-item>
+			<mat-list-item [routerLink]="RoutePaths.Users" routerLinkActive="active-route" *ngIf="(user$ | async)?.role === 'Admin'">
+				<mat-icon matListItemIcon>group</mat-icon>
+				<div matListItemTitle>Użytkownicy</div>
 			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>
 	<mat-sidenav-content>
 		<mat-toolbar color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()">
-				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+				<mat-icon>menu</mat-icon>
 			</button>
 			<span>BOMA - System Ewidencji Czasu Pracy</span>
+
+			<span class="spacer"></span>
+
+			<span>{{ (user$ | async)?.email }} ({{ (user$ | async)?.role }})</span>
+
+			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj">
+				<mat-icon>logout</mat-icon>
+			</button>
 		</mat-toolbar>
 		<div class="content">
 			<router-outlet></router-outlet>

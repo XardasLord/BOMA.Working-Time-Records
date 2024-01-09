@@ -21,7 +21,10 @@ export class AddNewEmployeeDialogComponent {
 	departments = DepartmentsArray;
 	shiftTypes = ShiftTypesArray;
 
-	constructor(fb: FormBuilder, private store: Store) {
+	constructor(
+		fb: FormBuilder,
+		private store: Store
+	) {
 		this.addNewEmployeeForm = fb.group<AddNewEmployeeFormGroup>({
 			firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.max(64)] }),
 			lastName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required, Validators.max(64)] }),
@@ -32,11 +35,7 @@ export class AddNewEmployeeDialogComponent {
 			departmentName: new FormControl<string>(''),
 			shiftTypeId: new FormControl<number | null>(0, { nonNullable: true, validators: [Validators.required] }),
 			shiftTypeName: new FormControl<string | null>(''),
-			position: new FormControl<string>('', { nonNullable: true, validators: [Validators.max(64)] }),
-			personalIdentityNumber: new FormControl<string>('', {
-				nonNullable: true,
-				validators: [Validators.minLength(11), Validators.maxLength(11)]
-			})
+			position: new FormControl<string>('', { nonNullable: true, validators: [Validators.max(64)] })
 		});
 	}
 

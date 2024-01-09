@@ -1,5 +1,4 @@
 ﻿using BOMA.WTR.Domain.AggregateModels;
-using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Tests.Base;
 using FluentAssertions;
 using Xunit;

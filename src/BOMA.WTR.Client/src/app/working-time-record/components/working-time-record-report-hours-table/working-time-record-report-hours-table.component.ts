@@ -6,7 +6,6 @@ import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
 import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-time-record-details-aggregated.model';
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
-import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -14,6 +13,7 @@ import {
 	WorkingTimeRecordReportHoursFormGroup
 } from '../../models/working-time-record-summary-data-form.model';
 import moment from 'moment';
+import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
 import UpdateReportHoursData = WorkingTimeRecord.UpdateReportHoursData;
 
 @Component({
@@ -29,7 +29,11 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 	reportHoursForm: FormGroup<WorkingTimeRecordReportHoursFormGroup>;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
 
-	constructor(private store: Store, private toastService: ToastrService, private fb: FormBuilder) {
+	constructor(
+		private store: Store,
+		private toastService: ToastrService,
+		private fb: FormBuilder
+	) {
 		this.reportHoursForm = this.fb.group<WorkingTimeRecordReportHoursFormGroup>({
 			year: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
 			month: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
@@ -160,11 +164,11 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 			if (workTimeRecord) {
 				this.reportHoursForm.patchValue({
 					[entry]:
-						workTimeRecord.workTimePeriodOriginal.duration != '00:00:00'
+						workTimeRecord.workTimePeriodOriginal.duration != '00:00:00' && workTimeRecord.workTimePeriodOriginal.from
 							? moment(workTimeRecord.workTimePeriodOriginal.from).format('HH:mm')
 							: emptyTimeFormat,
 					[exit]:
-						workTimeRecord.workTimePeriodOriginal.duration != '00:00:00'
+						workTimeRecord.workTimePeriodOriginal.duration != '00:00:00' && workTimeRecord.workTimePeriodOriginal.to
 							? moment(workTimeRecord.workTimePeriodOriginal.to).format('HH:mm')
 							: emptyTimeFormat
 				});

@@ -10,5 +10,4 @@ public sealed record AddEmployeeCommand(
     int RcpId,
     int DepartmentId,
     int ShiftTypeId,
-    string Position,
-    string PersonalIdentityNumber) : ICommand<AddEmployeeResponse>;
+    string Position) : ICommand<AddEmployeeResponse>;

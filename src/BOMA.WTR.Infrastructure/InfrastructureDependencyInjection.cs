@@ -10,11 +10,10 @@ using BOMA.WTR.Infrastructure.Database.Repositories;
 using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
 using BOMA.WTR.Infrastructure.ErrorHandling.Exceptions;
-using BOMA.WTR.Infrastructure.InsertGT.Gratyfikant;
+using BOMA.WTR.Infrastructure.Identity;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -36,9 +35,12 @@ public static class InfrastructureDependencyInjection
         services.AddSwaggerGen();
         services.AddHealthChecks();
 
-        services.AddDbContext<BomaDbContext>(x => 
-            x.UseSqlServer(configuration.GetConnectionString("Boma"), 
-                opt => opt.EnableRetryOnFailure()));
+        services.AddDbContext<BomaDbContext>(opt => 
+            opt.UseSqlServer(configuration.GetConnectionString("Boma"), 
+                x => x.EnableRetryOnFailure()));
+
+        services.AddBomaIdentity(configuration);
+        
         services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
         services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));
         
@@ -46,7 +48,6 @@ public static class InfrastructureDependencyInjection
         services.AddTransient<ISalaryCalculationDomainService, SalaryCalculationDomainServiceHandler>();
 
         // services.AddGraphQL();
-        services.AddGratyfikant(configuration);
         
         services.AddHangfire(config =>
         {
@@ -65,7 +66,10 @@ public static class InfrastructureDependencyInjection
         });
         services.AddHangfireServer();
         
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+        });
 
         services.AddSingleton(provider => new MapperConfiguration(cfg =>
         {
@@ -76,7 +80,7 @@ public static class InfrastructureDependencyInjection
         return services;
     }
 
-    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
+    public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, WebApplication webApp)
     {
         if (env.IsDevelopment())
         {
@@ -94,7 +98,8 @@ public static class InfrastructureDependencyInjection
             .AllowAnyHeader());
         
         app.UseHttpsRedirection();
-        app.UseAuthorization();
+
+        app.UseBomaIdentity(webApp);
 
         app.UseHealthChecks("/healthz");
 
@@ -111,6 +116,8 @@ public static class InfrastructureDependencyInjection
             nameof(AggregateWorkingTimeRecordHistoriesJob),
             job => job.Execute(null, CancellationToken.None),
             configuration["Hangfire:AggregateWorkingTimeRecordHistoriesJobCron"]);
+
+        webApp.MapControllers();
 
         return app;
     }
