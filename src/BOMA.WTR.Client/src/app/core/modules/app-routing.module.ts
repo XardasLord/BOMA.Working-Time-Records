@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NavigationComponent } from '../ui/components/navigation/navigation.component';
+import { Role } from '../../shared/auth/models/userDetails';
+import { HasRoleGuard } from '../guards/has-role.guard';
 
 export const RoutePaths = {
 	Employees: 'employees',
@@ -26,12 +28,16 @@ const routes: Routes = [
 				loadChildren: () => import('../../working-time-record/working-time-record.module').then((m) => m.WorkingTimeRecordModule)
 			},
 			{
-				path: RoutePaths.Auth,
-				loadChildren: () => import('../../shared/auth/auth.module').then((m) => m.AuthModule)
+				path: RoutePaths.Users,
+				loadChildren: () => import('../../users/users.module').then((m) => m.UsersModule),
+				canActivate: [HasRoleGuard],
+				data: {
+					roles: [Role.Admin]
+				}
 			},
 			{
-				path: RoutePaths.Users,
-				loadChildren: () => import('../../users/users.module').then((m) => m.UsersModule)
+				path: RoutePaths.Auth,
+				loadChildren: () => import('../../shared/auth/auth.module').then((m) => m.AuthModule)
 			}
 		]
 	},
