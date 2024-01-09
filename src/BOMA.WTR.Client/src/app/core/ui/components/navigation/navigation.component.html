@@ -35,7 +35,7 @@
 
 			<span class="spacer"></span>
 
-			<span>{{ (user$ | async)?.email }}</span>
+			<span>{{ (user$ | async)?.email }} ({{ (user$ | async)?.role }})</span>
 
 			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj">
 				<mat-icon>logout</mat-icon>
