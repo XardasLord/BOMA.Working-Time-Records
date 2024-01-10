@@ -19,6 +19,7 @@ import {
 	ConfirmationDialogComponent,
 	ConfirmationDialogModel
 } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
@@ -99,6 +100,10 @@ export class EmployeeState {
 				);
 
 				this.dialogRef.closeAll();
+			}),
+			catchError((e: HttpErrorResponse) => {
+				this.toastService.error(`Wystąpił błąd przy dodawaniu pracownika - ${e.message}`);
+				return throwError(() => e);
 			})
 		);
 	}
@@ -131,6 +136,10 @@ export class EmployeeState {
 				this.toastService.success(`Pracownik został edytowany`, 'Sukces');
 
 				this.dialogRef.closeAll();
+			}),
+			catchError((e: HttpErrorResponse) => {
+				this.toastService.error(`Wystąpił błąd przy edycji pracownika - ${e.message}`);
+				return throwError(() => e);
 			})
 		);
 	}
