@@ -2,6 +2,10 @@
 @import 'ngx-toastr/toastr';
 @import 'assets/scss/variabless.scss';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
 	height: 100%;
