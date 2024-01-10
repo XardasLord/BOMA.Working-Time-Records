@@ -36,6 +36,7 @@ public class Employee : Entity<int>, IAggregateRoot
         _jobInformation = jobInformation;
         _rcpId = rcpId;
         _departmentId = departmentId;
+        _isActive = true;
     }
     
     public Name Name => _name;
