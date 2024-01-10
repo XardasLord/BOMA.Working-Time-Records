@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { Action, State, StateContext, StateToken, Store } from '@ngxs/store';
+import { Action, State, StateContext, StateToken } from '@ngxs/store';
 import { Modal } from './modal.action';
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 import { AddNewEmployeeDialogComponent } from '../../employee/components/add-new-employee-dialog/add-new-employee-dialog.component';
@@ -22,9 +22,12 @@ export class ModalState {
 	private readonly addNewEmployeeDialogConfig = new MatDialogConfig();
 	private readonly editEmployeeDialogConfig = new MatDialogConfig();
 
-	constructor(private zone: NgZone, private dialog: MatDialog, private store: Store) {
+	constructor(
+		private zone: NgZone,
+		private dialog: MatDialog
+	) {
 		this.addNewEmployeeDialogConfig = {
-			width: '320px'
+			width: '420px'
 		};
 		this.editEmployeeDialogConfig = this.addNewEmployeeDialogConfig;
 	}
