@@ -27,11 +27,9 @@ export class ConfirmationDialogComponent {
 	}
 }
 
-/**
- * Class to represent confirm dialog model.
- *
- * It has been kept here to keep it as part of shared component.
- */
 export class ConfirmationDialogModel {
-	constructor(public title: string, public message: string) {}
+	constructor(
+		public title: string,
+		public message: string
+	) {}
 }

@@ -1,34 +1,25 @@
-<div class="card">
-	<div class="card-body">
-		<h1 class="card-title">Zaloguj się do systemu ECP</h1>
+<div class="container">
+	<h1 class="card-title">Zaloguj się do systemu ECP</h1>
 
-		<form [formGroup]="loginForm" autocomplete="off" novalidate (ngSubmit)="loginUser(loginForm.value)">
-			<div class="mb-3 row">
-				<label for="username" class="col-form-label col-sm-2">E-mail:</label>
-				<div class="col-md-5">
-					<input type="text" id="username" formControlName="username" class="form-control" />
-				</div>
-				<div class="col-md-5">
-					<em *ngIf="validateControl('username') && hasError('username', 'required')">E-mail jest wymagany</em>
-				</div>
-			</div>
-			<div class="mb-3 row">
-				<label for="password" class="col-form-label col-sm-2">Hasło:</label>
-				<div class="col-md-5">
-					<input type="password" id="password" formControlName="password" class="form-control" />
-				</div>
-				<div class="col-md-5">
-					<em *ngIf="validateControl('password') && hasError('password', 'required')">Hasło jest wymagane</em>
-				</div>
-			</div>
-			<br />
-			<div class="mb-3 row">
-				<div class="col-md-1">
-					<button mat-raised-button type="submit" color="primary" [disabled]="!loginForm.valid">Zaloguj się</button>
-				</div>
+	<form [formGroup]="loginForm" autocomplete="off" novalidate (ngSubmit)="loginUser(loginForm.value)">
+		<div class="flex flex-col">
+			<mat-form-field class="w-1/4">
+				<mat-label>E-mail</mat-label>
+				<input matInput placeholder="E-mail" formControlName="email" />
+			</mat-form-field>
+
+			<mat-form-field class="w-1/4">
+				<mat-label>Hasło</mat-label>
+				<input type="password" matInput placeholder="Hasło" formControlName="password" />
+			</mat-form-field>
+
+			<div>
+				<button mat-raised-button type="submit" color="primary" [disabled]="!loginForm.valid">Zaloguj się</button>
 			</div>
 
-			<a mat-button (click)="redirectToRegister()">Nie masz konta? Zarejestruj się</a>
-		</form>
-	</div>
+			<div>
+				<a mat-button (click)="redirectToRegister()">Nie masz konta? Zarejestruj się</a>
+			</div>
+		</div>
+	</form>
 </div>

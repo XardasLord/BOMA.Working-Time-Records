@@ -1,49 +1,49 @@
-<form [formGroup]="editEmployeeForm" (ngSubmit)="onSubmit()" ngxsForm="employee.editEmployeeForm">
-	<div class="content">
+<div class="container">
+	<form [formGroup]="editEmployeeForm" (ngSubmit)="onSubmit()" ngxsForm="employee.editEmployeeForm">
 		<h2 mat-dialog-title>Edytuj pracownika</h2>
 
 		<mat-dialog-content>
 			<section>
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Imię</mat-label>
 					<input type="text" matInput formControlName="firstName" />
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Nazwisko</mat-label>
 					<input type="text" matInput formControlName="lastName" />
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Stawka [PLN]</mat-label>
 					<input type="number" matInput formControlName="baseSalary" />
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Premia [%]</mat-label>
 					<input type="number" matInput formControlName="salaryBonusPercentage" />
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>RCP ID</mat-label>
 					<input type="number" matInput formControlName="rcpId" />
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Dział</mat-label>
 					<mat-select formControlName="departmentId">
 						<mat-option *ngFor="let department of departments" [value]="department.value">{{ department.key }}</mat-option>
 					</mat-select>
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Zmiana</mat-label>
 					<mat-select formControlName="shiftTypeId">
 						<mat-option *ngFor="let shiftType of shiftTypes" [value]="shiftType.value">{{ shiftType.key }}</mat-option>
 					</mat-select>
 				</mat-form-field>
 
-				<mat-form-field appearance="fill" class="input">
+				<mat-form-field appearance="fill" class="w-full">
 					<mat-label>Stanowisko</mat-label>
 					<input type="text" matInput formControlName="position" />
 				</mat-form-field>
@@ -55,9 +55,9 @@
 			<input type="hidden" formControlName="id" />
 		</mat-dialog-content>
 
-		<mat-dialog-actions>
+		<mat-dialog-actions align="end">
 			<button mat-button color="primary" type="button" mat-dialog-close>Anuluj</button>
-			<button mat-raised-button color="primary" type="submit" cdkFocusInitial>Edytuj</button>
+			<button mat-raised-button color="primary" type="submit">Edytuj</button>
 		</mat-dialog-actions>
-	</div>
-</form>
+	</form>
+</div>

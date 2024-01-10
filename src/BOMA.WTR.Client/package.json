@@ -1,6 +1,6 @@
 {
   "name": "boma.wtr.client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -51,6 +51,7 @@
     "@types/luxon": "^3.3.7",
     "@typescript-eslint/eslint-plugin": "6.17.0",
     "@typescript-eslint/parser": "6.17.0",
+    "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",
     "jasmine-core": "~5.1.1",
     "karma": "~6.4.2",
@@ -58,7 +59,9 @@
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.4.33",
     "prettier": "3.1.1",
+    "tailwindcss": "^3.4.1",
     "typescript": "~5.2.2"
   }
 }
