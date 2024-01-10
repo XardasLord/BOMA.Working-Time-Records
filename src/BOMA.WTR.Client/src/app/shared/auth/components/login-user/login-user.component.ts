@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginCommand } from '../../models/login.command';
-import { ToastrService } from 'ngx-toastr';
-import { Store } from '@ngxs/store';
-import { Navigate } from '@ngxs/router-plugin';
 import { RoutePaths } from '../../../../core/modules/app-routing.module';
 import { Auth } from '../../state/auth.action';
 import Login = Auth.Login;
@@ -30,24 +30,18 @@ export class LoginUserComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.loginForm = new FormGroup({
-			username: new FormControl('', [Validators.required]),
+			email: new FormControl('', [Validators.required]),
 			password: new FormControl('', [Validators.required])
 		});
 
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-	}
-	validateControl(controlName: string) {
-		return this.loginForm.get(controlName)?.invalid && this.loginForm.get(controlName)?.touched;
-	}
-	hasError(controlName: string, errorName: string) {
-		return this.loginForm.get(controlName)?.hasError(errorName);
 	}
 
 	loginUser(loginFormValue: any) {
 		const login = { ...loginFormValue };
 
 		const command: LoginCommand = {
-			email: login.username,
+			email: login.email,
 			password: login.password
 		};
 

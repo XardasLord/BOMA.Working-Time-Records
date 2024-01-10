@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
 import { RegisterCommand } from '../../models/register.command';
 import { Auth } from '../../state/auth.action';
-import Register = Auth.Register;
-import { Navigate } from '@ngxs/router-plugin';
 import { RoutePaths } from '../../../../core/modules/app-routing.module';
+import Register = Auth.Register;
 
 @Component({
 	selector: 'app-register-user',
@@ -23,14 +23,6 @@ export class RegisterUserComponent implements OnInit {
 			password: new FormControl('', [Validators.required]),
 			confirm: new FormControl('')
 		});
-	}
-
-	public validateControl(controlName: string) {
-		return this.registerForm.get(controlName)?.invalid && this.registerForm.get(controlName)?.touched;
-	}
-
-	public hasError(controlName: string, errorName: string) {
-		return this.registerForm.get(controlName)?.hasError(errorName);
 	}
 
 	public registerUser(registerFormValue: any) {
