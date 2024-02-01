@@ -244,19 +244,13 @@ public class Employee : Entity<int>, IAggregateRoot
             throw new InvalidOperationException("Nie można edytować godzin pracy za zakończony już miesiąc");
 
         UpdateEntryRecords(year, month, reportEntryHours);
-        UpdateExitRecords(year, month, reportExitHours);
+        UpdateExitRecords(year, month, reportEntryHours, reportExitHours);
     }
 
     private void UpdateEntryRecords(int year, int month, IDictionary<int, string> reportHours)
     {
         foreach (var reportHourDay in reportHours)
         {
-            var entryRecord = WorkingTimeRecords
-                .Where(x => x.OccuredAt.Month == month)
-                .Where(x => x.OccuredAt.Year == year)
-                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
-                .FirstOrDefault(x => x.EventType == RecordEventType.Entry);
-            
             if (string.IsNullOrWhiteSpace(reportHourDay.Value))
                 continue;
             
@@ -270,7 +264,14 @@ public class Employee : Entity<int>, IAggregateRoot
             
             var newOccuredAt = new DateTime(year, month, reportHourDay.Key, hours, minutes, 0);
 
-            if (entryRecord is null)
+            var entryRecords = WorkingTimeRecords
+                .Where(x => x.OccuredAt.Month == month)
+                .Where(x => x.OccuredAt.Year == year)
+                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
+                .Where(x => x.EventType == RecordEventType.Entry)
+                .ToList();
+            
+            if (entryRecords.Count == 0)
             {
                 var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
             
@@ -278,24 +279,33 @@ public class Employee : Entity<int>, IAggregateRoot
             }
             else
             {
-                if (entryRecord.OccuredAt.Hour != newOccuredAt.Hour || entryRecord.OccuredAt.Minute != newOccuredAt.Minute)
+                if (entryRecords.Count > 1)
                 {
-                    entryRecord.OccuredAt = newOccuredAt;
+                    _workingTimeRecords.RemoveAll(x => 
+                        x.OccuredAt.Month == month &&
+                        x.OccuredAt.Year == year &&
+                        x.OccuredAt.Day == reportHourDay.Key &&
+                        x.EventType == RecordEventType.Entry);
+                    
+                    var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
+            
+                    AddWorkingTimeRecord(entry);
+                }
+                else
+                {
+                    if (entryRecords.First().OccuredAt.Hour != newOccuredAt.Hour || entryRecords.First().OccuredAt.Minute != newOccuredAt.Minute)
+                    {
+                        entryRecords.First().OccuredAt = newOccuredAt;
+                    }
                 }
             }
         }
     }
 
-    private void UpdateExitRecords(int year, int month, IDictionary<int, string> reportHours)
+    private void UpdateExitRecords(int year, int month, IDictionary<int, string> reportEntryHours, IDictionary<int, string> reportExitHours)
     {
-        foreach (var reportHourDay in reportHours)
+        foreach (var reportHourDay in reportExitHours)
         {
-            var exitRecord = WorkingTimeRecords
-                .Where(x => x.OccuredAt.Month == month)
-                .Where(x => x.OccuredAt.Year == year)
-                .Where(x => x.OccuredAt.Day == reportHourDay.Key)
-                .LastOrDefault(x => x.EventType == RecordEventType.Exit);
-            
             if (string.IsNullOrWhiteSpace(reportHourDay.Value))
                 continue;
             
@@ -308,18 +318,52 @@ public class Employee : Entity<int>, IAggregateRoot
                 continue;
                 
             var newOccuredAt = new DateTime(year, month, day, hours, minutes, 0);
-
-            if (exitRecord is null)
-            {
-                var entry = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
             
-                AddWorkingTimeRecord(entry);
+            var exitRecords = WorkingTimeRecords
+                .Where(x => x.OccuredAt.Month == month)
+                .Where(x => x.OccuredAt.Year == year)
+                .Where(x => x.OccuredAt.Day == newOccuredAt.Day)
+                .Where(x => x.EventType == RecordEventType.Exit)
+                .ToList();
+            
+            if (exitRecords.Count == 0)
+            {
+                var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+            
+                AddWorkingTimeRecord(exit);
             }
             else
             {
-                if (exitRecord.OccuredAt.Hour != newOccuredAt.Hour || exitRecord.OccuredAt.Minute != newOccuredAt.Minute)
+                if (exitRecords.Count > 1)
                 {
-                    exitRecord.OccuredAt = newOccuredAt;
+                    _workingTimeRecords.RemoveAll(x => 
+                        x.OccuredAt.Month == month &&
+                        x.OccuredAt.Year == year &&
+                        x.OccuredAt.Day == newOccuredAt.Day &&
+                        x.EventType == RecordEventType.Exit);
+                    
+                    var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+            
+                    AddWorkingTimeRecord(exit);
+                }
+                else
+                {
+                    if (exitRecords.First().OccuredAt.Hour != newOccuredAt.Hour || exitRecords.First().OccuredAt.Minute != newOccuredAt.Minute)
+                    {
+                        var entryTimeSpanForThisDay = TimeSpan.Parse(reportEntryHours[reportHourDay.Key]);
+
+                        if (entryTimeSpanForThisDay.Hours < 15 && newOccuredAt.Hour > 18 && exitRecords.First().OccuredAt.Hour < 4)
+                        {
+                            // Szczególny przypadek, gdy pracownik wychodzi z pracy np o 22:00, a miał już wyjście tego samego dnia za dzień poprzedni o 02:00, więc traktujemy to jako zupełnie nowy wpis wyjścia na ten sam dzień
+                            var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+            
+                            AddWorkingTimeRecord(exit);
+                        }
+                        else
+                        {
+                            exitRecords.First().OccuredAt = newOccuredAt;
+                        }
+                    }
                 }
             }
         }
