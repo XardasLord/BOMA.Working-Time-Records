@@ -1,15 +1,23 @@
-﻿using BOMA.WTR.Domain.AggregateModels.ValueObjects;
+﻿using BOMA.WTR.Application.Salary;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Tests.Base;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRecordCalculationDomainService;
 
 public class GetDayWorkTimePeriodTests : TestBase
 {
-    private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut = new();
+    private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
     private DateTime _startWorkDate;
     private DateTime _endWorkDate;
+    private readonly IOptions<SalaryConfiguration> _options = new OptionsWrapper<SalaryConfiguration>(new SalaryConfiguration { MinSalary = 4242 });
+
+    public GetDayWorkTimePeriodTests()
+    {
+        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_options);
+    }
 
     private WorkTimePeriod? Act() => _sut.GetDayWorkTimePeriod(_startWorkDate, _endWorkDate);
 

@@ -1,6 +1,8 @@
-﻿using BOMA.WTR.Domain.SharedKernel;
+﻿using BOMA.WTR.Application.Salary;
+using BOMA.WTR.Domain.SharedKernel;
 using BOMA.WTR.Tests.Base;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRecordCalculationDomainService;
@@ -10,10 +12,11 @@ public class NormalizeDateTimeTests : TestBase
     private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
     private DateTime _date;
     private RecordEventType _recordEventType;
+    private readonly IOptions<SalaryConfiguration> _options = new OptionsWrapper<SalaryConfiguration>(new SalaryConfiguration { MinSalary = 4242 });
 
     public NormalizeDateTimeTests()
     {
-        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService();
+        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_options);
     }
 
     private DateTime Act() => _sut.NormalizeDateTime(_recordEventType, _date);

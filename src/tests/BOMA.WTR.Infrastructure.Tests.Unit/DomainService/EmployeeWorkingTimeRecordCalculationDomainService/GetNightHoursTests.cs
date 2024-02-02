@@ -1,5 +1,7 @@
-﻿using BOMA.WTR.Tests.Base;
+﻿using BOMA.WTR.Application.Salary;
+using BOMA.WTR.Tests.Base;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRecordCalculationDomainService;
@@ -9,10 +11,11 @@ public class GetNightHoursTests : TestBase
     private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
     private DateTime _startWorkDate;
     private DateTime _endWorkDate;
+    private readonly IOptions<SalaryConfiguration> _options = new OptionsWrapper<SalaryConfiguration>(new SalaryConfiguration { MinSalary = 4242 });
 
     public GetNightHoursTests()
     {
-        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService();
+        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_options);
     }
 
     private double Act() => _sut.GetNightHours(_startWorkDate, _endWorkDate);

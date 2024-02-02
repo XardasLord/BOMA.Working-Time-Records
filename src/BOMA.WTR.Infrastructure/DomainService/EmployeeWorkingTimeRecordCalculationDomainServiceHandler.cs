@@ -1,14 +1,22 @@
-﻿using BOMA.WTR.Domain.AggregateModels.Entities;
+﻿using BOMA.WTR.Application.RogerFiles;
+using BOMA.WTR.Application.Salary;
+using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.Extensions;
 using BOMA.WTR.Domain.SharedKernel;
+using Microsoft.Extensions.Options;
 
 namespace BOMA.WTR.Infrastructure.DomainService;
 
 public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkingTimeRecordCalculationDomainService
 {
-    private const int MinSalary = 3600;
+    private readonly SalaryConfiguration _salaryOptions;
+
+    public EmployeeWorkingTimeRecordCalculationDomainService(IOptions<SalaryConfiguration> options)
+    {
+        _salaryOptions = options.Value;
+    }
     
     public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
     {
@@ -356,7 +364,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
     public double GetNightFactorBonus(int year, int month)
     {
         var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonthExcludingBankHolidays();
-        var nightFactor = MinSalary / workedHoursInMonth * 0.2;
+        var nightFactor = _salaryOptions.MinSalary / workedHoursInMonth * 0.2;
 
         return Math.Round(nightFactor, 2);
     }
