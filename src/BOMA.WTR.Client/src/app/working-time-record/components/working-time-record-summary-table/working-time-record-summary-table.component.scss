@@ -21,8 +21,11 @@
 }
 
 .mat-column-fullName.mat-mdc-cell {
-	font-size: 20px;
-	width: 220px;
+	font-size: 18px;
+}
+
+.mat-column-fullName {
+	max-width: 170px;
 }
 
 .mat-column-gross.mat-mdc-cell,

@@ -1,5 +1,7 @@
-﻿using BOMA.WTR.Tests.Base;
+﻿using BOMA.WTR.Application.Salary;
+using BOMA.WTR.Tests.Base;
 using FluentAssertions;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRecordCalculationDomainService;
@@ -10,10 +12,11 @@ public class GetBaseNormativeHoursTests : TestBase
     private DateTime _startWorkDate;
     private DateTime _endWorkDate;
     private double _workedHours;
+    private readonly IOptions<SalaryConfiguration> _options = new OptionsWrapper<SalaryConfiguration>(new SalaryConfiguration { MinSalary = 4242 });
 
     public GetBaseNormativeHoursTests()
     {
-        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService();
+        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_options);
     }
 
     private double Act() => _sut.GetBaseNormativeHours(_startWorkDate, _endWorkDate, _workedHours);

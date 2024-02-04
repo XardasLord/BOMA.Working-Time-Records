@@ -3,6 +3,7 @@ using AutoMapper;
 using BOMA.WTR.Application.AutoMapper;
 using BOMA.WTR.Application.Hangfire;
 using BOMA.WTR.Application.RogerFiles;
+using BOMA.WTR.Application.Salary;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Domain.SharedKernel;
 using BOMA.WTR.Infrastructure.Database;
@@ -30,6 +31,7 @@ public static class InfrastructureDependencyInjection
         services.AddTransient<ExceptionHandlingMiddleware>();
         
         services.Configure<RogerFileConfiguration>(configuration.GetSection(RogerFileConfiguration.Position));
+        services.Configure<SalaryConfiguration>(configuration.GetSection(SalaryConfiguration.Position));
         
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
