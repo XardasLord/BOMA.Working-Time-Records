@@ -76,7 +76,7 @@ td.mat-mdc-footer-cell:first-of-type {
 .mat-column-29,
 .mat-column-30,
 .mat-column-31 {
-	max-width: 30px;
+	max-width: 90px;
 	min-width: 30px;
 	padding: 2px;
 }
@@ -154,8 +154,20 @@ tr.mat-mdc-row:nth-child(6n) > .mat-mdc-cell {
 }
 
 // Inline form inputs
-.mat-mdc-form-field {
+.mat-mdc-form-field.number-input {
 	text-align: center;
-	width: 80px;
+	min-width: 35px;
+	max-width: 60px;
 	margin-top: 10px;
+}
+
+// Hide arrows from input number
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
 }
