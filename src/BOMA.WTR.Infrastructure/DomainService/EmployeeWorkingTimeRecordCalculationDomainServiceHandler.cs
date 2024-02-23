@@ -35,8 +35,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         // TODO: Need a refactor to make it much simplier to understand
         foreach (var timeRecord in workingTimeRecords)
         {
-            var currentDay = timeRecord.OccuredAt.Day;
             var normalizedOccuredAt = NormalizeDateTime(timeRecord.EventType, timeRecord.OccuredAt);
+            var currentDay = normalizedOccuredAt.Day;
 
             if (currentDay != previousDay && previousDay != 0) // Is a next day
             {
