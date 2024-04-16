@@ -7,5 +7,6 @@ export interface UserDetails {
 
 export enum Role {
 	Admin = 'Admin',
-	User = 'User'
+	User = 'User',
+	Auditor = 'Auditor'
 }

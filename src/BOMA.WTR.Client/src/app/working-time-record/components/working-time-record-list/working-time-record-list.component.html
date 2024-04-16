@@ -1,22 +1,25 @@
 <app-working-time-record-filters></app-working-time-record-filters>
 
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-	<mat-tab label="Szczegóły" *ngIf="!managerMode && (user$ | async)?.role === 'Admin'">
+	<mat-tab label="Szczegóły" *ngIf="(userRole$ | async) === Role.Admin">
 		<ng-template matTabContent>
 			<app-working-time-record-detailed-table></app-working-time-record-detailed-table>
 		</ng-template>
 	</mat-tab>
-	<mat-tab label="Podsumowanie" *ngIf="!managerMode && (user$ | async)?.role === 'Admin'">
+	<mat-tab label="Podsumowanie" *ngIf="(userRole$ | async) === Role.Admin">
 		<ng-template matTabContent>
 			<app-working-time-record-summary-table></app-working-time-record-summary-table>
 		</ng-template>
 	</mat-tab>
-	<mat-tab label="Raport godzinowy">
+	<mat-tab
+		label="Raport godzinowy"
+		*ngIf="(userRole$ | async) === Role.Admin || (userRole$ | async) === Role.User || (userRole$ | async) === Role.Auditor"
+	>
 		<ng-template matTabContent>
 			<app-working-time-record-report-hours-table></app-working-time-record-report-hours-table>
 		</ng-template>
 	</mat-tab>
-	<mat-tab label="Raport nieobecności">
+	<mat-tab label="Raport nieobecności" *ngIf="(userRole$ | async) === Role.Admin || (userRole$ | async) === Role.User">
 		<ng-template matTabContent>
 			<app-working-time-record-report-absents-table></app-working-time-record-report-absents-table>
 		</ng-template>

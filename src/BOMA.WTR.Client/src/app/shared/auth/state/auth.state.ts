@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../services/auth.service';
 import { IProgressSpinnerService } from '../../services/progress-spinner.base.service';
 import { Auth } from './auth.action';
-import { UserDetails } from '../models/userDetails';
+import { Role, UserDetails } from '../models/userDetails';
 import Register = Auth.Register;
 import { RegisterResponse } from '../models/register.response';
 import Login = Auth.Login;
@@ -55,6 +55,11 @@ export class AuthState {
 	@Selector([AUTH_STATE_TOKEN])
 	static getUser(state: AuthStateModel): UserDetails | null {
 		return state.user;
+	}
+
+	@Selector([AUTH_STATE_TOKEN])
+	static getUserRole(state: AuthStateModel): Role | undefined {
+		return state.user?.role;
 	}
 
 	@Action(Register)
