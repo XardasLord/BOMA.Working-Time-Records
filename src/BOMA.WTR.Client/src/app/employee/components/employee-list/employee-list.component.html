@@ -57,7 +57,7 @@
 	</table>
 </div>
 
-<button mat-fab color="primary" class="add-employee" matTooltip="Dodaj pracownika" (click)="addEmployee()">
+<button mat-fab color="primary" class="add-employee" matTooltip="Dodaj pracownika" (click)="addEmployee()" *ngIf="userRole === Role.Admin">
 	<mat-icon>person_add</mat-icon>
 </button>
 <button mat-fab color="primary" class="refresh" matTooltip="Odśwież" (click)="refresh()">

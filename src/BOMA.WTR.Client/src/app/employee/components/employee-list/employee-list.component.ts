@@ -5,13 +5,15 @@ import { Employee } from '../../state/employee.action';
 import { EmployeeState } from '../../state/employee.state';
 import { EmployeeModel } from '../../../shared/models/employee.model';
 import { Modal } from '../../../shared/state/modal.action';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
+import { AuthState } from '../../../shared/auth/state/auth.state';
+import { Role } from '../../../shared/auth/models/userDetails';
 import GetAll = Employee.GetAll;
 import OpenAddNewEmployeeDialog = Modal.OpenAddNewEmployeeDialog;
 import OpenEditEmployeeDialog = Modal.OpenEditEmployeeDialog;
 import Deactivate = Employee.Deactivate;
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-employee-list',
@@ -23,6 +25,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
 	dataSource!: MatTableDataSource<EmployeeModel>;
 
 	employees$ = this.store.select(EmployeeState.getEmployees);
+	userRole = this.store.selectSnapshot(AuthState.getUserRole);
 
 	private subscriptions: Subscription = new Subscription();
 
@@ -32,13 +35,14 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
 		nameof<EmployeeModel>('lastName'),
 		nameof<EmployeeModel>('departmentName'),
 		nameof<EmployeeModel>('shiftTypeName'),
-		nameof<EmployeeModel>('position'),
-		nameof<EmployeeModel>('baseSalary'),
-		nameof<EmployeeModel>('salaryBonusPercentage'),
-		'actions'
+		nameof<EmployeeModel>('position')
 	];
 
-	constructor(private store: Store) {}
+	constructor(private store: Store) {
+		if (this.userRole === Role.Admin) {
+			this.columnsToDisplay.push(nameof<EmployeeModel>('baseSalary'), nameof<EmployeeModel>('salaryBonusPercentage'), 'actions');
+		}
+	}
 
 	ngOnInit(): void {
 		this.refresh();
@@ -72,4 +76,6 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
 	refresh() {
 		this.store.dispatch(new GetAll());
 	}
+
+	protected readonly Role = Role;
 }
