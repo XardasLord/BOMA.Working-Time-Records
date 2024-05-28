@@ -336,6 +336,9 @@ public class Employee : Entity<int>, IAggregateRoot
             {
                 if (exitRecords.Count > 1)
                 {
+                    if (exitRecords.Any(x => x.OccuredAt.Hour == newOccuredAt.Hour && x.OccuredAt.Minute == newOccuredAt.Minute))
+                        continue;
+                    
                     _workingTimeRecords.RemoveAll(x => 
                         x.OccuredAt.Month == month &&
                         x.OccuredAt.Year == year &&
@@ -348,21 +351,28 @@ public class Employee : Entity<int>, IAggregateRoot
                 }
                 else
                 {
-                    if (exitRecords.First().OccuredAt.Hour != newOccuredAt.Hour || exitRecords.First().OccuredAt.Minute != newOccuredAt.Minute)
-                    {
-                        var entryTimeSpanForThisDay = TimeSpan.Parse(reportEntryHours[reportHourDay.Key]);
+                    if (exitRecords.Any(x => x.OccuredAt.Hour == newOccuredAt.Hour && x.OccuredAt.Minute == newOccuredAt.Minute))
+                        continue;
+                    
+                    var entryTimeSpanForThisDay = TimeSpan.Parse(reportEntryHours[reportHourDay.Key]);
 
-                        if (entryTimeSpanForThisDay.Hours < 15 && newOccuredAt.Hour > 18 && exitRecords.First().OccuredAt.Hour < 4)
-                        {
-                            // Szczególny przypadek, gdy pracownik wychodzi z pracy np o 22:00, a miał już wyjście tego samego dnia za dzień poprzedni o 02:00, więc traktujemy to jako zupełnie nowy wpis wyjścia na ten sam dzień
-                            var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+                    if (entryTimeSpanForThisDay.Hours < 15 && newOccuredAt.Hour > 18 && exitRecords.First().OccuredAt.Hour < 4)
+                    {
+                        // Szczególny przypadek, gdy pracownik wychodzi z pracy np o 22:00, a miał już wyjście tego samego dnia za dzień poprzedni o 02:00, więc traktujemy to jako zupełnie nowy wpis wyjścia na ten sam dzień
+                        var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
             
-                            AddWorkingTimeRecord(exit);
-                        }
-                        else
-                        {
-                            exitRecords.First().OccuredAt = newOccuredAt;
-                        }
+                        AddWorkingTimeRecord(exit);
+                    }
+                    else if (exitRecords.First().OccuredAt.Hour >= 18 && entryTimeSpanForThisDay.Hours >= 14 && newOccuredAt.Hour < 4)
+                    {
+                        // Jest już wpis tego dnia z wyjściem po godzinie 18 (wieczornym), a teraz wyjście jest o godzinie w nocy (00:00 - 04:00), czyli jest to niezależne wyjście tego dnia i należy dodać jako nowy wpis
+                        var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
+            
+                        AddWorkingTimeRecord(exit);
+                    }
+                    else
+                    { 
+                        exitRecords.First().OccuredAt = newOccuredAt;
                     }
                 }
             }
