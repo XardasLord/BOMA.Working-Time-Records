@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { nameof } from '../../../shared/helpers/name-of.helper';
 import { Employee } from '../../state/employee.action';
 import { EmployeeState } from '../../state/employee.state';
 import { EmployeeModel } from '../../../shared/models/employee.model';
 import { Modal } from '../../../shared/state/modal.action';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Subscription } from 'rxjs';
 import { AuthState } from '../../../shared/auth/state/auth.state';
 import { Role } from '../../../shared/auth/models/userDetails';
 import GetAll = Employee.GetAll;
@@ -39,8 +39,12 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
 	];
 
 	constructor(private store: Store) {
-		if (this.userRole === Role.Admin) {
-			this.columnsToDisplay.push(nameof<EmployeeModel>('baseSalary'), nameof<EmployeeModel>('salaryBonusPercentage'), 'actions');
+		if ([Role.Admin, Role.UserWithSalaryView, Role.UserWithSalaryEdit].includes(this.userRole!)) {
+			this.columnsToDisplay.push(nameof<EmployeeModel>('baseSalary'), nameof<EmployeeModel>('salaryBonusPercentage'));
+		}
+
+		if ([Role.Admin, Role.UserWithSalaryEdit].includes(this.userRole!)) {
+			this.columnsToDisplay.push('actions');
 		}
 	}
 

@@ -11,15 +11,20 @@
 			<app-working-time-record-summary-table></app-working-time-record-summary-table>
 		</ng-template>
 	</mat-tab>
-	<mat-tab
-		label="Raport godzinowy"
-		*ngIf="(userRole$ | async) === Role.Admin || (userRole$ | async) === Role.User || (userRole$ | async) === Role.Auditor"
-	>
+	<mat-tab label="Raport godzinowy">
 		<ng-template matTabContent>
 			<app-working-time-record-report-hours-table></app-working-time-record-report-hours-table>
 		</ng-template>
 	</mat-tab>
-	<mat-tab label="Raport nieobecności" *ngIf="(userRole$ | async) === Role.Admin || (userRole$ | async) === Role.User">
+	<mat-tab
+		label="Raport nieobecności"
+		*ngIf="
+			(userRole$ | async) === Role.Admin ||
+			(userRole$ | async) === Role.User ||
+			(userRole$ | async) === Role.UserWithSalaryView ||
+			(userRole$ | async) === Role.UserWithSalaryEdit
+		"
+	>
 		<ng-template matTabContent>
 			<app-working-time-record-report-absents-table></app-working-time-record-report-absents-table>
 		</ng-template>
