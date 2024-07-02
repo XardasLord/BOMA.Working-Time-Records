@@ -8,7 +8,7 @@ export interface UserDetails {
 export enum Role {
 	Admin = 'Admin',
 	User = 'User',
-	UserWithSalaryView = 'User With Salary View',
-	UserWithSalaryEdit = 'User With Salary Edit',
+	UserWithSalaryView = 'UserWithSalaryView',
+	UserWithSalaryEdit = 'UserWithSalaryEdit',
 	Auditor = 'Auditor'
 }
