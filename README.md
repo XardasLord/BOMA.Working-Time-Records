@@ -46,7 +46,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 - Submit a pull request.
 
 ## License
-This project is licensed under the MIT License - see the *[LICENSE file]([https://www.markdownguide.org](https://github.com/XardasLord/BOMA.Working-Time-Records/blob/develop/LICENSE) for details.
+This project is licensed under the MIT License - see the [LICENSE file](https://github.com/XardasLord/BOMA.Working-Time-Records/blob/develop/LICENSE) for details.
 
 ## Contact
 If you have any questions or issues, feel free to open an issue in the repository or reach out via email at <kowalewicz.pawel@gmail.com>
