@@ -27,6 +27,10 @@ public class WorkingTimeRecord : Entity<int>
     
     public Department Department { get; private set; }
     public int DepartmentId { get; private set; }
+    public bool IsEditedManually { get; private set; }
     
     public MissingRecordEventType? MissingRecordEventType { get; private set; }
+    
+    public void MarkAsEditedManually() 
+        => IsEditedManually = true;
 }

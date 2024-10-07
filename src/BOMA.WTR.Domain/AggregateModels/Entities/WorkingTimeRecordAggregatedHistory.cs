@@ -18,6 +18,7 @@ public class WorkingTimeRecordAggregatedHistory : Entity<int>
     public double SaturdayHours { get; set; }
     public double NightHours { get; set; }
     public EmployeeSalaryAggregatedHistory SalaryInformation { get; set; }
+    public bool IsEditedManually { get; set; }
     public MissingRecordEventType? MissingRecordEventType { get; set; }
 }
 

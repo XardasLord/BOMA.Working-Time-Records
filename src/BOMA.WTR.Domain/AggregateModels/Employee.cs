@@ -152,6 +152,8 @@ public class Employee : Entity<int>, IAggregateRoot
             record.HundredPercentageBonusHours = calculationDomainService.GetHundredPercentageBonusHours(record.Date, record.Date, workedHours);
             record.SaturdayHours = saturdayHours;
             record.NightHours = nightHours;
+
+            record.IsEditedManually = true;
         });
 
         var first = recordsToUpdate.First();
@@ -274,7 +276,8 @@ public class Employee : Entity<int>, IAggregateRoot
             if (entryRecords.Count == 0)
             {
                 var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
-            
+                entry.MarkAsEditedManually();
+                
                 AddWorkingTimeRecord(entry);
             }
             else
@@ -288,7 +291,8 @@ public class Employee : Entity<int>, IAggregateRoot
                         x.EventType == RecordEventType.Entry);
                     
                     var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
-            
+                    entry.MarkAsEditedManually();
+                    
                     AddWorkingTimeRecord(entry);
                 }
                 else
@@ -296,6 +300,7 @@ public class Employee : Entity<int>, IAggregateRoot
                     if (entryRecords.First().OccuredAt.Hour != newOccuredAt.Hour || entryRecords.First().OccuredAt.Minute != newOccuredAt.Minute)
                     {
                         entryRecords.First().OccuredAt = newOccuredAt;
+                        entryRecords.First().MarkAsEditedManually();
                     }
                 }
             }
@@ -329,7 +334,8 @@ public class Employee : Entity<int>, IAggregateRoot
             if (exitRecords.Count == 0)
             {
                 var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
-            
+                exit.MarkAsEditedManually();
+                
                 AddWorkingTimeRecord(exit);
             }
             else
@@ -346,7 +352,8 @@ public class Employee : Entity<int>, IAggregateRoot
                         x.EventType == RecordEventType.Exit);
                     
                     var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
-            
+                    exit.MarkAsEditedManually();
+                    
                     AddWorkingTimeRecord(exit);
                 }
                 else
@@ -360,19 +367,22 @@ public class Employee : Entity<int>, IAggregateRoot
                     {
                         // Szczególny przypadek, gdy pracownik wychodzi z pracy np o 22:00, a miał już wyjście tego samego dnia za dzień poprzedni o 02:00, więc traktujemy to jako zupełnie nowy wpis wyjścia na ten sam dzień
                         var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
-            
+                        exit.MarkAsEditedManually();
+                        
                         AddWorkingTimeRecord(exit);
                     }
                     else if (exitRecords.First().OccuredAt.Hour >= 18 && entryTimeSpanForThisDay.Hours >= 14 && newOccuredAt.Hour < 4)
                     {
                         // Jest już wpis tego dnia z wyjściem po godzinie 18 (wieczornym), a teraz wyjście jest o godzinie w nocy (00:00 - 04:00), czyli jest to niezależne wyjście tego dnia i należy dodać jako nowy wpis
                         var exit = WorkingTimeRecord.Create(RecordEventType.Exit, newOccuredAt, _departmentId);
-            
+                        exit.MarkAsEditedManually();
+                        
                         AddWorkingTimeRecord(exit);
                     }
                     else
                     { 
                         exitRecords.First().OccuredAt = newOccuredAt;
+                        exitRecords.First().MarkAsEditedManually();
                     }
                 }
             }
