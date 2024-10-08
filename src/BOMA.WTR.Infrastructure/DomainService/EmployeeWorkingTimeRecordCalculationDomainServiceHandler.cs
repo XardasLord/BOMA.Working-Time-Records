@@ -1,5 +1,4 @@
-﻿using BOMA.WTR.Application.RogerFiles;
-using BOMA.WTR.Application.Salary;
+﻿using BOMA.WTR.Application.Salary;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
@@ -42,7 +41,12 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             {
                 if (previousEventType == RecordEventType.Exit && timeRecord.EventType == RecordEventType.Entry)
                 {
-                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal));
+                    results.Add(CreateWorkingTimeRecord(
+                        aggregatedMinutesForDayNormalized,
+                        previousDateNormalized,
+                        aggregatedMinutesForDayOriginal,
+                        previousDateOriginal,
+                        timeRecord.IsEditedManually));
                     
                     aggregatedMinutesForDayNormalized = 0;
                     aggregatedMinutesForDayOriginal = 0;
@@ -51,7 +55,12 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                     aggregatedMinutesForDayNormalized += (int)(normalizedOccuredAt - previousDateNormalized).TotalMinutes;
                     aggregatedMinutesForDayOriginal += (int)(timeRecord.OccuredAt - previousDateOriginal).TotalMinutes;
                     
-                    results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, normalizedOccuredAt, aggregatedMinutesForDayOriginal, timeRecord.OccuredAt));
+                    results.Add(CreateWorkingTimeRecord(
+                        aggregatedMinutesForDayNormalized,
+                        normalizedOccuredAt,
+                        aggregatedMinutesForDayOriginal, 
+                        timeRecord.OccuredAt,
+                        timeRecord.IsEditedManually));
                     
                     aggregatedMinutesForDayNormalized = 0;
                     aggregatedMinutesForDayOriginal = 0;
@@ -78,7 +87,13 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                     aggregatedMinutesForDayOriginal = 0;
                     var missingRecordType = timeRecord.EventType == RecordEventType.Entry ? MissingRecordEventType.MissingExit : MissingRecordEventType.MissingEntry;
 
-                    resultWithMissingRecords.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal, missingRecordType));
+                    resultWithMissingRecords.Add(CreateWorkingTimeRecord(
+                        aggregatedMinutesForDayNormalized,
+                        previousDateNormalized,
+                        aggregatedMinutesForDayOriginal,
+                        previousDateOriginal, 
+                        timeRecord.IsEditedManually,
+                        missingRecordType));
                 }
                 
                 if (timeRecord.EventType == RecordEventType.Exit)
@@ -99,7 +114,12 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
         if (aggregatedMinutesForDayNormalized > 0)
         {
-            results.Add(CreateWorkingTimeRecord(aggregatedMinutesForDayNormalized, previousDateNormalized, aggregatedMinutesForDayOriginal, previousDateOriginal));
+            results.Add(CreateWorkingTimeRecord(
+                aggregatedMinutesForDayNormalized,
+                previousDateNormalized,
+                aggregatedMinutesForDayOriginal,
+                previousDateOriginal,
+                false));
         }
 
         if (previousEventType == RecordEventType.Entry)
@@ -118,7 +138,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                 SaturdayHours = 0,
                 NightHours = 0,
                 IsWeekendDay = previousDateOriginal.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
-                MissingRecordEventType = null
+                MissingRecordEventType = null,
+                IsEditedManually = false
             });
         }
         
@@ -623,6 +644,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         DateTime endWorkDateNormalized,
         double aggregatedMinutesForDayOriginal,
         DateTime endWorkDateOriginal,
+        bool isEditedManually,
         MissingRecordEventType? incorrectRecordEventTypeOrder = null)
     {
         var allWorkedHoursRounded = Math.Round(TimeSpan.FromMinutes(aggregatedMinutesForDayNormalized).TotalHours * 2, MidpointRounding.AwayFromZero) / 2;
@@ -644,7 +666,8 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             SaturdayHours = GetSaturdayHours(startWorkDateNormalized, endWorkDateNormalized, allWorkedHoursRounded),
             NightHours = GetNightHours(startWorkDateNormalized, endWorkDateNormalized),
             IsWeekendDay = startWorkDateNormalized.Date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday,
-            MissingRecordEventType = incorrectRecordEventTypeOrder
+            MissingRecordEventType = incorrectRecordEventTypeOrder,
+            IsEditedManually = isEditedManually
         };
     }
 }

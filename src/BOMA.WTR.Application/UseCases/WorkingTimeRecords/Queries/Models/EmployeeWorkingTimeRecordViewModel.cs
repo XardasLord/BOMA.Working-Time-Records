@@ -20,6 +20,4 @@ public class WorkingTimeRecordDetailsViewModel
     public int GroupId { get; set; }
 }
 
-public class EmployeeSalaryViewModel: EmployeeSalaryAggregatedHistory
-{
-}
+public class EmployeeSalaryViewModel: EmployeeSalaryAggregatedHistory;
