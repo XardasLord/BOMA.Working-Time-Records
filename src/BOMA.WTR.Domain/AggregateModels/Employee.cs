@@ -277,7 +277,7 @@ public class Employee : Entity<int>, IAggregateRoot
             {
                 var entry = WorkingTimeRecord.Create(RecordEventType.Entry, newOccuredAt, _departmentId);
                 entry.MarkAsEditedManually();
-                
+
                 AddWorkingTimeRecord(entry);
             }
             else

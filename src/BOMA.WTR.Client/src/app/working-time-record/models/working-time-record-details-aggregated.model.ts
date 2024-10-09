@@ -1,5 +1,3 @@
-import { Duration } from 'moment';
-
 export class WorkingTimeRecordDetailsAggregatedModel {
 	date!: Date;
 	workTimePeriodNormalized!: WorkTimePeriod;
@@ -12,6 +10,7 @@ export class WorkingTimeRecordDetailsAggregatedModel {
 	saturdayHours!: number;
 	nightHours!: number;
 	isWeekendDay!: boolean;
+	isEditedManually!: boolean;
 	missingRecordEventType?: number;
 }
 

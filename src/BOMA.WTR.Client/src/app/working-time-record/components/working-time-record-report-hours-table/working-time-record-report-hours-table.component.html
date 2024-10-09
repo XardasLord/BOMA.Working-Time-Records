@@ -119,11 +119,22 @@
 						'weekend-day': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isWeekendDay
 					}"
 				>
-					<span *ngIf="i % 3 === 0">
+					<span
+						*ngIf="i % 3 === 0"
+						[ngClass]="{
+							'edited-manually': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isEditedManually
+						}"
+					>
 						{{
 							record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded +
 								record?.workingTimeRecordsAggregated[+dayNumber - 1]?.saturdayHours | emptyIfZero
 						}}
+						<mat-icon
+							*ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isEditedManually"
+							[matTooltip]="'Ten dzień był edytowany manualnie w zakładce Szczegóły'"
+							[matTooltipDisabled]="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isEditedManually === false"
+							>info</mat-icon
+						>
 						<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
 						<!--							<mat-icon>error</mat-icon>-->
 						<!--						</span>-->

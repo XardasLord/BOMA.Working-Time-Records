@@ -47,6 +47,15 @@ body {
 	color: $warning-color;
 }
 
+.mat-mdc-cell > .edited-manually {
+	color: $info-color;
+}
+
+.mat-mdc-cell > .edited-manually .mat-icon {
+	color: $info-color;
+	vertical-align: bottom;
+}
+
 button.print-table {
 	position: fixed;
 	bottom: 40px;

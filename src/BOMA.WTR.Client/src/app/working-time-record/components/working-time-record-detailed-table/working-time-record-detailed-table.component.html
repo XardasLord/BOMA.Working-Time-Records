@@ -186,15 +186,25 @@
 					</ng-template>
 
 					<ng-template #readOnlyMode>
-						<span *ngIf="i % 6 === 0">
-							<!--              // TODO: This should apply to the above span-->
-							<!--              [ngClass]="{-->
-							<!--              'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType-->
-							<!--							}"-->
+						<!-- TODO: Add this to span element as a class condition -->
+						<!--            'missing-record-type': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType,-->
+						<span
+							*ngIf="i % 6 === 0"
+							[ngClass]="{
+								'edited-manually': record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isEditedManually
+							}"
+						>
 							{{ record?.workingTimeRecordsAggregated[+dayNumber - 1]?.workedHoursRounded | emptyIfZero }}
-							<!--						<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
-							<!--							<mat-icon>error</mat-icon>-->
-							<!--						</span>-->
+
+							<mat-icon
+								*ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isEditedManually"
+								[matTooltip]="'Godziny tego dnia były edytowane manualnie'"
+								[matTooltipDisabled]="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.isEditedManually === false"
+								>info</mat-icon
+							>
+							<!--							<span *ngIf="record?.workingTimeRecordsAggregated[+dayNumber - 1]?.missingRecordEventType">-->
+							<!--								<mat-icon>error</mat-icon>-->
+							<!--							</span>-->
 						</span>
 						<span
 							*ngIf="i % 6 === 1"
