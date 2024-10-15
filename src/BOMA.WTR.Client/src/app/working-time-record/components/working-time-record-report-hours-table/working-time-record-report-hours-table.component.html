@@ -2,9 +2,10 @@
 	<form [formGroup]="reportHoursForm" (ngSubmit)="onFormSubmit()">
 		<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackRecord">
 			<ng-container matColumnDef="actions">
-				<th mat-header-cell *matHeaderCellDef></th>
+				<th mat-header-cell *matHeaderCellDef class="no-print"></th>
 				<td
 					mat-cell
+					class="no-print"
 					*matCellDef="let record; let i = index"
 					[attr.rowspan]="i % 3 === 0 ? '3' : null"
 					[style.display]="i % 3 ? 'none' : null"
@@ -27,9 +28,10 @@
 			</ng-container>
 
 			<ng-container matColumnDef="index">
-				<th mat-header-cell *matHeaderCellDef>Lp</th>
+				<th mat-header-cell *matHeaderCellDef class="no-print">Lp</th>
 				<td
 					mat-cell
+					class="no-print"
 					*matCellDef="let record; let i = index"
 					[attr.rowspan]="i % 3 === 0 ? '3' : null"
 					[style.display]="i % 3 ? 'none' : null"
@@ -172,7 +174,7 @@
 
 			<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async; sticky: true"></tr>
 			<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async"></tr>
-			<tr mat-footer-row *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
+			<tr mat-footer-row class="no-print" *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
 		</table>
 	</form>
 </div>

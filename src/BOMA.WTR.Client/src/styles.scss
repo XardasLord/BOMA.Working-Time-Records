@@ -74,3 +74,14 @@ button.send-hours-to-gratyfikant {
 	-webkit-print-color-adjust: exact;
 	color-adjust: exact;
 }
+
+@media print {
+	.no-print,
+	.no-print * {
+		display: none !important;
+	}
+
+	.print-font-size-12 {
+		font-size: 12px !important;
+	}
+}

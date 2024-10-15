@@ -8,6 +8,7 @@ import { Auth } from '../../../../shared/auth/state/auth.action';
 import Logout = Auth.Logout;
 import { AuthState } from '../../../../shared/auth/state/auth.state';
 import { RoutePaths } from '../../../modules/app-routing.module';
+import { Role } from '../../../../shared/auth/models/userDetails';
 
 @Component({
 	selector: 'app-navigation',
@@ -34,4 +35,5 @@ export class NavigationComponent {
 	}
 
 	protected readonly RoutePaths = RoutePaths;
+	protected readonly Role = Role;
 }

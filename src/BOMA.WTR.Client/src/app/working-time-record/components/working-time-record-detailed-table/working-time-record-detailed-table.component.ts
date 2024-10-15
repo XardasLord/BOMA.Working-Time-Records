@@ -13,6 +13,7 @@ import { WorkingTimeRecordDetailsAggregatedModel } from '../../models/working-ti
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 import { AuthState } from '../../../shared/auth/state/auth.state';
+import { Role } from '../../../shared/auth/models/userDetails';
 
 @Component({
 	selector: 'app-working-time-record-detailed-table',
@@ -482,4 +483,6 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 
 		return cssClasses;
 	}
+
+	protected readonly Role = Role;
 }

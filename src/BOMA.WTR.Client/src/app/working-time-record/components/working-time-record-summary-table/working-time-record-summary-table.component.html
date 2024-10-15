@@ -2,8 +2,8 @@
 	<form [formGroup]="salaryForm" (ngSubmit)="onFormSubmit()" [ngxsFormClearOnDestroy]="true" ngxsForm="workingTimeRecord.summaryForm">
 		<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackSummaryRecord">
 			<ng-container matColumnDef="index">
-				<th mat-header-cell *matHeaderCellDef>Lp</th>
-				<td mat-cell *matCellDef="let record; let i = index">
+				<th mat-header-cell *matHeaderCellDef class="no-print">Lp</th>
+				<td mat-cell class="no-print" *matCellDef="let record; let i = index">
 					{{ i + 1 }}
 				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
@@ -149,8 +149,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="actions">
-				<th mat-header-cell *matHeaderCellDef></th>
-				<td mat-cell *matCellDef="let record">
+				<th mat-header-cell *matHeaderCellDef class="no-print"></th>
+				<td mat-cell *matCellDef="let record" class="no-print">
 					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
 						<button mat-icon-button type="submit" matTooltip="Zapisz">
 							<mat-icon>save</mat-icon>
@@ -165,7 +165,7 @@
 							(click)="enableEditMode(record)"
 							[disabled]="!record?.isEditable"
 							matTooltip="Edytuj"
-							*ngIf="(user$ | async)?.role === 'Admin'"
+							*ngIf="(user$ | async)?.role === Role.Admin"
 						>
 							<mat-icon>edit</mat-icon>
 						</button>

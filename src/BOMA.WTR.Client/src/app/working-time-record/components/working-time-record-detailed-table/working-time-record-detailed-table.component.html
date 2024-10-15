@@ -2,9 +2,10 @@
 	<form [formGroup]="detailedHoursForm" (ngSubmit)="onFormSubmit()">
 		<table mat-table class="mat-elevation-z3" [dataSource]="(detailedRecords$ | async)!" [trackBy]="trackDetailedRecord">
 			<ng-container matColumnDef="actions">
-				<th mat-header-cell *matHeaderCellDef></th>
+				<th mat-header-cell *matHeaderCellDef class="no-print"></th>
 				<td
 					mat-cell
+					class="no-print"
 					*matCellDef="let record; let i = index"
 					[attr.rowspan]="i % 6 === 0 ? '6' : null"
 					[style.display]="i % 6 ? 'none' : null"
@@ -23,7 +24,7 @@
 							(click)="enableEditMode(record)"
 							[disabled]="!record?.isEditable"
 							matTooltip="Edytuj"
-							*ngIf="(user$ | async)?.role === 'Admin'"
+							*ngIf="(user$ | async)?.role === Role.Admin"
 						>
 							<mat-icon>edit</mat-icon>
 						</button>
@@ -32,9 +33,10 @@
 			</ng-container>
 
 			<ng-container matColumnDef="index">
-				<th mat-header-cell *matHeaderCellDef>Lp</th>
+				<th mat-header-cell *matHeaderCellDef class="no-print">Lp</th>
 				<td
 					mat-cell
+					class="no-print"
 					*matCellDef="let record; let i = index"
 					[attr.rowspan]="i % 6 === 0 ? '6' : null"
 					[style.display]="i % 6 ? 'none' : null"
@@ -44,9 +46,10 @@
 			</ng-container>
 
 			<ng-container matColumnDef="fullName">
-				<th mat-header-cell *matHeaderCellDef>Imię i nazwisko</th>
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12">Imię i nazwisko</th>
 				<td
 					mat-cell
+					class="print-font-size-12"
 					*matCellDef="let record; let i = index"
 					[attr.rowspan]="i % 6 === 0 ? '6' : null"
 					[style.display]="i % 6 ? 'none' : null"
@@ -56,8 +59,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="baseSalary">
-				<th mat-header-cell *matHeaderCellDef>Stawka</th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getRateCssClass(i)">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12">Stawka</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="print-font-size-12" [ngClass]="getRateCssClass(i)">
 					<ng-container *ngIf="i % 6 === 0"></ng-container>
 					<ng-container *ngIf="i % 6 === 1">{{ record?.salaryInformation?.baseSalary | currency: 'PLN' }}</ng-container>
 					<ng-container *ngIf="i % 6 === 2">{{
@@ -72,8 +75,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="gross">
-				<th mat-header-cell *matHeaderCellDef>Brutto</th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getGrossCssClass(i)">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12">Brutto</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="print-font-size-12" [ngClass]="getGrossCssClass(i)">
 					<span *ngIf="i % 6 === 0"></span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossBase50PercentageSalary | currency: 'PLN' }}</span>
@@ -84,8 +87,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="bonus">
-				<th mat-header-cell *matHeaderCellDef>Premia</th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getBonusCssClass(i)">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12 no-print">Premia</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="print-font-size-12 no-print" [ngClass]="getBonusCssClass(i)">
 					<span *ngIf="i % 6 === 0">{{ record?.salaryInformation?.percentageBonusSalary | number: '1.2-2' }} % </span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.bonusBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.bonusBase50PercentageSalary | currency: 'PLN' }}</span>
@@ -96,8 +99,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="sumValue">
-				<th mat-header-cell *matHeaderCellDef>Suma duża</th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getSumValueCssClass(i)">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12 no-print">Suma duża</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="print-font-size-12 no-print" [ngClass]="getSumValueCssClass(i)">
 					<span *ngIf="i % 6 === 0"></span>
 					<span *ngIf="i % 6 === 1">{{ record?.salaryInformation?.grossSumBaseSalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 2">{{ record?.salaryInformation?.grossSumBase50PercentageSalary | currency: 'PLN' }}</span>
@@ -108,8 +111,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="sumBonus">
-				<th mat-header-cell *matHeaderCellDef>Suma premia</th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getSumBonusCssClass(i)">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12">Suma premia</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="print-font-size-12" [ngClass]="getSumBonusCssClass(i)">
 					<span *ngIf="i % 6 === 0"></span>
 					<span *ngIf="i % 6 === 1"></span>
 					<span *ngIf="i % 6 === 2"></span>
@@ -120,8 +123,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="sumHours">
-				<th mat-header-cell *matHeaderCellDef>Suma [h]</th>
-				<td mat-cell *matCellDef="let record; let i = index" class="default-value">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12">Suma [h]</th>
+				<td mat-cell *matCellDef="let record; let i = index" class="default-value print-font-size-12">
 					<span *ngIf="i % 6 === 0">{{ getWorkingHoursSum(record?.workingTimeRecordsAggregated) }}</span>
 					<span *ngIf="i % 6 === 1">{{ getNormativeHoursSum(record?.workingTimeRecordsAggregated) }}</span>
 					<span *ngIf="i % 6 === 2">{{ get50PercentageHoursSum(record?.workingTimeRecordsAggregated) }}</span>
@@ -132,8 +135,8 @@
 			</ng-container>
 
 			<ng-container matColumnDef="emptyLabel">
-				<th mat-header-cell *matHeaderCellDef></th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getEmptyLabelCssClass(i)">
+				<th mat-header-cell *matHeaderCellDef class="print-font-size-12"></th>
+				<td mat-cell *matCellDef="let record; let i = index" class="print-font-size-12" [ngClass]="getEmptyLabelCssClass(i)">
 					<span *ngIf="i % 6 === 0">Godziny</span>
 					<span *ngIf="i % 6 === 1">Normatywne</span>
 					<span *ngIf="i % 6 === 2">50%</span>
@@ -145,7 +148,12 @@
 
 			<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
 				<th mat-header-cell *matHeaderCellDef>{{ dayNumber }}</th>
-				<td mat-cell *matCellDef="let record; let i = index" [ngClass]="getDayNumberCssClass(i, +dayNumber, record)">
+				<td
+					mat-cell
+					*matCellDef="let record; let i = index"
+					class="print-font-size-12"
+					[ngClass]="getDayNumberCssClass(i, +dayNumber, record)"
+				>
 					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
 						<span *ngIf="i % 6 === 0">
 							<mat-form-field appearance="outline" class="number-input">

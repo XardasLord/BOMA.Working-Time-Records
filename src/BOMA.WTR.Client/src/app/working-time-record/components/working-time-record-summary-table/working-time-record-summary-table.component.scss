@@ -59,10 +59,3 @@ tr.mat-mdc-footer-row {
 	width: 100px;
 	margin-top: 10px;
 }
-
-@media print {
-	.no-print,
-	.no-print * {
-		display: none !important;
-	}
-}

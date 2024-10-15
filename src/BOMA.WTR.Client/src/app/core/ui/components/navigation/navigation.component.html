@@ -20,7 +20,7 @@
 				<mat-icon matListItemIcon>work_history</mat-icon>
 				<div matListItemTitle>ECP</div>
 			</mat-list-item>
-			<mat-list-item [routerLink]="RoutePaths.Users" routerLinkActive="active-route" *ngIf="(user$ | async)?.role === 'Admin'">
+			<mat-list-item [routerLink]="RoutePaths.Users" routerLinkActive="active-route" *ngIf="(user$ | async)?.role === Role.Admin">
 				<mat-icon matListItemIcon>group</mat-icon>
 				<div matListItemTitle>Użytkownicy</div>
 			</mat-list-item>

@@ -14,6 +14,7 @@ import { WorkingTimeRecordSummaryDataFormModel } from '../../models/working-time
 import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateSummaryData = WorkingTimeRecord.UpdateSummaryData;
 import { AuthState } from '../../../shared/auth/state/auth.state';
+import { Role } from '../../../shared/auth/models/userDetails';
 
 @Component({
 	selector: 'app-working-time-record-summary-table',
@@ -195,4 +196,6 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 			map((results) => results.map((r) => r.salaryInformation).reduce((acc, obj) => acc + obj.finalSumSalary, 0))
 		);
 	}
+
+	protected readonly Role = Role;
 }
