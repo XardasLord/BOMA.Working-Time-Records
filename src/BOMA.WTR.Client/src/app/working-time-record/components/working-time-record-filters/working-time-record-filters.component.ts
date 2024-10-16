@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngxs/store';
-import * as moment from 'moment';
+import moment from 'moment';
 
 import { MonthsArray } from '../../../shared/models/months-array';
 import { DepartmentsArray } from '../../../shared/models/departments-array';

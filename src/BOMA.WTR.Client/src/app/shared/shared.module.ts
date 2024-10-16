@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { DebounceDirective } from './directives/debounce.directive';
 import { YearFormatDirective } from './directives/date-picket-year-format.directive';
@@ -20,10 +20,8 @@ import { AuthModule } from './auth/auth.module';
 		ProgressSpinnerDialogComponent,
 		ConfirmationDialogComponent
 	],
-	imports: [FormsModule, HttpClientModule, AuthModule, ToastrModule.forRoot()],
 	exports: [
 		FormsModule,
-		HttpClientModule,
 		AuthModule,
 		ToastrModule,
 		NgxPrintModule,
@@ -32,6 +30,7 @@ import { AuthModule } from './auth/auth.module';
 		MonthFormatDirective,
 		EmptyIfZeroPipe
 	],
-	providers: []
+	imports: [FormsModule, AuthModule, ToastrModule.forRoot()],
+	providers: [provideHttpClient(withInterceptorsFromDi())]
 })
 export class SharedModule {}
