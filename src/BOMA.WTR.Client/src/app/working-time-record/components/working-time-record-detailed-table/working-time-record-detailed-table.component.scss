@@ -171,3 +171,11 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
 	-moz-appearance: textfield;
 }
+
+td.mat-mdc-footer-cell {
+	font-size: 18px !important;
+	text-align: center;
+	font-weight: bold;
+	padding-left: 2px;
+	padding-right: 2px;
+}

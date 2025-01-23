@@ -14,6 +14,7 @@ import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import UpdateDetailedData = WorkingTimeRecord.UpdateDetailedData;
 import { AuthState } from '../../../shared/auth/state/auth.state';
 import { Role } from '../../../shared/auth/models/userDetails';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-working-time-record-detailed-table',
@@ -482,6 +483,17 @@ export class WorkingTimeRecordDetailedTableComponent implements AfterViewInit {
 			cssClasses.push('too-less-hours');
 
 		return cssClasses;
+	}
+
+	getTotalSaturdayHoursSum() {
+		return this.detailedRecords$?.pipe(
+			map(
+				(results) =>
+					results
+						.map((r) => r.workingTimeRecordsAggregated.reduce((accumulator, obj) => accumulator + obj.saturdayHours, 0))
+						.reduce((acc, obj) => acc + obj, 0) / 6
+			)
+		);
 	}
 
 	protected readonly Role = Role;
