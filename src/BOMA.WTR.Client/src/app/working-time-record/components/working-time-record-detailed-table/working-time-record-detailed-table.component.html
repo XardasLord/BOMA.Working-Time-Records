@@ -30,7 +30,6 @@
 						</button>
 					</ng-template>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="index">
@@ -44,7 +43,6 @@
 				>
 					{{ i / 6 + 1 }}
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="fullName">
@@ -58,7 +56,6 @@
 				>
 					{{ record?.employee?.firstName }} {{ record?.employee?.lastName }}
 				</td>
-				<td mat-footer-cell *matFooterCellDef rowspan="2">Podsumowanie</td>
 			</ng-container>
 
 			<ng-container matColumnDef="baseSalary">
@@ -75,7 +72,6 @@
 					<ng-container *ngIf="i % 6 === 4">{{ record?.salaryInformation?.baseSaturdaySalary | currency: 'PLN' }}</ng-container>
 					<ng-container *ngIf="i % 6 === 5"></ng-container>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="gross">
@@ -88,7 +84,6 @@
 					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.grossBaseSaturdaySalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 5"></span>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="bonus">
@@ -101,7 +96,6 @@
 					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.bonusBaseSaturdaySalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 5"></span>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="sumValue">
@@ -114,7 +108,6 @@
 					<span *ngIf="i % 6 === 4">{{ record?.salaryInformation?.grossSumBaseSaturdaySalary | currency: 'PLN' }}</span>
 					<span *ngIf="i % 6 === 5"></span>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="sumBonus">
@@ -127,7 +120,6 @@
 					<span *ngIf="i % 6 === 4"></span>
 					<span *ngIf="i % 6 === 5"></span>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container matColumnDef="sumHours">
@@ -140,7 +132,6 @@
 					<span *ngIf="i % 6 === 4">{{ getSaturdayHoursSum(record?.workingTimeRecordsAggregated) }}</span>
 					<span *ngIf="i % 6 === 5">{{ getNightHoursSum(record?.workingTimeRecordsAggregated) }}</span>
 				</td>
-				<td mat-footer-cell *matFooterCellDef>Soboty: {{ getTotalSaturdayHoursSum() | async }}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="emptyLabel">
@@ -153,7 +144,6 @@
 					<span *ngIf="i % 6 === 4">Sobota</span>
 					<span *ngIf="i % 6 === 5">Nocka</span>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<ng-container [matColumnDef]="dayNumber" *ngFor="let dayNumber of numberOfDays$ | async">
@@ -253,7 +243,6 @@
 						}}</span>
 					</ng-template>
 				</td>
-				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 
 			<tr mat-header-row *matHeaderRowDef="columnsToDisplay$ | async; sticky: true"></tr>
@@ -262,7 +251,6 @@
 					<input style="display: none" type="number" matInput formControlName="employeeId" />
 				</ng-template>
 			</tr>
-			<tr mat-footer-row class="no-print" *matFooterRowDef="columnsToDisplay$ | async; sticky: true"></tr>
 		</table>
 	</form>
 </div>
