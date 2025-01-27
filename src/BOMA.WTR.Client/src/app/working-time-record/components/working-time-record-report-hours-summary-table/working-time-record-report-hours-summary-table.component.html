@@ -1,0 +1,32 @@
+<div id="print-content" class="table-container mat-elevation-z3">
+	<div class="p-6 m-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
+		<ul class="divide-y divide-gray-200">
+			<li class="py-4 flex justify-between">
+				<span class="font-medium text-gray-700">Ilość pracowników:</span>
+				<span class="text-gray-900">{{ getTotalNumberOfEmployees() | async }}</span>
+			</li>
+			<li class="py-4 flex justify-between">
+				<span class="font-medium text-gray-700">Godziny nominalne:</span>
+				<span class="text-gray-900">{{ getTotalNormativeHoursSum() | async }}</span>
+			</li>
+			<li class="py-4 flex justify-between">
+				<span class="font-medium text-gray-700">Nadgodziny 50%:</span>
+				<span class="text-gray-900">{{ getTotalFiftyPercentageBonusHoursSum() | async }}</span>
+			</li>
+			<li class="py-4 flex justify-between">
+				<span class="font-medium text-gray-700">Nadgodziny 100%:</span>
+				<span class="text-gray-900">{{ getTotalHundredPercentageBonusHoursSum() | async }}</span>
+			</li>
+			<li class="py-4 flex justify-between">
+				<span class="font-medium text-gray-700">Soboty:</span>
+				<span class="text-gray-900">{{ getTotalSaturdayHoursSum() | async }}</span>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<pre>{{ detailedRecords$ | async | json }}</pre>
+
+<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" ngxPrint printSectionId="print-content" [useExistingCss]="true">
+	<mat-icon>print</mat-icon>
+</button>

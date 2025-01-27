@@ -1,0 +1,61 @@
+@import '../../../../assets/scss/variabless.scss';
+
+.container {
+	height: 80vh;
+	max-width: 100%;
+	overflow: auto;
+}
+
+.mat-mdc-header-cell,
+.mat-mdc-cell {
+	text-align: center;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+}
+
+.mat-mdc-row:hover {
+	background-color: gray;
+
+	.mat-mdc-cell {
+		background-color: gray;
+	}
+}
+
+.mat-column-fullName.mat-mdc-cell {
+	font-size: 18px;
+}
+
+.mat-column-fullName {
+	max-width: 170px;
+}
+
+.mat-column-gross.mat-mdc-cell,
+.mat-column-bonus.mat-mdc-cell,
+.mat-column-bonus10Percentage.mat-mdc-cell,
+.mat-column-overtimes.mat-mdc-cell,
+.mat-column-saturdays.mat-mdc-cell,
+.mat-column-nightHours.mat-mdc-cell,
+.mat-column-sum.mat-mdc-cell {
+	background-color: $summary-table-base-color;
+}
+
+.mat-column-rate.mat-mdc-cell,
+.mat-column-bonusPercentage.mat-mdc-cell,
+.mat-column-night.mat-mdc-cell,
+.mat-column-holiday.mat-mdc-cell,
+.mat-column-sickness.mat-mdc-cell,
+.mat-column-additional.mat-mdc-cell {
+	background-color: $summary-table-yellow-color;
+}
+
+tr.mat-mdc-footer-row {
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+}
+
+// Inline form inputs
+.mat-mdc-form-field {
+	text-align: center;
+	width: 100px;
+	margin-top: 10px;
+}
