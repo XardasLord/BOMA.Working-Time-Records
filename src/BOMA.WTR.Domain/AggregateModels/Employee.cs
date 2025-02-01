@@ -234,7 +234,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public void Deactivate()
     {
         if (!_isActive)
-            throw new InvalidOperationException("Pracownik został już zdeaktywowany.");
+            throw new InvalidOperationException("Pracownik został już zdezaktywowany.");
         
         _isActive = false;
         _rcpId = InactiveRcpId;

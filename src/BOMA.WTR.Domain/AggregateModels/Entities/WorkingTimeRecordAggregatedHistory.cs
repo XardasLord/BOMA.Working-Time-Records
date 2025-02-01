@@ -1,4 +1,5 @@
-﻿using BOMA.WTR.Domain.SeedWork;
+﻿using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.SeedWork;
 using BOMA.WTR.Domain.SharedKernel;
 
 namespace BOMA.WTR.Domain.AggregateModels.Entities;
@@ -61,6 +62,10 @@ public class EmployeeSalaryAggregatedHistory
     public decimal HolidaySalary { get; set; }
     public decimal SicknessSalary { get; set; }
     public decimal AdditionalSalary { get; set; }
+    
+    // Compensation to min salary
+    public decimal MinSalaryCompensationAmount { get; set; }
+    public decimal MinSalaryCompensationFactor  { get; set; }
 
     public decimal FinalSumSalary { get; set; }
 }

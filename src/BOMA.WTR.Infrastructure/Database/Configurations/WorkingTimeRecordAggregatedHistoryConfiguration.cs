@@ -49,6 +49,8 @@ public class WorkingTimeRecordAggregatedHistoryConfiguration : IEntityTypeConfig
             salary.Property(x => x.HolidaySalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.SicknessSalary).HasColumnType("decimal(10,2)");
             salary.Property(x => x.AdditionalSalary).HasColumnType("decimal(10,2)");
+            salary.Ignore(x => x.MinSalaryCompensationAmount);
+            salary.Ignore(x => x.MinSalaryCompensationFactor);
             salary.Property(x => x.FinalSumSalary).HasColumnType("decimal(10,2)");
         });
 

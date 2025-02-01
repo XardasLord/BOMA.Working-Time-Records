@@ -6,6 +6,8 @@ public sealed class EmployeeByRcpIdSpec : Specification<Employee>, ISingleResult
 {
     public EmployeeByRcpIdSpec(int rcpId)
     {
-        Query.Where(x => x.RcpId == rcpId).Include(x => x.WorkingTimeRecords);
+        Query.Where(x => x.RcpId == rcpId)
+            .Include(x => x.WorkingTimeRecords)
+            .Include(x => x.WorkingTimeRecordAggregatedHistories);
     }
 }

@@ -118,6 +118,11 @@ public static class InfrastructureDependencyInjection
             nameof(AggregateWorkingTimeRecordHistoriesJob),
             job => job.Execute(null, CancellationToken.None),
             configuration["Hangfire:AggregateWorkingTimeRecordHistoriesJobCron"]);
+        
+        RecurringJob.AddOrUpdate<CompensateRecordHistoriesToMinSalaryJob>(
+            nameof(CompensateRecordHistoriesToMinSalaryJob),
+            job => job.Execute(null, CancellationToken.None),
+            configuration["Hangfire:CompensateRecordHistoriesToMinSalaryJob"]);
 
         webApp.MapControllers();
 
