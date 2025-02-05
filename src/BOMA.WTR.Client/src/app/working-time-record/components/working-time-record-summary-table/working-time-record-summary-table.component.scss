@@ -43,7 +43,8 @@
 .mat-column-night.mat-mdc-cell,
 .mat-column-holiday.mat-mdc-cell,
 .mat-column-sickness.mat-mdc-cell,
-.mat-column-additional.mat-mdc-cell {
+.mat-column-additional.mat-mdc-cell,
+.mat-column-minSalaryCompensation.mat-mdc-cell {
 	background-color: $summary-table-yellow-color;
 }
 

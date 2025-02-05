@@ -23,11 +23,12 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         decimal holidaySalary,
         decimal sicknessSalary,
         decimal additionalSalary,
+        decimal minSalaryCompensationAmount,
         List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth)
     {
         var records = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(aggregatedHistoryRecordsForMonth);
         
-        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, records);
+        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount, records);
     }
 
     public EmployeeSalaryAggregatedHistory GetRecalculatedCurrentMonthSalary(
@@ -36,9 +37,10 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         decimal holidaySalary,
         decimal sicknessSalary,
         decimal additionalSalary,
+        decimal minSalaryCompensationAmount,
         List<WorkingTimeRecordAggregatedViewModel> aggregatedCurrentRecordsForMonth)
     {
-        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, aggregatedCurrentRecordsForMonth);
+        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount, aggregatedCurrentRecordsForMonth);
     }
 
     private EmployeeSalaryAggregatedHistory RecalculateRecord(
@@ -47,6 +49,7 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         decimal holidaySalary,
         decimal sicknessSalary,
         decimal additionalSalary,
+        decimal minSalaryCompensationAmount,
         IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> recordsForMonth)
     {
         return new EmployeeSalaryAggregatedHistory
@@ -74,9 +77,11 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
             HolidaySalary = holidaySalary,
             SicknessSalary = sicknessSalary,
             AdditionalSalary = additionalSalary,
+            MinSalaryCompensationFactor = 0,
+            MinSalaryCompensationAmount = minSalaryCompensationAmount,
             FinalSumSalary = CalculateFinalSumSalary(
                 baseSalary, percentageBonusSalary, 
-                holidaySalary, sicknessSalary, additionalSalary,
+                holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount,
                 recordsForMonth)
         };
     }
@@ -165,7 +170,11 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         return Math.Round(nightSumSalary, 2);
     }
 
-    private decimal CalculateFinalSumSalary(decimal baseSalary, decimal bonusPercentageSalary, decimal holidaySalary, decimal sicknessSalary, decimal additionalSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
+    private decimal CalculateFinalSumSalary(
+        decimal baseSalary,
+        decimal bonusPercentageSalary,
+        decimal holidaySalary, decimal sicknessSalary, decimal additionalSalary, decimal minSalaryCompensationAmount,
+        IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         return CalculateGrossSumBaseSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBase50PercentageSalary(baseSalary, bonusPercentageSalary, records) +
@@ -174,7 +183,8 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
                CalculateNightSumSalary(records) +
                holidaySalary +
                sicknessSalary +
-               additionalSalary;
+               additionalSalary +
+               minSalaryCompensationAmount;
     }
 
     private static double CalculateAllNightWorkedHours(IEnumerable<WorkingTimeRecordAggregatedViewModel> records)

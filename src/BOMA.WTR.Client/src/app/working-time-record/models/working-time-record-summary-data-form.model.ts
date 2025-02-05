@@ -7,6 +7,7 @@ export interface WorkingTimeRecordSummaryDataFormModel {
 	holidaySalary: number;
 	sicknessSalary: number;
 	additionalSalary: number;
+	minSalaryCompensationAmount: number;
 	year: number;
 	month: number;
 }

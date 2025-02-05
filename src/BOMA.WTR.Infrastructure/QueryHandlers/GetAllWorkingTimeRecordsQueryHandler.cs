@@ -93,7 +93,7 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             var salary = _salaryCalculationDomainService.GetRecalculatedCurrentMonthSalary(
                 x.Employee.BaseSalary,
                 x.Employee.SalaryBonusPercentage, 
-                0, 0, 0,
+                0, 0, 0, 0,
                 x.WorkingTimeRecordsAggregated.Where(record => record.Date.Month == query.QueryModel.Month).ToList());
             
             x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(salary);

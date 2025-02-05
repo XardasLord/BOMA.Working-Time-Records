@@ -17,10 +17,11 @@ public class GetRecalculatedCurrentMonthSalaryTests
     private decimal _holidaySalary;
     private decimal _sicknessSalary;
     private decimal _additionalSalary;
+    private decimal _minSalaryCompensationAmount;
     private List<WorkingTimeRecordAggregatedViewModel> _records;
     
     private EmployeeSalaryAggregatedHistory Act()
-        => _sut.GetRecalculatedCurrentMonthSalary(_baseSalary, _percentageBonusSalary, _holidaySalary, _sicknessSalary, _additionalSalary, _records);
+        => _sut.GetRecalculatedCurrentMonthSalary(_baseSalary, _percentageBonusSalary, _holidaySalary, _sicknessSalary, _additionalSalary, _minSalaryCompensationAmount, _records);
 
     public GetRecalculatedCurrentMonthSalaryTests()
     {
@@ -33,8 +34,9 @@ public class GetRecalculatedCurrentMonthSalaryTests
         _holidaySalary = 0;
         _sicknessSalary = 0;
         _additionalSalary = 0;
+        _minSalaryCompensationAmount = 0;
 
-        _records = new List<WorkingTimeRecordAggregatedViewModel>();
+        _records = [];
     }
 
     [Fact]
@@ -46,10 +48,11 @@ public class GetRecalculatedCurrentMonthSalaryTests
         _holidaySalary = 100m;
         _sicknessSalary = 200m;
         _additionalSalary = 300m;
+        _minSalaryCompensationAmount = 1000m;
 
-        _records = new List<WorkingTimeRecordAggregatedViewModel>
-        {
-            new()
+        _records =
+        [
+            new WorkingTimeRecordAggregatedViewModel
             {
                 BaseNormativeHours = 168,
                 FiftyPercentageBonusHours = 42,
@@ -59,7 +62,7 @@ public class GetRecalculatedCurrentMonthSalaryTests
                 WorkedHoursRounded = 168,
                 WorkedMinutes = 168 * 60
             }
-        };
+        ];
 
         // Act
         var result = Act();
@@ -95,6 +98,9 @@ public class GetRecalculatedCurrentMonthSalaryTests
         result.NightWorkedHours.Should().Be(60);
         result.NightBaseSalary.Should().Be(0); // TODO: Use mock to get night factor
         
+        result.MinSalaryCompensationFactor.Should().Be(0);
+        result.MinSalaryCompensationAmount.Should().Be(1000);
+        
         result.FinalSumSalary.Should().Be(
             result.GrossSumBaseSalary + 
             result.GrossSumBase50PercentageSalary + 
@@ -103,6 +109,7 @@ public class GetRecalculatedCurrentMonthSalaryTests
             result.NightBaseSalary + 
             result.HolidaySalary + 
             result.SicknessSalary + 
-            result.AdditionalSalary);
+            result.AdditionalSalary + 
+            result.MinSalaryCompensationAmount);
     }
 }

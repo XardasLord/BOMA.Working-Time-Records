@@ -31,6 +31,7 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 	holidaySalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 	sicknessSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
 	additionalSalaryOriginalValue: FormControlOriginalValueValidationModel = {};
+	minSalaryCompensationAmountOriginalValue: FormControlOriginalValueValidationModel = {};
 
 	columnsToDisplay = [
 		'index',
@@ -46,6 +47,7 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 		'holiday',
 		'sickness',
 		'additional',
+		'minSalaryCompensation',
 		'sum',
 		'actions'
 	];
@@ -84,6 +86,11 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 				Validators.min(0),
 				createValueChangedValidator(this.additionalSalaryOriginalValue)
 			]),
+			minSalaryCompensationAmount: new FormControl<number>(0, [
+				Validators.required,
+				Validators.min(0),
+				createValueChangedValidator(this.minSalaryCompensationAmountOriginalValue)
+			]),
 			year: new FormControl<number>(0),
 			month: new FormControl<number>(0)
 		});
@@ -113,6 +120,7 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 		this.holidaySalaryOriginalValue.originalValue = record.salaryInformation.holidaySalary;
 		this.sicknessSalaryOriginalValue.originalValue = record.salaryInformation.sicknessSalary;
 		this.additionalSalaryOriginalValue.originalValue = record.salaryInformation.additionalSalary;
+		this.minSalaryCompensationAmountOriginalValue.originalValue = record.salaryInformation.minSalaryCompensationAmount;
 
 		this.store.dispatch(
 			new UpdateFormValue({
@@ -147,6 +155,13 @@ export class WorkingTimeRecordSummaryTableComponent implements AfterViewInit {
 				path: 'workingTimeRecord.summaryForm',
 				value: record.salaryInformation.additionalSalary,
 				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('additionalSalary')
+			})
+		);
+		this.store.dispatch(
+			new UpdateFormValue({
+				path: 'workingTimeRecord.summaryForm',
+				value: record.salaryInformation.minSalaryCompensationAmount,
+				propertyPath: nameof<WorkingTimeRecordSummaryDataFormModel>('minSalaryCompensationAmount')
 			})
 		);
 	}

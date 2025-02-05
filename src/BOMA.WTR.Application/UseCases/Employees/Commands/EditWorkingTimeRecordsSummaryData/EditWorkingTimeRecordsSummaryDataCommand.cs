@@ -10,4 +10,5 @@ public record EditWorkingTimeRecordsSummaryDataCommand(
     decimal PercentageBonusSalary,
     decimal HolidaySalary,
     decimal SicknessSalary,
-    decimal AdditionalSalary) : ICommand;
+    decimal AdditionalSalary,
+    decimal MinSalaryCompensationAmount) : ICommand;

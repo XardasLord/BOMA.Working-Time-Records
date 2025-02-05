@@ -68,7 +68,7 @@ public class Employee : Entity<int>, IAggregateRoot
     public void UpdateSummaryData(
         int year, int month,
         decimal baseSalary, decimal percentageBonusSalary,
-        Money holidaySalary, Money sicknessSalary, Money additionalSalary,
+        Money holidaySalary, Money sicknessSalary, Money additionalSalary, Money minSalaryCompensationAmount,
         ISalaryCalculationDomainService salaryCalculationDomainService)
     {
         var recordsToUpdate = WorkingTimeRecordAggregatedHistories
@@ -78,7 +78,7 @@ public class Employee : Entity<int>, IAggregateRoot
         
         var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
             baseSalary, percentageBonusSalary, 
-            holidaySalary.Amount, sicknessSalary.Amount, additionalSalary.Amount, 
+            holidaySalary.Amount, sicknessSalary.Amount, additionalSalary.Amount,  minSalaryCompensationAmount.Amount,
             recordsToUpdate);
         
         recordsToUpdate.ForEach(record =>
@@ -112,6 +112,13 @@ public class Employee : Entity<int>, IAggregateRoot
             record.SalaryInformation.HolidaySalary = recalculatedRecord.HolidaySalary;
             record.SalaryInformation.SicknessSalary = recalculatedRecord.SicknessSalary;
             record.SalaryInformation.AdditionalSalary = recalculatedRecord.AdditionalSalary;
+            
+            if (record.SalaryInformation.MinSalaryCompensationAmount != recalculatedRecord.MinSalaryCompensationAmount)
+            {
+                record.SalaryInformation.MinSalaryCompensationFactor = 0;
+            }
+            
+            record.SalaryInformation.MinSalaryCompensationAmount = recalculatedRecord.MinSalaryCompensationAmount;
             record.SalaryInformation.FinalSumSalary = recalculatedRecord.FinalSumSalary;
         });
     }
@@ -159,7 +166,7 @@ public class Employee : Entity<int>, IAggregateRoot
         var first = recordsToUpdate.First();
         var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
             first.SalaryInformation.BaseSalary, first.SalaryInformation.PercentageBonusSalary, 
-            first.SalaryInformation.HolidaySalary, first.SalaryInformation.SicknessSalary, first.SalaryInformation.AdditionalSalary, 
+            first.SalaryInformation.HolidaySalary, first.SalaryInformation.SicknessSalary, first.SalaryInformation.AdditionalSalary, first.SalaryInformation.MinSalaryCompensationAmount, 
             recordsToUpdate);
         
         UpdateAllHistorySalaryInformation(recordsToUpdate, recalculatedRecord);

@@ -30,11 +30,12 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
         var holidaySalary = new Money(command.HolidaySalary);
         var sicknessSalary = new Money(command.SicknessSalary);
         var additionalSalary = new Money(command.AdditionalSalary);
+        var minSalaryCompensationAmount = new Money(command.MinSalaryCompensationAmount);
         
         employee.UpdateSummaryData(
             command.Year, command.Month,
             command.BaseSalary, command.PercentageBonusSalary,
-            holidaySalary, sicknessSalary, additionalSalary,
+            holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount,
             _salaryCalculationDomainService);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);

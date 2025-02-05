@@ -11,6 +11,7 @@ public interface ISalaryCalculationDomainService
         decimal holidaySalary,
         decimal sicknessSalary,
         decimal additionalSalary,
+        decimal minSalaryCompensationAmount,
         List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth);
     
     public EmployeeSalaryAggregatedHistory GetRecalculatedCurrentMonthSalary(
@@ -19,5 +20,6 @@ public interface ISalaryCalculationDomainService
         decimal holidaySalary,
         decimal sicknessSalary,
         decimal additionalSalary,
+        decimal minSalaryCompensationAmount,
         List<WorkingTimeRecordAggregatedViewModel> aggregatedCurrentRecordsForMonth);
 }

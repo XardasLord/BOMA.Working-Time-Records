@@ -50,8 +50,20 @@ public static class DateTimeExtensions
         { new DateTime(2025, 8, 15), false },
         { new DateTime(2025, 11, 1), true },
         { new DateTime(2025, 11, 11), false },
+        { new DateTime(2025, 12, 24), false },
         { new DateTime(2025, 12, 25), false },
-        { new DateTime(2025, 12, 26), false }
+        { new DateTime(2025, 12, 26), false },
+        
+        { new DateTime(2026, 1, 1), false },
+        { new DateTime(2026, 1, 6), false },
+        { new DateTime(2026, 4, 6), false },
+        { new DateTime(2026, 5, 1), false },
+        { new DateTime(2026, 6, 4), false },
+        { new DateTime(2026, 8, 15), true },
+        { new DateTime(2026, 11, 11), false },
+        { new DateTime(2026, 12, 24), false },
+        { new DateTime(2026, 12, 25), false },
+        { new DateTime(2026, 12, 26), true }
     };
     
     public static int WeekDaysInMonth(this DateTime dateTime)

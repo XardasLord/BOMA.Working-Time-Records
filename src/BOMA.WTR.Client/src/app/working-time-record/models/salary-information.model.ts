@@ -36,6 +36,8 @@ export interface SalaryInformationModel {
 	holidaySalary: number;
 	sicknessSalary: number;
 	additionalSalary: number;
+	minSalaryCompensationFactor: number;
+	minSalaryCompensationAmount: number;
 
 	finalSumSalary: number;
 }
