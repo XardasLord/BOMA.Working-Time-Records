@@ -46,9 +46,7 @@ public class CompensateRecordHistoriesToMinSalaryJob(
             foreach (var historyEntry in employee.WorkingTimeRecordAggregatedHistories)
             {
                 historyEntry.SalaryInformation.MinSalaryCompensationFactor = minSalaryCompensationFactor;
-                // TODO: Tutaj powinniśmy podnosić o ten współczynnik minSalaryCompensationFactor tylko wypłatę brutton (bez nadgodzin, sobót, nocek, itp)
-                // TODO: Do zweryfikowania czy historyEntry.SalaryInformation.BaseSalary * workingHoursInMonth wylicza właśnie to poprawnie
-                historyEntry.SalaryInformation.MinSalaryCompensationAmount = historyEntry.SalaryInformation.BaseSalary * workingHoursInMonth * minSalaryCompensationFactor;
+                historyEntry.SalaryInformation.MinSalaryCompensationAmount = Math.Round(historyEntry.SalaryInformation.GrossBaseSalary * minSalaryCompensationFactor, 2);
                 historyEntry.SalaryInformation.FinalSumSalary += historyEntry.SalaryInformation.MinSalaryCompensationAmount;
             }
         });
