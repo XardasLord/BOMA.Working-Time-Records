@@ -6,6 +6,7 @@ using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Specifications;
 using BOMA.WTR.Domain.SharedKernel;
+using Hangfire;
 using Hangfire.Server;
 using MediatR;
 
@@ -16,12 +17,18 @@ public class AggregateWorkingTimeRecordHistoriesJob
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
     private readonly IAggregateRepository<Employee> _employeeRepository;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
-    public AggregateWorkingTimeRecordHistoriesJob(IMediator mediator, IMapper mapper, IAggregateRepository<Employee> employeeRepository)
+    public AggregateWorkingTimeRecordHistoriesJob(
+        IMediator mediator,
+        IMapper mapper,
+        IAggregateRepository<Employee> employeeRepository,
+        IBackgroundJobClient backgroundJobClient)
     {
         _mediator = mediator;
         _mapper = mapper;
         _employeeRepository = employeeRepository;
+        _backgroundJobClient = backgroundJobClient;
     }
     
     public async Task Execute(PerformContext? context, CancellationToken cancellationToken)
@@ -81,5 +88,7 @@ public class AggregateWorkingTimeRecordHistoriesJob
         }
         
         await _employeeRepository.SaveChangesAsync(cancellationToken);
+
+        _backgroundJobClient.Enqueue<CompensateRecordHistoriesToMinSalaryJob>(job => job.Execute(null, cancellationToken));
     }
 }
