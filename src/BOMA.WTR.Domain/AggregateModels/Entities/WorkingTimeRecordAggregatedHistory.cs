@@ -1,4 +1,4 @@
-﻿using BOMA.WTR.Domain.AggregateModels.Interfaces;
+﻿using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SeedWork;
 using BOMA.WTR.Domain.SharedKernel;
 
@@ -19,6 +19,12 @@ public class WorkingTimeRecordAggregatedHistory : Entity<int>
     public double SaturdayHours { get; set; }
     public double NightHours { get; set; }
     public EmployeeSalaryAggregatedHistory SalaryInformation { get; set; }
+    
+    // TODO: BOMA-13 - Dorzucić śledzenie dnia, kiedy nastąpiła dezaktywacja i zmiana działu i zmiany w czasie
+    public int DepartmentId { get; set; }
+    public ShiftType? ShiftType { get; set; }
+    public bool IsActive { get; set; }
+
     public bool IsEditedManually { get; set; }
     public MissingRecordEventType? MissingRecordEventType { get; set; }
 }

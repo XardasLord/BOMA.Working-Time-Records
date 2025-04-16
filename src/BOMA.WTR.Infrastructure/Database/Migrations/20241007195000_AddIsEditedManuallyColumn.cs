@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BOMA.WTR.Infrastructure.Persistence.EF.Migrations
+namespace BOMA.WTR.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
     public partial class AddIsEditedManuallyColumn : Migration

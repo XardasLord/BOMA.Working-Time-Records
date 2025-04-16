@@ -4,16 +4,19 @@ using BOMA.WTR.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BOMA.WRT.Infrastructure.Database.Migrations
+namespace BOMA.WTR.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(BomaDbContext))]
-    partial class BomaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250409080455_AddHistoricalDepartmentShiftAndActiveness")]
+    partial class AddHistoricalDepartmentShiftAndActiveness
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

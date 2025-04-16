@@ -5,6 +5,7 @@ using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Specifications;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SharedKernel;
 using Hangfire;
 using Hangfire.Server;
@@ -78,7 +79,10 @@ public class AggregateWorkingTimeRecordHistoriesJob
                     HundredPercentageBonusHours = wtr.HundredPercentageBonusHours,
                     SaturdayHours = wtr.SaturdayHours,
                     NightHours = wtr.NightHours,
-                    SalaryInformation = _mapper.Map<EmployeeSalaryAggregatedHistory>(model.SalaryInformation)
+                    SalaryInformation = _mapper.Map<EmployeeSalaryAggregatedHistory>(model.SalaryInformation),
+                    IsActive = model.Employee.IsActive,
+                    DepartmentId = model.Employee.DepartmentId,
+                    ShiftType = (ShiftType?)model.Employee.ShiftTypeId
                 };
 
                 historyEntry.SalaryInformation.PercentageBonusSalary = model.Employee.SalaryBonusPercentage;

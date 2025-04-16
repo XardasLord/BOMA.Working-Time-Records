@@ -10,4 +10,5 @@ export interface EmployeeModel {
 	shiftTypeId: number | null;
 	shiftTypeName: string;
 	position: string;
+	isActive: boolean;
 }
