@@ -8,6 +8,7 @@ public class EmployeeWorkingTimeRecordViewModel
 {
     public EmployeeViewModel Employee { get; set; }
     public EmployeeSalaryViewModel SalaryInformation { get; set; }
+    // TODO: BOMA-13: Zwracanie informacji historycznej o aktualnym na ten miesiąc dziale, zmianie i czy jest aktywny
     public List<WorkingTimeRecordAggregatedViewModel> WorkingTimeRecordsAggregated { get; set; }
     public bool IsEditable { get; set; }
 }

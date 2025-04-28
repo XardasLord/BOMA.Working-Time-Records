@@ -8,6 +8,6 @@ public sealed class EmployeeByRcpIdSpec : Specification<Employee>, ISingleResult
     {
         Query.Where(x => x.RcpId == rcpId)
             .Include(x => x.WorkingTimeRecords)
-            .Include(x => x.WorkingTimeRecordAggregatedHistories);
+            .Include(x => x.WorkingTimeRecordAggregatedHistories); // TODO: BOMA-10 - long execution time because of this include of historical data 
     }
 }

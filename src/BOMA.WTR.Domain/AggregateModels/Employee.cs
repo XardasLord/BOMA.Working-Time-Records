@@ -23,8 +23,8 @@ public class Employee : Entity<int>, IAggregateRoot
 
     internal Employee()
     {
-        _workingTimeRecords = new List<WorkingTimeRecord>();
-        _workingTimeRecordAggregatedHistories = new List<WorkingTimeRecordAggregatedHistory>();
+        _workingTimeRecords = [];
+        _workingTimeRecordAggregatedHistories = [];
     }
 
     private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, JobInformation jobInformation, int rcpId, int departmentId) 

@@ -1,4 +1,5 @@
 ﻿using BOMA.WTR.Domain.AggregateModels.Entities;
+using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -61,5 +62,18 @@ public class WorkingTimeRecordAggregatedHistoryConfiguration : IEntityTypeConfig
         builder.Property(x => x.HundredPercentageBonusHours).HasColumnType("decimal(10,2)");
         builder.Property(x => x.SaturdayHours).HasColumnType("decimal(10,2)");
         builder.Property(x => x.NightHours).HasColumnType("decimal(10,2)");
+        
+        builder.Property(x => x.DepartmentId)
+            .HasColumnName("DepartmentId")
+            .IsRequired();
+        
+        builder.Property(x => x.ShiftType)
+            .HasColumnName("ShiftType")
+            .HasConversion(new EnumToNumberConverter<ShiftType, byte>())
+            .IsRequired(false);
+
+        builder.Property(x => x.IsActive)
+            .HasColumnName("IsActive")
+            .IsRequired();
     }
 }
