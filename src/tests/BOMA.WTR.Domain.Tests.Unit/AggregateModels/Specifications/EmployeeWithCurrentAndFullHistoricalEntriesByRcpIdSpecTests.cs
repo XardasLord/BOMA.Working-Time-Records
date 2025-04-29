@@ -6,9 +6,9 @@ using Xunit;
 
 namespace BOMA.WTR.Domain.Tests.Unit.AggregateModels.Specifications;
 
-public class EmployeeByRcpIdSpecTests : TestBase
+public class EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpecTests : TestBase
 {
-    private EmployeeByRcpIdSpec _spec;
+    private EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec _spec;
     private const int TestRcpId = 300;
     private const int TestId = 3;
 
@@ -18,7 +18,7 @@ public class EmployeeByRcpIdSpecTests : TestBase
     public void Returns_aggregate_with_given_rcp_id()
     {
         // Arrange
-        _spec = new EmployeeByRcpIdSpec(TestRcpId);
+        _spec = new EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec(TestRcpId);
         
         // Act
         var result = Act();

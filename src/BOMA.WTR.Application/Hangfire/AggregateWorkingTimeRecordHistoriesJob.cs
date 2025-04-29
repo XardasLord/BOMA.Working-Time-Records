@@ -50,7 +50,7 @@ public class AggregateWorkingTimeRecordHistoriesJob
             
             if (currentEmployee is null)
             {
-                var spec = new EmployeeByRcpIdSpec(model.Employee.RcpId);
+                var spec = new EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec(model.Employee.RcpId);
 
                 if (await _employeeRepository.CountAsync(spec, cancellationToken) > 1)
                 {

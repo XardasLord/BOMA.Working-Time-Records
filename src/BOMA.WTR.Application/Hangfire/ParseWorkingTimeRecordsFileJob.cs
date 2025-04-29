@@ -30,6 +30,7 @@ public class ParseWorkingTimeRecordsFileJob
         
         if (files.Length < 1)
         {
+            context.SetTextColor(ConsoleTextColor.Green);
             context.WriteLine("There is no CSV files to get");
             return;
         }
@@ -65,7 +66,7 @@ public class ParseWorkingTimeRecordsFileJob
                         rogerFileModel.DepartmentId = 9; // Bez grupy
                     }
 
-                    var spec = new EmployeeByRcpIdSpec(rogerFileModel.UserRcpId!.Value);
+                    var spec = new EmployeeWithCurrentEntriesByRcpIdSpec(rogerFileModel.UserRcpId!.Value);
                     currentEmployee = await _employeeRepository.FirstOrDefaultAsync(spec, cancellationToken);
 
                     if (currentEmployee is null)
@@ -103,7 +104,10 @@ public class ParseWorkingTimeRecordsFileJob
 
             await _employeeRepository.SaveChangesAsync(cancellationToken);
 
+            context.SetTextColor(ConsoleTextColor.Green);
             context.WriteLine($"There are {addedNewEmployees} added new employees from the file - {file}");
+            
+            context.SetTextColor(ConsoleTextColor.Green);
             context.WriteLine($"There are {addedNewRecords} added new records for employees from the file - {file}");
 
             File.Move(file, Path.Combine(_rogerFileOptions.ProcessedFileLocation, Path.GetFileName(file)), true);

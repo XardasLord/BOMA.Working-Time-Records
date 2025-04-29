@@ -2,9 +2,9 @@
 
 namespace BOMA.WTR.Domain.AggregateModels.Specifications;
 
-public sealed class EmployeeByRcpIdSpec : Specification<Employee>, ISingleResultSpecification<Employee>
+public sealed class EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec : Specification<Employee>, ISingleResultSpecification<Employee>
 {
-    public EmployeeByRcpIdSpec(int rcpId)
+    public EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec(int rcpId)
     {
         Query.Where(x => x.RcpId == rcpId)
             .Include(x => x.WorkingTimeRecords)
