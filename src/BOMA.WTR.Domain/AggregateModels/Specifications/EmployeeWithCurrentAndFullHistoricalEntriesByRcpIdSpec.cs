@@ -7,7 +7,7 @@ public sealed class EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec : Spe
     public EmployeeWithCurrentAndFullHistoricalEntriesByRcpIdSpec(int rcpId)
     {
         Query.Where(x => x.RcpId == rcpId)
-            .Include(x => x.WorkingTimeRecords)
-            .Include(x => x.WorkingTimeRecordAggregatedHistories); // TODO: BOMA-10 - long execution time because of this include of historical data 
+            .Include(x => x.WorkingTimeRecords);
+        // .Include(x => x.WorkingTimeRecordAggregatedHistories); // TODO: BOMA-10 - long execution time because of this include of historical data 
     }
 }
