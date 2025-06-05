@@ -1,25 +1,50 @@
-<div class="container">
-	<h1 class="card-title">Zaloguj się do systemu ECP</h1>
+<div class="flex justify-center px-4 pt-16 h-auto">
+	<div class="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8 w-full max-w-md">
+		<h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Zaloguj się do systemu ECP</h1>
 
-	<form [formGroup]="loginForm" autocomplete="off" novalidate (ngSubmit)="loginUser(loginForm.value)">
-		<div class="flex flex-col">
-			<mat-form-field class="w-1/4">
-				<mat-label>E-mail</mat-label>
-				<input matInput placeholder="E-mail" formControlName="email" />
-			</mat-form-field>
+		<form [formGroup]="loginForm" autocomplete="off" novalidate (ngSubmit)="loginUser(loginForm.value)">
+			<div class="space-y-6">
+				<mat-form-field class="w-full transition-all duration-300">
+					<mat-label>E-mail</mat-label>
+					<input
+						matInput
+						placeholder="E-mail"
+						formControlName="email"
+						class="transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					/>
+				</mat-form-field>
 
-			<mat-form-field class="w-1/4">
-				<mat-label>Hasło</mat-label>
-				<input type="password" matInput placeholder="Hasło" formControlName="password" />
-			</mat-form-field>
+				<mat-form-field class="w-full transition-all duration-300">
+					<mat-label>Hasło</mat-label>
+					<input
+						type="password"
+						matInput
+						placeholder="Hasło"
+						formControlName="password"
+						class="transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					/>
+				</mat-form-field>
 
-			<div>
-				<button mat-raised-button type="submit" color="primary" [disabled]="!loginForm.valid">Zaloguj się</button>
+				<button
+					mat-raised-button
+					type="submit"
+					color="primary"
+					class="w-full py-2 font-medium transition duration-300 transform hover:-translate-y-0.5 hover:shadow-md"
+					[disabled]="!loginForm.valid"
+				>
+					Zaloguj się
+				</button>
+
+				<div class="text-center">
+					<a
+						mat-button
+						(click)="redirectToRegister()"
+						class="text-sm text-blue-600 hover:text-blue-700 transition duration-300 hover:underline"
+					>
+						Nie masz konta? Zarejestruj się
+					</a>
+				</div>
 			</div>
-
-			<div>
-				<a mat-button (click)="redirectToRegister()">Nie masz konta? Zarejestruj się</a>
-			</div>
-		</div>
-	</form>
+		</form>
+	</div>
 </div>

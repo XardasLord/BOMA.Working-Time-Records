@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
-import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '../../services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoginCommand } from '../../models/login.command';
 import { RoutePaths } from '../../../../core/modules/app-routing.module';
 import { Auth } from '../../state/auth.action';
@@ -16,16 +14,11 @@ import Login = Auth.Login;
 	styleUrl: './login-user.component.scss'
 })
 export class LoginUserComponent implements OnInit {
-	private returnUrl: string = '';
-
 	loginForm!: FormGroup;
 
 	constructor(
 		private store: Store,
-		private authService: AuthService,
-		private router: Router,
-		private route: ActivatedRoute,
-		private toastService: ToastrService
+		private route: ActivatedRoute
 	) {}
 
 	ngOnInit(): void {
@@ -33,8 +26,6 @@ export class LoginUserComponent implements OnInit {
 			email: new FormControl('', [Validators.required]),
 			password: new FormControl('', [Validators.required])
 		});
-
-		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 	}
 
 	loginUser(loginFormValue: any) {
