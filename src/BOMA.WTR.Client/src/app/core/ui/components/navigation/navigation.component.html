@@ -1,47 +1,69 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container h-screen">
+	<!-- LEWE MENU -->
 	<mat-sidenav
 		#sidenav
-		class="sidenav"
+		class="sidenav w-64 bg-white border-r shadow-md"
 		fixedInViewport
 		[attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
 		[mode]="(isHandset$ | async) ? 'over' : 'side'"
 		[opened]="(isHandset$ | async) === false"
 	>
-		<mat-toolbar>
-			BOMA&nbsp;&nbsp;
-			<span class="app-version">(v.{{ appVersion }})</span>
+		<mat-toolbar class="bg-white text-lg font-semibold text-gray-800 px-4 py-3 border-b">
+			BOMA ECP
+			<span class="text-sm font-normal text-gray-500 ml-2">(v.{{ appVersion }})</span>
 		</mat-toolbar>
-		<mat-nav-list>
-			<mat-list-item [routerLink]="RoutePaths.Employees" routerLinkActive="active-route">
-				<mat-icon matListItemIcon>person</mat-icon>
-				<div matListItemTitle>Pracownicy</div>
+
+		<mat-nav-list class="pt-2 space-y-1 overflow-x-hidden">
+			<mat-list-item
+				[routerLink]="RoutePaths.Employees"
+				routerLinkActive="active-route"
+				class="group hover:bg-blue-50 transition rounded-md mx-2 px-3"
+			>
+				<mat-icon matListItemIcon class="text-gray-600 group-hover:text-blue-600 transition">person</mat-icon>
+				<div matListItemTitle class="text-sm font-medium text-gray-800 group-hover:text-blue-600">Pracownicy</div>
 			</mat-list-item>
-			<mat-list-item [routerLink]="RoutePaths.WorkingTimeRecords" routerLinkActive="active-route">
-				<mat-icon matListItemIcon>work_history</mat-icon>
-				<div matListItemTitle>ECP</div>
+
+			<mat-list-item
+				[routerLink]="RoutePaths.WorkingTimeRecords"
+				routerLinkActive="active-route"
+				class="group hover:bg-blue-50 transition rounded-md mx-2 px-3"
+			>
+				<mat-icon matListItemIcon class="text-gray-600 group-hover:text-blue-600 transition">work_history</mat-icon>
+				<div matListItemTitle class="text-sm font-medium text-gray-800 group-hover:text-blue-600">ECP</div>
 			</mat-list-item>
-			<mat-list-item [routerLink]="RoutePaths.Users" routerLinkActive="active-route" *ngIf="(user$ | async)?.role === Role.Admin">
-				<mat-icon matListItemIcon>group</mat-icon>
-				<div matListItemTitle>Użytkownicy</div>
+
+			<mat-list-item
+				*ngIf="(user$ | async)?.role === Role.Admin"
+				[routerLink]="RoutePaths.Users"
+				routerLinkActive="active-route"
+				class="group hover:bg-blue-50 transition rounded-md mx-2 px-3"
+			>
+				<mat-icon matListItemIcon class="text-gray-600 group-hover:text-blue-600 transition">group</mat-icon>
+				<div matListItemTitle class="text-sm font-medium text-gray-800 group-hover:text-blue-600">Użytkownicy</div>
 			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>
+
+	<!-- ZAWARTOŚĆ STRONY + TOOLBAR -->
 	<mat-sidenav-content>
-		<mat-toolbar color="primary">
-			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()">
+		<!-- GÓRNY PASEK -->
+		<mat-toolbar color="primary" class="px-4">
+			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()" class="mr-2">
 				<mat-icon>menu</mat-icon>
 			</button>
-			<span>BOMA - System Ewidencji Czasu Pracy</span>
 
-			<span class="spacer"></span>
+			<span class="text-lg font-semibold">BOMA - System Ewidencji Czasu Pracy</span>
+			<span class="spacer flex-grow"></span>
 
-			<span>{{ (user$ | async)?.email }} ({{ (user$ | async)?.role }})</span>
+			<span *ngIf="user$ | async as user">{{ user.email }} ({{ user.role }})</span>
 
-			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj">
+			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj" class="ml-2">
 				<mat-icon>logout</mat-icon>
 			</button>
 		</mat-toolbar>
-		<div class="content">
+
+		<!-- TREŚĆ -->
+		<div class="content bg-gray-50 min-h-[calc(100vh-64px)] overflow-auto">
 			<router-outlet></router-outlet>
 		</div>
 	</mat-sidenav-content>

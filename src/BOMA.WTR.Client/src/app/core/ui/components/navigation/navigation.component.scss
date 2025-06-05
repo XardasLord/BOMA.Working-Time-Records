@@ -1,27 +1,15 @@
-.sidenav-container {
-	height: 100%;
-}
-
-.sidenav {
-	width: 200px;
-}
-
-.sidenav .mat-toolbar {
-	background: inherit;
-}
-
 .mat-toolbar.mat-primary {
 	position: sticky;
 	top: 0;
 	z-index: 100;
 }
 
-.content {
-	padding: 40px;
+.active-route {
+	@apply bg-blue-100 text-blue-700 font-semibold;
 }
 
-.app-version {
-	font-size: 16px;
+.content {
+	padding: 40px;
 }
 
 .spacer {
