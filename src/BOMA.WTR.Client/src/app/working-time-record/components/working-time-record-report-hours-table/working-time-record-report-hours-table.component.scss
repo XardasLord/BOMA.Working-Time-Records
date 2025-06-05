@@ -127,3 +127,67 @@ td.mat-mdc-footer-cell {
 input.time-picker {
 	width: 60px;
 }
+
+// === Wiersze pogrupowane (co 3)
+tr.mat-mdc-row:nth-child(3n-2) .mat-mdc-cell {
+	background-color: #f4f4f4;
+}
+
+tr.mat-mdc-row:nth-child(3n) .mat-mdc-cell {
+	border-bottom: 2px solid black;
+}
+
+// === Styl weekendów
+.mat-mdc-header-cell.weekend-day,
+.mat-mdc-cell.weekend-day {
+	background-color: $weekend-day-color !important;
+	font-weight: bold;
+}
+
+// === Styl wejść/wyjść/godzin
+.mat-mdc-cell.default-value-hours {
+	background-color: #e3f2fd; // niebieski pastelowy
+}
+
+.mat-mdc-cell.none-value {
+	background-color: #f9f9f9;
+	font-weight: 500;
+}
+
+// === Input time edytowalny
+input.time-picker {
+	width: 60px;
+	padding: 2px 4px;
+	font-size: 12px;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+// === Drukowanie
+@media print {
+	.no-print {
+		display: none !important;
+	}
+
+	.mat-mdc-cell,
+	.mat-mdc-header-cell {
+		font-size: 10px !important;
+		padding: 2px !important;
+	}
+
+	.mat-mdc-cell button,
+	input.time-picker,
+	mat-icon {
+		display: none !important;
+	}
+
+	.mat-mdc-cell.edited-manually {
+		font-style: italic;
+		color: #000;
+	}
+
+	.mat-mdc-row:nth-child(3n-2) .mat-mdc-cell {
+		background-color: #eee !important;
+	}
+}

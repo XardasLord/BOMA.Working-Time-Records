@@ -1,5 +1,39 @@
 @import '../../../../assets/scss/variabless.scss';
 
+input.clean-input {
+	border: none;
+	background: transparent;
+	text-align: center;
+	width: 40px;
+	font-size: 12px;
+
+	&:focus {
+		outline: none;
+		border-bottom: 1px solid #000;
+	}
+}
+
+.sub-header-row {
+	background-color: #ddd !important;
+	height: 28px;
+	font-weight: bold;
+	font-size: 12px;
+	border-top: 2px solid black;
+	border-bottom: 1px solid gray;
+}
+
+.sub-header-cell {
+	text-align: center;
+	padding: 4px;
+	border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+	padding: 8px 4px;
+	font-size: 13px;
+}
+
 .mat-mdc-header-cell,
 .mat-mdc-cell {
 	text-align: center;
@@ -29,6 +63,10 @@ td.mat-mdc-footer-cell:first-of-type {
 
 .mat-column-fullName {
 	max-width: 180px;
+	position: sticky;
+	left: 0;
+	background-color: white;
+	z-index: 2;
 }
 
 .mat-column-baseSalary,
@@ -77,7 +115,7 @@ td.mat-mdc-footer-cell:first-of-type {
 .mat-column-30,
 .mat-column-31 {
 	max-width: 90px;
-	min-width: 30px;
+	min-width: 25px;
 	padding: 2px;
 }
 
@@ -123,7 +161,7 @@ tr.mat-mdc-row:nth-child(6n) > .mat-mdc-cell {
 
 // Gross column
 .mat-mdc-cell.base-gross {
-	background-color: $red-color;
+	background-color: $light-red-color;
 }
 
 // Bonus column
@@ -132,14 +170,14 @@ tr.mat-mdc-row:nth-child(6n) > .mat-mdc-cell {
 }
 
 .mat-mdc-cell.base-bonus {
-	background-color: $red-color;
+	background-color: $light-red-color;
 }
 
 // Gross sum column
 .mat-mdc-cell.fifty-percentage-gross-sum,
 .mat-mdc-cell.hundred-percentage-gross-sum,
 .mat-mdc-cell.saturday-gross-sum {
-	background-color: $red-color;
+	background-color: $light-red-color;
 }
 
 // Bonus sum column
@@ -178,4 +216,16 @@ td.mat-mdc-footer-cell {
 	font-weight: bold;
 	padding-left: 2px;
 	padding-right: 2px;
+}
+
+@media print {
+	.no-print {
+		display: none !important;
+	}
+
+	th,
+	td {
+		font-size: 10px !important;
+		padding: 2px !important;
+	}
 }

@@ -1,62 +1,134 @@
 @import '../../../../assets/scss/variabless.scss';
 
-.container {
-	height: 80vh;
-	max-width: 100%;
-	overflow: auto;
-}
-
+// === OGÓLNE ===
 .mat-mdc-header-cell,
 .mat-mdc-cell {
 	text-align: center;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	padding: 8px 4px;
+	font-size: 13px;
 }
 
 .mat-mdc-row:hover {
-	background-color: gray;
+	background-color: #f0f0f0;
 
 	.mat-mdc-cell {
-		background-color: gray;
+		background-color: #f0f0f0;
 	}
 }
 
+tr.mat-mdc-footer-row {
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	background-color: #fafafa;
+	border-top: 2px solid black;
+}
+
+// === KOLUMNY NAZYWANE ===
 .mat-column-fullName.mat-mdc-cell {
-	font-size: 18px;
+	font-size: 16px;
+	font-weight: bold;
+	text-transform: uppercase;
+	max-width: 200px;
 }
 
-.mat-column-fullName {
-	max-width: 170px;
+.mat-column-index.mat-mdc-cell {
+	max-width: 30px;
 }
 
-.mat-column-gross.mat-mdc-cell,
-.mat-column-bonus.mat-mdc-cell,
-.mat-column-bonus10Percentage.mat-mdc-cell,
-.mat-column-overtimes.mat-mdc-cell,
-.mat-column-saturdays.mat-mdc-cell,
-.mat-column-nightHours.mat-mdc-cell,
-.mat-column-sum.mat-mdc-cell {
+// === KOLOROWANIE BLOKÓW DANYCH ===
+.mat-column-gross,
+.mat-column-bonus,
+.mat-column-overtimes,
+.mat-column-saturdays,
+.mat-column-nightHours,
+.mat-column-sum {
 	background-color: $summary-table-base-color;
 }
 
-.mat-column-rate.mat-mdc-cell,
-.mat-column-bonusPercentage.mat-mdc-cell,
-.mat-column-night.mat-mdc-cell,
-.mat-column-holiday.mat-mdc-cell,
-.mat-column-sickness.mat-mdc-cell,
-.mat-column-additional.mat-mdc-cell,
-.mat-column-minSalaryCompensation.mat-mdc-cell {
+.mat-column-baseSalary,
+.mat-column-bonusPercentage,
+.mat-column-night,
+.mat-column-holiday,
+.mat-column-sickness,
+.mat-column-additional,
+.mat-column-minSalaryCompensation {
 	background-color: $summary-table-yellow-color;
 }
 
-tr.mat-mdc-footer-row {
-	font-size: 22px;
-	font-weight: bold;
-	text-align: center;
-}
-
-// Inline form inputs
+// === INPUTY ===
 .mat-mdc-form-field {
 	text-align: center;
 	width: 100px;
-	margin-top: 10px;
+	margin: 4px auto;
+
+	.mat-mdc-input-element {
+		padding: 4px;
+		font-size: 13px;
+		text-align: center;
+	}
+}
+
+// uproszczone inputy do edycji
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+
+.summary-card {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 400px;
+	margin: 20px auto;
+	padding: 12px 20px;
+	background-color: #fff;
+	border: 2px solid #dcdcdc;
+	border-radius: 10px;
+	box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+
+	.summary-label {
+		font-size: 16px;
+		font-weight: 500;
+		color: #333;
+	}
+
+	.summary-value {
+		font-size: 18px;
+		font-weight: bold;
+		color: #1a237e;
+	}
+}
+
+// === DRUK ===
+@media print {
+	.no-print {
+		display: none !important;
+	}
+
+	.mat-mdc-header-cell,
+	.mat-mdc-cell,
+	.mat-mdc-footer-cell {
+		font-size: 10px !important;
+		padding: 2px 4px !important;
+	}
+
+	.mat-mdc-footer-row {
+		font-size: 12px !important;
+		background: #eee !important;
+	}
+
+	.print-table {
+		display: none !important;
+	}
+
+	.mat-form-field {
+		display: none !important;
+	}
 }

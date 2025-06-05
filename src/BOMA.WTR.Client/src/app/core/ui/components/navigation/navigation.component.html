@@ -8,9 +8,11 @@
 		[mode]="(isHandset$ | async) ? 'over' : 'side'"
 		[opened]="(isHandset$ | async) === false"
 	>
-		<mat-toolbar class="bg-white text-lg font-semibold text-gray-800 px-4 py-3 border-b">
-			BOMA ECP
-			<span class="text-sm font-normal text-gray-500 ml-2">(v.{{ appVersion }})</span>
+		<mat-toolbar class="bg-white px-4 py-3 border-b shadow-sm flex items-center justify-between">
+			<div class="flex items-center gap-2">
+				<span class="text-xl font-semibold text-gray-800 tracking-wide">BOMA ECP</span>
+				<span class="text-sm text-gray-500">(v.{{ appVersion }})</span>
+			</div>
 		</mat-toolbar>
 
 		<mat-nav-list class="pt-2 space-y-1 overflow-x-hidden">
@@ -47,17 +49,28 @@
 	<!-- ZAWARTOŚĆ STRONY + TOOLBAR -->
 	<mat-sidenav-content>
 		<!-- GÓRNY PASEK -->
-		<mat-toolbar color="primary" class="px-4">
-			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()" class="mr-2">
+		<mat-toolbar color="primary" class="px-4 h-16 shadow-sm">
+			<!-- MENU ICON -->
+			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="sidenav.toggle()" class="mr-4">
 				<mat-icon>menu</mat-icon>
 			</button>
 
-			<span class="text-lg font-semibold">BOMA - System Ewidencji Czasu Pracy</span>
+			<!-- NAZWA SYSTEMU -->
+			<span class="text-lg font-semibold tracking-wide">BOMA – Ewidencja Czasu Pracy</span>
+
+			<!-- SPACER -->
 			<span class="spacer flex-grow"></span>
 
-			<span *ngIf="user$ | async as user">{{ user.email }} ({{ user.role }})</span>
+			<!-- DANE UŻYTKOWNIKA -->
+			<div *ngIf="user$ | async as user" class="flex items-center gap-2 text-sm text-white">
+				<span>{{ user.email }}</span>
+				<span class="bg-white/20 px-2 py-0.5 rounded text-xs tracking-wide uppercase">
+					{{ user.role }}
+				</span>
+			</div>
 
-			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj" class="ml-2">
+			<!-- LOGOUT -->
+			<button *ngIf="loggedIn$ | async" type="button" mat-icon-button (click)="logout()" matTooltip="Wyloguj" class="ml-4">
 				<mat-icon>logout</mat-icon>
 			</button>
 		</mat-toolbar>

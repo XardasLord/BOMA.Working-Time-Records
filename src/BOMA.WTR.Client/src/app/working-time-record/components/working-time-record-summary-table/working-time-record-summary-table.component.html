@@ -202,13 +202,9 @@
 		</table>
 	</form>
 
-	<div class="p-6 m-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
-		<ul class="divide-y divide-gray-200">
-			<li class="py-4 flex justify-between">
-				<span class="font-medium text-gray-700">Podsumowanie:</span>
-				<span class="text-gray-900 font-bold">{{ getAllFinalSum() | async | currency: 'PLN' }}</span>
-			</li>
-		</ul>
+	<div class="summary-card">
+		<div class="summary-label">Podsumowanie:</div>
+		<div class="summary-value">{{ getAllFinalSum() | async | currency: 'PLN' }}</div>
 	</div>
 </div>
 

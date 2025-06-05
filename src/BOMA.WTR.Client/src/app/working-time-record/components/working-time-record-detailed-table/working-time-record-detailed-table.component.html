@@ -156,9 +156,7 @@
 				>
 					<ng-template [ngIf]="isRowEditing(record)" [ngIfElse]="readOnlyMode">
 						<span *ngIf="i % 6 === 0">
-							<mat-form-field appearance="outline" class="number-input">
-								<input type="number" min="0" step="0.5" matInput formControlName="day{{ dayNumber }}" />
-							</mat-form-field>
+							<input type="number" matInput min="0" step="0.5" formControlName="day{{ dayNumber }}" class="clean-input" />
 						</span>
 						<span
 							*ngIf="i % 6 === 1"

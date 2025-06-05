@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { append, patch, removeItem, updateItem } from '@ngxs/store/operators';
 import { catchError, finalize, Observable, of, switchMap, tap, throwError } from 'rxjs';
@@ -19,7 +20,6 @@ import {
 	ConfirmationDialogComponent,
 	ConfirmationDialogModel
 } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import { HttpErrorResponse } from '@angular/common/http';
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];

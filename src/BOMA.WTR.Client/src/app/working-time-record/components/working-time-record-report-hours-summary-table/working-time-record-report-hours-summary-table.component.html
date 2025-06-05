@@ -1,27 +1,25 @@
-<div id="print-content" class="table-container mat-elevation-z3">
-	<div class="p-6 m-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
-		<ul class="divide-y divide-gray-200">
-			<li class="py-4 flex justify-between">
-				<span class="font-medium text-gray-700">Ilość pracowników:</span>
-				<span class="text-gray-900">{{ getTotalNumberOfEmployees() | async }}</span>
-			</li>
-			<li class="py-4 flex justify-between">
-				<span class="font-medium text-gray-700">Godziny nominalne:</span>
-				<span class="text-gray-900">{{ getTotalNormativeHoursSum() | async }}</span>
-			</li>
-			<li class="py-4 flex justify-between">
-				<span class="font-medium text-gray-700">Nadgodziny 50%:</span>
-				<span class="text-gray-900">{{ getTotalFiftyPercentageBonusHoursSum() | async }}</span>
-			</li>
-			<li class="py-4 flex justify-between">
-				<span class="font-medium text-gray-700">Nadgodziny 100%:</span>
-				<span class="text-gray-900">{{ getTotalHundredPercentageBonusHoursSum() | async }}</span>
-			</li>
-			<li class="py-4 flex justify-between">
-				<span class="font-medium text-gray-700">Soboty:</span>
-				<span class="text-gray-900">{{ getTotalSaturdayHoursSum() | async }}</span>
-			</li>
-		</ul>
+<div id="print-content" class="summary-container mat-elevation-z3">
+	<div class="summary-box">
+		<div class="summary-row">
+			<span class="summary-label">🧑‍ Ilość pracowników:</span>
+			<span class="summary-value">{{ getTotalNumberOfEmployees() | async }}</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">🕓 Godziny nominalne:</span>
+			<span class="summary-value">{{ getTotalNormativeHoursSum() | async }}</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⏱️ Nadgodziny 50%:</span>
+			<span class="summary-value">{{ getTotalFiftyPercentageBonusHoursSum() | async }}</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⏱️ Nadgodziny 100%:</span>
+			<span class="summary-value">{{ getTotalHundredPercentageBonusHoursSum() | async }}</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">📆 Soboty:</span>
+			<span class="summary-value">{{ getTotalSaturdayHoursSum() | async }}</span>
+		</div>
 	</div>
 </div>
 
