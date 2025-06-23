@@ -43,6 +43,16 @@
 				<mat-icon matListItemIcon class="text-gray-600 group-hover:text-blue-600 transition">group</mat-icon>
 				<div matListItemTitle class="text-sm font-medium text-gray-800 group-hover:text-blue-600">Użytkownicy</div>
 			</mat-list-item>
+
+			<mat-list-item
+				*ngIf="(user$ | async)?.role === Role.Admin"
+				[routerLink]="RoutePaths.Settings"
+				routerLinkActive="active-route"
+				class="group hover:bg-blue-50 transition rounded-md mx-2 px-3"
+			>
+				<mat-icon matListItemIcon class="text-gray-600 group-hover:text-blue-600 transition">settings</mat-icon>
+				<div matListItemTitle class="text-sm font-medium text-gray-800 group-hover:text-blue-600">Ustawienia</div>
+			</mat-list-item>
 		</mat-nav-list>
 	</mat-sidenav>
 

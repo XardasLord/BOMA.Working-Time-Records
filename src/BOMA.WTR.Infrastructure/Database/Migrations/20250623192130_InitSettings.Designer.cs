@@ -4,16 +4,19 @@ using BOMA.WTR.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BOMA.WRT.Infrastructure.Database.Migrations
+namespace BOMA.WTR.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(BomaDbContext))]
-    partial class BomaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250623192130_InitSettings")]
+    partial class InitSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,7 +269,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = -1,
                             Description = "Minimalne wynagrodzenie pracownika.",
                             Key = "MinimumWage",
                             LastModified = new DateTime(2025, 6, 23, 19, 21, 29, 528, DateTimeKind.Utc).AddTicks(8782),
@@ -283,7 +286,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.Employee.JobInformation#BOMA.WTR.Domain.AggregateModels.ValueObjects.JobInformation", "JobInformation", b1 =>
+                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.ValueObjects.JobInformation", "JobInformation", b1 =>
                         {
                             b1.Property<int>("EmployeeId")
                                 .HasColumnType("int");
@@ -294,12 +297,12 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
 
                             b1.HasKey("EmployeeId");
 
-                            b1.ToTable("Employees", (string)null);
+                            b1.ToTable("Employees");
 
                             b1.WithOwner()
                                 .HasForeignKey("EmployeeId");
 
-                            b1.OwnsOne("BOMA.WTR.Domain.AggregateModels.Employee.JobInformation#BOMA.WTR.Domain.AggregateModels.ValueObjects.JobInformation.Position#BOMA.WTR.Domain.AggregateModels.ValueObjects.Position", "Position", b2 =>
+                            b1.OwnsOne("BOMA.WTR.Domain.AggregateModels.ValueObjects.Position", "Position", b2 =>
                                 {
                                     b2.Property<int>("JobInformationEmployeeId")
                                         .HasColumnType("int");
@@ -311,7 +314,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
 
                                     b2.HasKey("JobInformationEmployeeId");
 
-                                    b2.ToTable("Employees", (string)null);
+                                    b2.ToTable("Employees");
 
                                     b2.WithOwner()
                                         .HasForeignKey("JobInformationEmployeeId");
@@ -321,32 +324,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                                 .IsRequired();
                         });
 
-                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.Employee.Name#BOMA.WTR.Domain.AggregateModels.ValueObjects.Name", "Name", b1 =>
-                        {
-                            b1.Property<int>("EmployeeId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasMaxLength(64)
-                                .HasColumnType("nvarchar(64)")
-                                .HasColumnName("FirstName");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasMaxLength(64)
-                                .HasColumnType("nvarchar(64)")
-                                .HasColumnName("LastName");
-
-                            b1.HasKey("EmployeeId");
-
-                            b1.ToTable("Employees", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("EmployeeId");
-                        });
-
-                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.Employee.Salary#BOMA.WTR.Domain.AggregateModels.ValueObjects.Money", "Salary", b1 =>
+                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.ValueObjects.Money", "Salary", b1 =>
                         {
                             b1.Property<int>("EmployeeId")
                                 .HasColumnType("int");
@@ -366,13 +344,38 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
 
                             b1.HasKey("EmployeeId");
 
-                            b1.ToTable("Employees", (string)null);
+                            b1.ToTable("Employees");
 
                             b1.WithOwner()
                                 .HasForeignKey("EmployeeId");
                         });
 
-                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.Employee.SalaryBonusPercentage#BOMA.WTR.Domain.AggregateModels.ValueObjects.PercentageBonus", "SalaryBonusPercentage", b1 =>
+                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.ValueObjects.Name", "Name", b1 =>
+                        {
+                            b1.Property<int>("EmployeeId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasMaxLength(64)
+                                .HasColumnType("nvarchar(64)")
+                                .HasColumnName("FirstName");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasMaxLength(64)
+                                .HasColumnType("nvarchar(64)")
+                                .HasColumnName("LastName");
+
+                            b1.HasKey("EmployeeId");
+
+                            b1.ToTable("Employees");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EmployeeId");
+                        });
+
+                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.ValueObjects.PercentageBonus", "SalaryBonusPercentage", b1 =>
                         {
                             b1.Property<int>("EmployeeId")
                                 .HasColumnType("int");
@@ -383,7 +386,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
 
                             b1.HasKey("EmployeeId");
 
-                            b1.ToTable("Employees", (string)null);
+                            b1.ToTable("Employees");
 
                             b1.WithOwner()
                                 .HasForeignKey("EmployeeId");
@@ -429,7 +432,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.Entities.WorkingTimeRecordAggregatedHistory.SalaryInformation#BOMA.WTR.Domain.AggregateModels.Entities.EmployeeSalaryAggregatedHistory", "SalaryInformation", b1 =>
+                    b.OwnsOne("BOMA.WTR.Domain.AggregateModels.Entities.EmployeeSalaryAggregatedHistory", "SalaryInformation", b1 =>
                         {
                             b1.Property<int>("WorkingTimeRecordAggregatedHistoryId")
                                 .HasColumnType("int");
@@ -514,7 +517,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
 
                             b1.HasKey("WorkingTimeRecordAggregatedHistoryId");
 
-                            b1.ToTable("WorkingTimeRecordAggregatedHistories", (string)null);
+                            b1.ToTable("WorkingTimeRecordAggregatedHistories");
 
                             b1.WithOwner()
                                 .HasForeignKey("WorkingTimeRecordAggregatedHistoryId");

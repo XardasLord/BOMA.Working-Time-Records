@@ -9,6 +9,7 @@ export const RoutePaths = {
 	Groups: 'groups',
 	WorkingTimeRecords: 'working-time-records',
 	Users: 'users',
+	Settings: 'settings',
 	Auth: 'auth',
 	Register: 'auth/register',
 	Login: 'auth/login'
@@ -30,6 +31,14 @@ const routes: Routes = [
 			{
 				path: RoutePaths.Users,
 				loadChildren: () => import('../../users/users.module').then((m) => m.UsersModule),
+				canActivate: [HasRoleGuard],
+				data: {
+					roles: [Role.Admin]
+				}
+			},
+			{
+				path: RoutePaths.Settings,
+				loadComponent: () => import('../../settings/components/settings/settings.component').then((c) => c.SettingsComponent),
 				canActivate: [HasRoleGuard],
 				data: {
 					roles: [Role.Admin]

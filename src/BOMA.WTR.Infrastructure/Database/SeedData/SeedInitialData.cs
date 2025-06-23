@@ -1,4 +1,5 @@
 ﻿using BOMA.WTR.Domain.AggregateModels.Entities;
+using BOMA.WTR.Domain.AggregateModels.Setting;
 using Microsoft.EntityFrameworkCore;
 
 namespace BOMA.WTR.Infrastructure.Database.SeedData;
@@ -15,5 +16,17 @@ public class SeedInitialData
         modelBuilder.Entity<Department>().HasData(Department.Create(6, "BOMA"));
         modelBuilder.Entity<Department>().HasData(Department.Create(7, "Zlecenia"));
         modelBuilder.Entity<Department>().HasData(Department.Create(8, "Agencja"));
+
+        var setting = new Setting(
+            "MinimumWage",
+            "4666",
+            "int",
+            "Minimalne wynagrodzenie pracownika."
+        )
+        {
+            Id = 1
+        };
+
+        modelBuilder.Entity<Setting>().HasData(setting);
     }
 }

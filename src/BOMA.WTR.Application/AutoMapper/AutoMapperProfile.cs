@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using BOMA.WTR.Application.UseCases.Employees.Queries.GetAll;
+using BOMA.WTR.Application.UseCases.Settings.Queries.GetAll;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Domain.AggregateModels;
 using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.Setting;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 
 namespace BOMA.WTR.Application.AutoMapper;
@@ -43,5 +45,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.NightWorkTimePeriodNormalized, opt => opt.MapFrom(src => calculationDomainService.GetNightWorkTimePeriod(src.StartNormalizedAt, src.FinishNormalizedAt)));
 
         CreateMap<EmployeeSalaryAggregatedHistory, EmployeeSalaryViewModel>();
+
+        CreateMap<Setting, SettingViewModel>();
     }
 }
