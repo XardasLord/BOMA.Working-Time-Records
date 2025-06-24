@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RemoteServiceBase } from '../../shared/services/remote.service.base';
-import { SettingsModel } from '../models/settings.model';
+import { SettingModelRequest, SettingsModel } from '../models/settings.model';
 
 @Injectable()
 export class SettingsService extends RemoteServiceBase {
@@ -14,7 +14,7 @@ export class SettingsService extends RemoteServiceBase {
 		return this.httpClient.get<SettingsModel[]>(`${this.apiEndpoint}/settings`);
 	}
 
-	public saveMinimumWage(minimumWage: number): Observable<void> {
-		return this.httpClient.put<void>(`${this.apiEndpoint}/settings/minimum-wage`, { minimumWage });
+	public updateSettings(settings: SettingModelRequest[]): Observable<void> {
+		return this.httpClient.patch<void>(`${this.apiEndpoint}/settings`, { settings });
 	}
 }

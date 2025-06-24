@@ -1,4 +1,4 @@
-﻿using BOMA.WTR.Application.UseCases.Settings.Commands.Edit;
+﻿using BOMA.WTR.Application.UseCases.Settings.Commands.Update;
 using BOMA.WTR.Application.UseCases.Settings.Queries.GetAll;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +12,8 @@ public class SettingsController : ApiBaseController
         return Ok(await Mediator.Send(new GetAllSettingsQuery()));
     }
 
-    [HttpPut]
-    [Route("minimum-wage")]
-    public async Task<IActionResult> EditMinimumWage(int id, EditMinimumWageCommand command)
+    [HttpPatch]
+    public async Task<IActionResult> UpdateSettings(UpdateCommand command)
     {
         await Mediator.Send(command);
 

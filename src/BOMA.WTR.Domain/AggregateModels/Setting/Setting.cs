@@ -11,7 +11,7 @@ public class Setting : Entity<int>, IAggregateRoot
     public string Value { get; private set; }
     public string Type { get; private set; }
     public string Description { get; private set; }
-    public DateTime LastModified { get; private set; }
+    public DateTimeOffset LastModified { get; private set; }
     
     private Setting() { }
 

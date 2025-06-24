@@ -11,6 +11,7 @@ import { SettingsService } from '../services/settings.service';
 import { Settings } from './settings.action';
 import GetAll = Settings.GetAll;
 import SaveMinimumWage = Settings.SaveMinimumWage;
+import UpdateSettings = Settings.UpdateSettings;
 
 export interface SettingsStateModel {
 	settings: SettingsModel[];
@@ -53,14 +54,14 @@ export class SettingsState {
 		);
 	}
 
-	@Action(SaveMinimumWage)
-	saveMinimumWage(ctx: StateContext<SettingsStateModel>, action: SaveMinimumWage): Observable<void> {
-		return this.settingsService.saveMinimumWage(action.minimumWage).pipe(
+	@Action(UpdateSettings)
+	updateSettings(ctx: StateContext<SettingsStateModel>, action: UpdateSettings): Observable<void> {
+		return this.settingsService.updateSettings(action.settings).pipe(
 			tap((_) => {
-				this.toastService.success(`Minimalna płaca została zaktualizowana na ${action.minimumWage} PLN`, 'Sukces');
+				this.toastService.success(`Ustawienia zostały zapisane`, 'Sukces');
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.toastService.error(`Wystąpił błąd przy aktualizacji minimalnej płacy - ${e.message}`, 'Błąd');
+				this.toastService.error(`Wystąpił błąd przy aktualizacji ustawień - ${e.message}`, 'Błąd');
 				return throwError(() => e);
 			})
 		);

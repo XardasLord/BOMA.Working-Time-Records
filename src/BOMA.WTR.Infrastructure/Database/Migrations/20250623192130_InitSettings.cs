@@ -31,7 +31,7 @@ namespace BOMA.WTR.Infrastructure.Database.Migrations
             migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "Id", "Description", "Key", "LastModified", "Type", "Value" },
-                values: new object[] { 1, "Minimalne wynagrodzenie pracownika.", "MinimumWage", new DateTime(2025, 6, 23, 19, 21, 29, 528, DateTimeKind.Utc).AddTicks(8782), "int", "4666" });
+                values: new object[] { 1, "Minimalne wynagrodzenie pracownika [PLN]", "MinimumWage", new DateTime(2025, 6, 23, 19, 21, 29, 528, DateTimeKind.Utc).AddTicks(8782), "int", "4666" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Settings_Key",

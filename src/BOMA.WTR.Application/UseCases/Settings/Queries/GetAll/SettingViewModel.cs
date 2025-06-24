@@ -7,5 +7,5 @@ public class SettingViewModel
     public string Value { get; set; }
     public string Type { get; set; }
     public string Description { get; set; }
-    public DateTime LastModified { get; set; }
+    public DateTimeOffset LastModified { get; set; }
 }
