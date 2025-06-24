@@ -20,7 +20,7 @@ public class GetRecalculatedCurrentMonthSalaryTests
     private decimal _minSalaryCompensationAmount;
     private List<WorkingTimeRecordAggregatedViewModel> _records;
     
-    private EmployeeSalaryAggregatedHistory Act()
+    private Task<EmployeeSalaryAggregatedHistory> Act()
         => _sut.GetRecalculatedCurrentMonthSalary(_baseSalary, _percentageBonusSalary, _holidaySalary, _sicknessSalary, _additionalSalary, _minSalaryCompensationAmount, _records);
 
     public GetRecalculatedCurrentMonthSalaryTests()
@@ -40,7 +40,7 @@ public class GetRecalculatedCurrentMonthSalaryTests
     }
 
     [Fact]
-    public void CalculateProperSalary()
+    public async Task CalculateProperSalary()
     {
         // Arrange
         _baseSalary = 20m;
@@ -65,7 +65,7 @@ public class GetRecalculatedCurrentMonthSalaryTests
         ];
 
         // Act
-        var result = Act();
+        var result = await Act();
 
         // Assert
         result.BaseSalary.Should().Be(_baseSalary);

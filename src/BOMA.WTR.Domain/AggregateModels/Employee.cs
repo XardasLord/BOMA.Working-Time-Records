@@ -65,7 +65,7 @@ public class Employee : Entity<int>, IAggregateRoot
         _departmentId = departmentId;
     }
     
-    public void UpdateSummaryData(
+    public async Task UpdateSummaryData(
         int year, int month,
         decimal baseSalary, decimal percentageBonusSalary,
         Money holidaySalary, Money sicknessSalary, Money additionalSalary, Money minSalaryCompensationAmount,
@@ -76,7 +76,7 @@ public class Employee : Entity<int>, IAggregateRoot
             .Where(x => x.Date.Year == year)
             .ToList();
         
-        var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
+        var recalculatedRecord = await salaryCalculationDomainService.RecalculateHistoricalSalary(
             baseSalary, percentageBonusSalary, 
             holidaySalary.Amount, sicknessSalary.Amount, additionalSalary.Amount,  minSalaryCompensationAmount.Amount,
             recordsToUpdate);
@@ -123,7 +123,7 @@ public class Employee : Entity<int>, IAggregateRoot
         });
     }
 
-    public void UpdateDetailsData(
+    public async Task UpdateDetailsData(
         int year, 
         int month, 
         IDictionary<int, double?> dayHoursDictionary,
@@ -164,7 +164,7 @@ public class Employee : Entity<int>, IAggregateRoot
         });
 
         var first = recordsToUpdate.First();
-        var recalculatedRecord = salaryCalculationDomainService.RecalculateHistoricalSalary(
+        var recalculatedRecord = await salaryCalculationDomainService.RecalculateHistoricalSalary(
             first.SalaryInformation.BaseSalary, first.SalaryInformation.PercentageBonusSalary, 
             first.SalaryInformation.HolidaySalary, first.SalaryInformation.SicknessSalary, first.SalaryInformation.AdditionalSalary, first.SalaryInformation.MinSalaryCompensationAmount, 
             recordsToUpdate);

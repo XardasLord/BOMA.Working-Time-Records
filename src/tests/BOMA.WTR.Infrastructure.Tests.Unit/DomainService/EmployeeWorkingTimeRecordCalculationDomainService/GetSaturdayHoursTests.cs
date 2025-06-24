@@ -1,7 +1,8 @@
-﻿using BOMA.WTR.Application.Salary;
+﻿using BOMA.WTR.Domain.AggregateModels.Setting;
+using BOMA.WTR.Domain.SharedKernel;
 using BOMA.WTR.Tests.Base;
 using FluentAssertions;
-using Microsoft.Extensions.Options;
+using Moq;
 using Xunit;
 
 namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRecordCalculationDomainService;
@@ -12,11 +13,11 @@ public class GetSaturdayHoursTests : TestBase
     private DateTime _startWorkDate;
     private DateTime _endWorkDate;
     private double _workedHours;
-    private readonly IOptions<SalaryConfiguration> _options = new OptionsWrapper<SalaryConfiguration>(new SalaryConfiguration { MinSalary = 4242 });
+    private readonly Mock<IAggregateReadRepository<Setting>> _settingRepository = new();
 
     public GetSaturdayHoursTests()
     {
-        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_options);
+        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_settingRepository.Object);
     }
 
     private double Act() => _sut.GetSaturdayHours(_startWorkDate, _endWorkDate, _workedHours);

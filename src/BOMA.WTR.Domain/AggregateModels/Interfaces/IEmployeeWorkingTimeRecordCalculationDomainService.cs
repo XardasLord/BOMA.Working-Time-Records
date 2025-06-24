@@ -13,7 +13,7 @@ public interface IEmployeeWorkingTimeRecordCalculationDomainService
     public double GetHundredPercentageBonusHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded);
     public double GetSaturdayHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized, double workedHoursRounded);
     public double GetNightHours(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized);
-    public double GetNightFactorBonus(int year, int month);
+    public Task<double> GetNightFactorBonus(int year, int month);
     public WorkTimePeriod? GetDayWorkTimePeriod(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized);
     public WorkTimePeriod? GetNightWorkTimePeriod(DateTime startWorkDateNormalized, DateTime endWorkDateNormalized);
 }

@@ -1,22 +1,16 @@
-﻿using BOMA.WTR.Application.Salary;
-using BOMA.WTR.Domain.AggregateModels.Entities;
+﻿using BOMA.WTR.Domain.AggregateModels.Entities;
 using BOMA.WTR.Domain.AggregateModels.Interfaces;
+using BOMA.WTR.Domain.AggregateModels.Setting;
+using BOMA.WTR.Domain.AggregateModels.Setting.Specifications;
 using BOMA.WTR.Domain.AggregateModels.ValueObjects;
 using BOMA.WTR.Domain.Extensions;
 using BOMA.WTR.Domain.SharedKernel;
-using Microsoft.Extensions.Options;
 
 namespace BOMA.WTR.Infrastructure.DomainService;
 
-public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkingTimeRecordCalculationDomainService
+public class EmployeeWorkingTimeRecordCalculationDomainService(IAggregateReadRepository<Setting> settingsRepository)
+    : IEmployeeWorkingTimeRecordCalculationDomainService
 {
-    private readonly SalaryConfiguration _salaryOptions;
-
-    public EmployeeWorkingTimeRecordCalculationDomainService(IOptions<SalaryConfiguration> options)
-    {
-        _salaryOptions = options.Value;
-    }
-    
     public List<WorkingTimeRecordAggregatedViewModel> CalculateAggregatedWorkingTimeRecords(IEnumerable<WorkingTimeRecord> workingTimeRecords)
     {
         var results = new List<WorkingTimeRecordAggregatedViewModel>();
@@ -378,10 +372,13 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
         return 0;
     }
 
-    public double GetNightFactorBonus(int year, int month)
+    public async Task<double> GetNightFactorBonus(int year, int month)
     {
+        var minimumWageSetting = await settingsRepository.SingleOrDefaultAsync(new SettingByKeySpec("MinimumWage"));
+        var minWage = int.Parse(minimumWageSetting!.Value);
+        
         var workedHoursInMonth = new DateTime(year, month, 1).WorkingHoursInMonthExcludingBankHolidays();
-        var nightFactor = _salaryOptions.MinSalary / workedHoursInMonth * 0.2;
+        var nightFactor = minWage / workedHoursInMonth * 0.2;
 
         return Math.Round(nightFactor, 2);
     }
@@ -497,7 +494,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
 
     
     // TODO: Move to separate domain service
-    public void RecalculateSalary(List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth)
+    public async Task RecalculateSalary(List<WorkingTimeRecordAggregatedHistory> aggregatedHistoryRecordsForMonth)
     {
         var baseSalary = aggregatedHistoryRecordsForMonth.First().SalaryInformation.BaseSalary;
         var percentageBonusSalary = aggregatedHistoryRecordsForMonth.First().SalaryInformation.PercentageBonusSalary;
@@ -524,9 +521,9 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
             historyRecord.SalaryInformation.GrossSumBaseSaturdaySalary = CalculateGrossSumBaseSaturdaySalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
             
             historyRecord.SalaryInformation.BonusSumSalary = CalculateBonusSumSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.NightBaseSalary = CalculateNightSumSalary(aggregatedHistoryRecordsForMonth);
+            historyRecord.SalaryInformation.NightBaseSalary = await CalculateNightSumSalary(aggregatedHistoryRecordsForMonth);
             historyRecord.SalaryInformation.NightWorkedHours = CalculateAllNightWorkedHours(aggregatedHistoryRecordsForMonth);
-            historyRecord.SalaryInformation.FinalSumSalary = CalculateFinalSumSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
+            historyRecord.SalaryInformation.FinalSumSalary = await CalculateFinalSumSalary(baseSalary, percentageBonusSalary, aggregatedHistoryRecordsForMonth);
         }
     }
 
@@ -601,20 +598,20 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                CalculateGrossBaseSaturdaySalary(baseSalary, records);
     }
 
-    private decimal CalculateNightSumSalary(IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private async Task<decimal> CalculateNightSumSalary(IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
     {
         var period = records.FirstOrDefault();
         if (period is null)
             return 0;
         
-        var nightFactor = GetNightFactorBonus(period.Date.Year, period.Date.Month);
+        var nightFactor = await GetNightFactorBonus(period.Date.Year, period.Date.Month);
         var nightWorkedHours = (decimal)CalculateAllNightWorkedHours(records);
         var nightSumSalary =  (decimal)nightFactor * nightWorkedHours;
 
         return Math.Round(nightSumSalary, 2);
     }
 
-    private decimal CalculateFinalSumSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
+    private async Task<decimal> CalculateFinalSumSalary(decimal baseSalary, decimal bonusPercentageSalary, IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> records)
     {
         var firstRecord = records.First();
         
@@ -622,7 +619,7 @@ public class EmployeeWorkingTimeRecordCalculationDomainService : IEmployeeWorkin
                CalculateGrossSumBase50PercentageSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBase100PercentageSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBaseSaturdaySalary(baseSalary, bonusPercentageSalary, records) +
-               CalculateNightSumSalary(records) +
+               await CalculateNightSumSalary(records) +
                firstRecord.SalaryInformation.HolidaySalary +
                firstRecord.SalaryInformation.SicknessSalary +
                firstRecord.SalaryInformation.AdditionalSalary;

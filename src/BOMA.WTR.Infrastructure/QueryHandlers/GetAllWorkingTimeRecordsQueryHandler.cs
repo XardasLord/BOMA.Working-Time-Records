@@ -88,16 +88,18 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
         // Clear all records without any entry
         result = result.Where(x => x.WorkingTimeRecordsAggregated.Any()).ToList();
         
-        result.ForEach(x =>
+        foreach (var x in result)
         {
-            var salary = _salaryCalculationDomainService.GetRecalculatedCurrentMonthSalary(
+            var salary = await _salaryCalculationDomainService.GetRecalculatedCurrentMonthSalary(
                 x.Employee.BaseSalary,
                 x.Employee.SalaryBonusPercentage, 
                 0, 0, 0, 0,
-                x.WorkingTimeRecordsAggregated.Where(record => record.Date.Month == query.QueryModel.Month).ToList());
-            
+                x.WorkingTimeRecordsAggregated
+                    .Where(record => record.Date.Month == query.QueryModel.Month)
+                    .ToList());
+
             x.SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(salary);
-        });
+        }
         
         result.ForEach(entry =>
         {

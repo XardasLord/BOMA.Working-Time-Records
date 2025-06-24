@@ -1,9 +1,9 @@
-﻿using BOMA.WTR.Application.Salary;
-using BOMA.WTR.Domain.AggregateModels.Entities;
+﻿using BOMA.WTR.Domain.AggregateModels.Entities;
+using BOMA.WTR.Domain.AggregateModels.Setting;
 using BOMA.WTR.Domain.SharedKernel;
 using BOMA.WTR.Tests.Base;
 using FluentAssertions;
-using Microsoft.Extensions.Options;
+using Moq;
 using Xunit;
 
 namespace BOMA.WTR.Infrastructure.Tests.Unit.DomainService.EmployeeWorkingTimeRecordCalculationDomainService;
@@ -12,11 +12,11 @@ public class CalculateAggregatedWorkingTimeRecords : TestBase
 {
     private readonly Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService _sut;
     private IList<WorkingTimeRecord> _workingTimeRecords;
-    private readonly IOptions<SalaryConfiguration> _options = new OptionsWrapper<SalaryConfiguration>(new SalaryConfiguration { MinSalary = 4242 });
+    private readonly Mock<IAggregateReadRepository<Setting>> _settingRepository = new();
 
     public CalculateAggregatedWorkingTimeRecords()
     {
-        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_options);
+        _sut = new Infrastructure.DomainService.EmployeeWorkingTimeRecordCalculationDomainService(_settingRepository.Object);
         _workingTimeRecords = new List<WorkingTimeRecord>();
     }
 

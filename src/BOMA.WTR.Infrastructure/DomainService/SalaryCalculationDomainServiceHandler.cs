@@ -17,7 +17,7 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         _employeeWorkingTimeRecordCalculationDomainService = employeeWorkingTimeRecordCalculationDomainService;
     }
     
-    public EmployeeSalaryAggregatedHistory RecalculateHistoricalSalary(
+    public async Task<EmployeeSalaryAggregatedHistory> RecalculateHistoricalSalary(
         decimal baseSalary,
         decimal percentageBonusSalary,
         decimal holidaySalary,
@@ -28,10 +28,10 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
     {
         var records = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(aggregatedHistoryRecordsForMonth);
         
-        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount, records);
+        return await RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount, records);
     }
 
-    public EmployeeSalaryAggregatedHistory GetRecalculatedCurrentMonthSalary(
+    public async Task<EmployeeSalaryAggregatedHistory> GetRecalculatedCurrentMonthSalary(
         decimal baseSalary,
         decimal percentageBonusSalary,
         decimal holidaySalary,
@@ -40,10 +40,10 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
         decimal minSalaryCompensationAmount,
         List<WorkingTimeRecordAggregatedViewModel> aggregatedCurrentRecordsForMonth)
     {
-        return RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount, aggregatedCurrentRecordsForMonth);
+        return await RecalculateRecord(baseSalary, percentageBonusSalary, holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount, aggregatedCurrentRecordsForMonth);
     }
 
-    private EmployeeSalaryAggregatedHistory RecalculateRecord(
+    private async Task<EmployeeSalaryAggregatedHistory> RecalculateRecord(
         decimal baseSalary,
         decimal percentageBonusSalary,
         decimal holidaySalary,
@@ -72,14 +72,14 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
             GrossSumBase100PercentageSalary = CalculateGrossSumBase100PercentageSalary(baseSalary, percentageBonusSalary, recordsForMonth),
             GrossSumBaseSaturdaySalary = CalculateGrossSumBaseSaturdaySalary(baseSalary, percentageBonusSalary, recordsForMonth),
             BonusSumSalary = CalculateBonusSumSalary(baseSalary, percentageBonusSalary, recordsForMonth),
-            NightBaseSalary = CalculateNightSumSalary(recordsForMonth),
+            NightBaseSalary = await CalculateNightSumSalary(recordsForMonth),
             NightWorkedHours = CalculateAllNightWorkedHours(recordsForMonth),
             HolidaySalary = holidaySalary,
             SicknessSalary = sicknessSalary,
             AdditionalSalary = additionalSalary,
             MinSalaryCompensationFactor = 0,
             MinSalaryCompensationAmount = minSalaryCompensationAmount,
-            FinalSumSalary = CalculateFinalSumSalary(
+            FinalSumSalary = await CalculateFinalSumSalary(
                 baseSalary, percentageBonusSalary, 
                 holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount,
                 recordsForMonth)
@@ -157,20 +157,20 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
                CalculateGrossBaseSaturdaySalary(baseSalary, records);
     }
 
-    private decimal CalculateNightSumSalary(IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
+    private async Task<decimal> CalculateNightSumSalary(IReadOnlyCollection<WorkingTimeRecordAggregatedViewModel> records)
     {
         var period = records.FirstOrDefault();
         if (period is null)
             return 0;
         
-        var nightFactor = _employeeWorkingTimeRecordCalculationDomainService.GetNightFactorBonus(period.Date.Year, period.Date.Month);
+        var nightFactor = await _employeeWorkingTimeRecordCalculationDomainService.GetNightFactorBonus(period.Date.Year, period.Date.Month);
         var nightWorkedHours = (decimal)CalculateAllNightWorkedHours(records);
         var nightSumSalary =  (decimal)nightFactor * nightWorkedHours;
 
         return Math.Round(nightSumSalary, 2);
     }
 
-    private decimal CalculateFinalSumSalary(
+    private async Task<decimal> CalculateFinalSumSalary(
         decimal baseSalary,
         decimal bonusPercentageSalary,
         decimal holidaySalary, decimal sicknessSalary, decimal additionalSalary, decimal minSalaryCompensationAmount,
@@ -180,7 +180,7 @@ public class SalaryCalculationDomainServiceHandler : ISalaryCalculationDomainSer
                CalculateGrossSumBase50PercentageSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBase100PercentageSalary(baseSalary, bonusPercentageSalary, records) +
                CalculateGrossSumBaseSaturdaySalary(baseSalary, bonusPercentageSalary, records) +
-               CalculateNightSumSalary(records) +
+               await CalculateNightSumSalary(records) +
                holidaySalary +
                sicknessSalary +
                additionalSalary +
