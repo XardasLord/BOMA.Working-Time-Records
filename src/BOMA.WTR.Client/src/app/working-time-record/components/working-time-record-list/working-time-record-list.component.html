@@ -1,37 +1,11 @@
 <app-working-time-record-filters></app-working-time-record-filters>
 
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
-	<mat-tab label="Szczegóły" *ngIf="(userRole$ | async) === Role.Admin">
-		<ng-template matTabContent>
-			<app-working-time-record-detailed-table />
-		</ng-template>
-	</mat-tab>
-	<mat-tab label="Podsumowanie" *ngIf="(userRole$ | async) === Role.Admin">
-		<ng-template matTabContent>
-			<app-working-time-record-summary-table />
-		</ng-template>
-	</mat-tab>
-	<mat-tab label="Raport godzinowy">
-		<ng-template matTabContent>
-			<app-working-time-record-report-hours-table />
-		</ng-template>
-	</mat-tab>
-	<mat-tab label="Raport godzinowy - podsumowanie">
-		<ng-template matTabContent>
-			<app-working-time-record-report-hours-summary-table />
-		</ng-template>
-	</mat-tab>
-	<mat-tab
-		label="Raport nieobecności"
-		*ngIf="
-			(userRole$ | async) === Role.Admin ||
-			(userRole$ | async) === Role.User ||
-			(userRole$ | async) === Role.UserWithSalaryView ||
-			(userRole$ | async) === Role.UserWithSalaryEdit
-		"
-	>
-		<ng-template matTabContent>
-			<app-working-time-record-report-absents-table />
-		</ng-template>
-	</mat-tab>
+	<ng-container *ngIf="filteredTabs$ | async as tabs">
+		<mat-tab *ngFor="let tab of tabs" [label]="tab.label">
+			<ng-template matTabContent>
+				<ng-container *ngComponentOutlet="tab.component"></ng-container>
+			</ng-template>
+		</mat-tab>
+	</ng-container>
 </mat-tab-group>
