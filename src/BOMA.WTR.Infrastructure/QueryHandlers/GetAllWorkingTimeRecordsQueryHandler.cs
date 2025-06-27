@@ -43,35 +43,39 @@ public class GetAllWorkingTimeRecordsQueryHandler : IQueryHandler<GetAllWorkingT
             return historyEntries;
         }
         
-        var nextMonth = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Month;
-        var nextMonthYear = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1).AddMonths(1).Year;
+        var monthStart = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1);
+        var monthEnd = monthStart.AddMonths(1);
+        var nextMonthFirstDay = monthEnd;
+        var includeEnd = nextMonthFirstDay.AddDays(1); // tylko 1. dzień kolejnego miesiąca
 
         var databaseQuery = _dbContext.Employees
             .Include(x => x.Department)
             .Include(x => x.WorkingTimeRecords
-                .Where(w => (w.OccuredAt.Year == query.QueryModel.Year && w.OccuredAt.Month == query.QueryModel.Month) ||
-                            w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1)) // We need to include also the first day of new month for last day of month calculations
+                .Where(w => w.OccuredAt >= monthStart && w.OccuredAt < includeEnd)) // miesiąc + 1 dzień
             .Where(x => x.IsActive)
-            .Where(x => x.WorkingTimeRecords
-                .Any(w => (w.OccuredAt.Year == query.QueryModel.Year && w.OccuredAt.Month == query.QueryModel.Month) ||
-                          w.OccuredAt.Year == nextMonthYear && w.OccuredAt.Month == nextMonth && w.OccuredAt.Day == 1));
-
+            .Where(x => x.WorkingTimeRecords.Any(w => w.OccuredAt >= monthStart && w.OccuredAt < includeEnd));
 
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
-            databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
+        {
+            databaseQuery = databaseQuery.Where(e =>
+                e.Name.FirstName.Contains(query.QueryModel.SearchText) ||
+                e.Name.LastName.Contains(query.QueryModel.SearchText));
+        }
 
         if (query.QueryModel.DepartmentId is > 0)
-            databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
-
-        if (query.QueryModel.DepartmentId is > 0)
-            databaseQuery = databaseQuery.Where(x => query.QueryModel.DepartmentId == null || x.DepartmentId == query.QueryModel.DepartmentId);
+        {
+            databaseQuery = databaseQuery.Where(x => x.DepartmentId == query.QueryModel.DepartmentId);
+        }
 
         if (query.QueryModel.ShiftId is > 0)
-            databaseQuery = databaseQuery.Where(x => x.JobInformation.ShiftType == (ShiftType)query.QueryModel.ShiftId);
+        {
+            databaseQuery = databaseQuery.Where(x => x.JobInformation.ShiftType == (ShiftType)query.QueryModel.ShiftId!);
+        }
 
         var employeesWithWorkingTimeRecords = await databaseQuery
             .OrderBy(x => x.Name.LastName)
             .ToListAsync(cancellationToken);
+
 
         // We delete all records when there is no records for querying period of time
         foreach (var employee in employeesWithWorkingTimeRecords.Where(employee => employee.WorkingTimeRecords.All(x => x.OccuredAt.Month != query.QueryModel.Month)))

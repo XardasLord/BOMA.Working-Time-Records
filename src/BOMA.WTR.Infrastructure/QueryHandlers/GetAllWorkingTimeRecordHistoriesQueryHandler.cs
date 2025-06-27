@@ -23,30 +23,27 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
     
     public async Task<IEnumerable<EmployeeWorkingTimeRecordViewModel>> Handle(GetAllWorkingTimeRecordHistoriesQuery query, CancellationToken cancellationToken)
     {
+        var monthStart = new DateTime(query.QueryModel.Year, query.QueryModel.Month, 1);
+        var monthEnd = monthStart.AddMonths(1);
+
         var databaseQuery = _dbContext.Employees
             .Include(x => x.Department)
             .Include(x => x.WorkingTimeRecordAggregatedHistories
-                .Where(w => w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month)) // We need to include also the first day of new month for last day of month calculations
-            .Where(x => x.WorkingTimeRecordAggregatedHistories
-                .Any(w => w.Date.Year == query.QueryModel.Year && w.Date.Month == query.QueryModel.Month))
-            .Where(x => x.WorkingTimeRecordAggregatedHistories
-                .Any(w => w.IsActive));
-        
+                .Where(w => w.Date >= monthStart && w.Date < monthEnd))
+            .Where(x => x.WorkingTimeRecordAggregatedHistories.Any(w =>
+                w.Date >= monthStart && w.Date < monthEnd &&
+                w.IsActive &&
+                (query.QueryModel.DepartmentId == null || query.QueryModel.DepartmentId <= 0 || w.DepartmentId == query.QueryModel.DepartmentId) &&
+                (query.QueryModel.ShiftId == null || query.QueryModel.ShiftId <= 0 || w.ShiftType == (ShiftType)query.QueryModel.ShiftId!)
+            ));
+
         if (!string.IsNullOrWhiteSpace(query.QueryModel.SearchText))
         {
-            databaseQuery = databaseQuery.Where(e => e.Name.FirstName.Contains(query.QueryModel.SearchText) || e.Name.LastName.Contains(query.QueryModel.SearchText));
+            databaseQuery = databaseQuery.Where(e =>
+                e.Name.FirstName.Contains(query.QueryModel.SearchText) ||
+                e.Name.LastName.Contains(query.QueryModel.SearchText));
         }
-
-        if (query.QueryModel.DepartmentId is > 0)
-        {
-            databaseQuery = databaseQuery.Where(x => x.WorkingTimeRecordAggregatedHistories.Any(w => w.DepartmentId == query.QueryModel.DepartmentId));
-        }
-
-        if (query.QueryModel.ShiftId is > 0)
-        {
-            databaseQuery = databaseQuery.Where(x => x.WorkingTimeRecordAggregatedHistories.Any(w => w.ShiftType == (ShiftType)query.QueryModel.DepartmentId!));
-        }
-
+        
         var employeesWithWorkingTimeRecords = await databaseQuery
             .OrderBy(x => x.Name.LastName)
             .ToListAsync(cancellationToken);
@@ -84,13 +81,6 @@ public class GetAllWorkingTimeRecordHistoriesQueryHandler : IQueryHandler<GetAll
                 SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(workingTimeRecord?.SalaryInformation)
             };
         }).ToList();
-
-        // var result = employeesWithWorkingTimeRecords.Select(employee => new EmployeeWorkingTimeRecordViewModel
-        // {
-        //     Employee = _mapper.Map<EmployeeViewModel>(employee), // TODO: BOMA-13 tutaj dla tego obiektu trzeba zmienić wartości IsActive, DepartmentId oraz ShiftId. A te wartości możemy wziąć z employee.WorkingTimeRecordAggregatedHistories.First().XYZ
-        //     WorkingTimeRecordsAggregated = _mapper.Map<List<WorkingTimeRecordAggregatedViewModel>>(employee.WorkingTimeRecordAggregatedHistories),
-        //     SalaryInformation = _mapper.Map<EmployeeSalaryViewModel>(employee.WorkingTimeRecordAggregatedHistories.First().SalaryInformation) // TODO: BOMA-13: Tak jest zwracane wynagrodzenie historyczne
-        // }).ToList();
 
         // Order by date
         result.ForEach(entry =>

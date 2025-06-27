@@ -21,7 +21,7 @@ public class SeedInitialData
             "MinimumWage",
             "4666",
             "int",
-            "Minimalne wynagrodzenie pracownika."
+            "Minimalne wynagrodzenie pracownika [PLN]"
         )
         {
             Id = 1
