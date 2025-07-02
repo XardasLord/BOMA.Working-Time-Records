@@ -32,7 +32,7 @@ public class EditWorkingTimeRecordsSummaryDataCommandHandler : ICommandHandler<E
         var additionalSalary = new Money(command.AdditionalSalary);
         var minSalaryCompensationAmount = new Money(command.MinSalaryCompensationAmount);
         
-        employee.UpdateSummaryData(
+        await employee.UpdateSummaryData(
             command.Year, command.Month,
             command.BaseSalary, command.PercentageBonusSalary,
             holidaySalary, sicknessSalary, additionalSalary, minSalaryCompensationAmount,

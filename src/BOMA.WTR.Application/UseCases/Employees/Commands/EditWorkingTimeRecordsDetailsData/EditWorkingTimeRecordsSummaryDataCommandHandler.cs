@@ -29,7 +29,7 @@ public class EditWorkingTimeRecordsDetailsDataCommandHandler : ICommandHandler<E
         var employee = await _employeeRepository.SingleOrDefaultAsync(spec, cancellationToken)
                        ?? throw new NotFoundException($"Employee with ID = {command.EmployeeId} was not found");
 
-        employee.UpdateDetailsData(command.Year, command.Month, command.DayHours, command.SaturdayHours, command.NightHours, _calculationDomainService, _salaryCalculationDomainService);
+        await employee.UpdateDetailsData(command.Year, command.Month, command.DayHours, command.SaturdayHours, command.NightHours, _calculationDomainService, _salaryCalculationDomainService);
 
         await _employeeRepository.SaveChangesAsync(cancellationToken);
     }
