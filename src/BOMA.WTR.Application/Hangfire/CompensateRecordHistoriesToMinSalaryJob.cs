@@ -1,6 +1,8 @@
 ﻿using BOMA.WTR.Application.Exceptions;
 using BOMA.WTR.Application.Salary;
 using BOMA.WTR.Domain.AggregateModels;
+using BOMA.WTR.Domain.AggregateModels.Setting;
+using BOMA.WTR.Domain.AggregateModels.Setting.Specifications;
 using BOMA.WTR.Domain.AggregateModels.Specifications;
 using BOMA.WTR.Domain.Extensions;
 using BOMA.WTR.Domain.SharedKernel;
@@ -12,7 +14,7 @@ namespace BOMA.WTR.Application.Hangfire;
 
 public class CompensateRecordHistoriesToMinSalaryJob(
     IAggregateRepository<Employee> employeeRepository,
-    IOptions<SalaryConfiguration> salaryConfigurationOptions)
+    IAggregateReadRepository<Setting> settingsRepository)
 {
     public async Task Execute(PerformContext? context, CancellationToken cancellationToken)
     {
@@ -40,10 +42,14 @@ public class CompensateRecordHistoriesToMinSalaryJob(
         var employeeWithLowestSalary = await employeeRepository.FirstOrDefaultAsync(lowestSalaryEmployeeSpec, cancellationToken) 
                                        ?? throw new NotFoundException("No employee found for the given date with lowest salary");
         
+        // Get min wage (salary)
+        var minimumWageSetting = await settingsRepository.SingleOrDefaultAsync(new SettingByKeySpec("MinimumWage"), cancellationToken);
+        var minWage = int.Parse(minimumWageSetting!.Value);
+        
         // Get the employee with the lowest salary
         var lowestSalary = employeeWithLowestSalary.Salary.Amount;
         var monthlySalary = lowestSalary * workingHoursInMonth;
-        var differenceToMinSalary = salaryConfigurationOptions.Value.MinSalary - monthlySalary;
+        var differenceToMinSalary = minWage - monthlySalary;
         
         
         context.SetTextColor(ConsoleTextColor.Green);
