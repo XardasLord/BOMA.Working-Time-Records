@@ -8,6 +8,24 @@ export namespace Employee {
 		static readonly type = `${prefix} ${GetAll.name}`;
 	}
 
+	export class ApplyFilter {
+		constructor(public searchPhrase: string) {}
+
+		static readonly type = `${prefix} ${ApplyFilter.name}`;
+	}
+
+	export class ChangeGroup {
+		constructor(public groupId: number) {}
+
+		static readonly type = `${prefix} ${ChangeGroup.name}`;
+	}
+
+	export class ChangeShift {
+		constructor(public shiftId: number) {}
+
+		static readonly type = `${prefix} ${ChangeShift.name}`;
+	}
+
 	export class Add {
 		constructor(public employee: AddNewEmployeeFormModel) {}
 
@@ -15,7 +33,10 @@ export namespace Employee {
 	}
 
 	export class Edit {
-		constructor(public employeeId: number, public employee: EditEmployeeFormModel) {}
+		constructor(
+			public employeeId: number,
+			public employee: EditEmployeeFormModel
+		) {}
 
 		static readonly type = `${prefix} ${Edit.name}`;
 	}

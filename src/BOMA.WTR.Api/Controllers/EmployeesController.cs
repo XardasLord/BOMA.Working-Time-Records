@@ -12,9 +12,9 @@ namespace BOMA.WTR.Api.Controllers;
 public class EmployeesController : ApiBaseController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetRecordsQueryModel queryModel)
     {
-        return Ok(await Mediator.Send(new GetAllEmployeesQuery()));
+        return Ok(await Mediator.Send(new GetAllEmployeesQuery(queryModel)));
     }
     
     [HttpPost]

@@ -20,9 +20,14 @@ import {
 	ConfirmationDialogComponent,
 	ConfirmationDialogModel
 } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { DefaultQueryModel, QueryModel } from '../models/query.model';
+import ApplyFilter = Employee.ApplyFilter;
+import ChangeGroup = Employee.ChangeGroup;
+import ChangeShift = Employee.ChangeShift;
 
 export interface EmployeeStateModel {
 	employees: EmployeeModel[];
+	query: QueryModel;
 	addNewEmployeeForm: FormStateModel<AddNewEmployeeFormModel>;
 	editEmployeeForm: FormStateModel<EditEmployeeFormModel>;
 }
@@ -32,6 +37,7 @@ const EMPLOYEE_STATE_TOKEN = new StateToken<EmployeeStateModel>('employee');
 	name: EMPLOYEE_STATE_TOKEN,
 	defaults: {
 		employees: [],
+		query: DefaultQueryModel,
 		addNewEmployeeForm: DefaultFormStateValue,
 		editEmployeeForm: DefaultFormStateValue
 	}
@@ -51,11 +57,16 @@ export class EmployeeState {
 		return state.employees;
 	}
 
+	@Selector([EMPLOYEE_STATE_TOKEN])
+	static getQueryModel(state: EmployeeStateModel): QueryModel {
+		return state.query;
+	}
+
 	@Action(GetAll)
 	getAll(ctx: StateContext<EmployeeStateModel>, _: GetAll): Observable<EmployeeModel[]> {
 		this.progressSpinnerService.showProgressSpinner();
 
-		return this.employeeService.getAll().pipe(
+		return this.employeeService.getAll(ctx.getState().query).pipe(
 			tap((response) => {
 				ctx.patchState({
 					employees: response
@@ -68,6 +79,42 @@ export class EmployeeState {
 				this.progressSpinnerService.hideProgressSpinner();
 			})
 		);
+	}
+
+	@Action(ApplyFilter)
+	applyFilter(ctx: StateContext<EmployeeStateModel>, action: ApplyFilter): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.searchText = action.searchPhrase;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
+	}
+
+	@Action(ChangeGroup)
+	changeGroup(ctx: StateContext<EmployeeStateModel>, action: ChangeGroup): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.departmentId = action.groupId;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
+	}
+
+	@Action(ChangeShift)
+	changeShift(ctx: StateContext<EmployeeStateModel>, action: ChangeShift): Observable<void> {
+		const updatedQuery = { ...ctx.getState().query };
+		updatedQuery.shiftId = action.shiftId;
+
+		ctx.patchState({
+			query: updatedQuery
+		});
+
+		return ctx.dispatch(new GetAll());
 	}
 
 	@Action(Add)
