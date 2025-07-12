@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
-import { catchError, finalize, Observable, take, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { IProgressSpinnerService } from '../../shared/services/progress-spinner.base.service';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../models/employee-working-time-record-details.model';
@@ -29,6 +29,14 @@ import { EmployeeWorkingTimeRecordAbsentsModel } from '../models/employee-workin
 import { WorkingTimeRecordAbsentAggregatedModel } from '../models/working-time-record-details-aggregated.model';
 import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
 import UpdateReportHoursData = WorkingTimeRecord.UpdateReportHoursData;
+import {
+	ConfirmationDialogComponent,
+	ConfirmationDialogModel
+} from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { patch, removeItem } from '@ngxs/store/operators';
+import { EmployeeModel } from '../../shared/models/employee.model';
+import ClosePreviousMonth = WorkingTimeRecord.ClosePreviousMonth;
+import { MatDialog } from '@angular/material/dialog';
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -64,11 +72,11 @@ const WORKING_TIME_RECORD_STATE_TOKEN = new StateToken<WorkingTimeRecordStateMod
 })
 @Injectable()
 export class WorkingTimeRecordState {
-	constructor(
-		private workingTimeRecordService: IWorkingTimeRecordService,
-		private progressSpinnerService: IProgressSpinnerService,
-		private toastService: ToastrService
-	) {}
+	private zone = inject(NgZone);
+	private workingTimeRecordService = inject(IWorkingTimeRecordService);
+	private progressSpinnerService = inject(IProgressSpinnerService);
+	private toastService = inject(ToastrService);
+	private dialogRef = inject(MatDialog);
 
 	@Selector([WORKING_TIME_RECORD_STATE_TOKEN])
 	static getSearchQueryModel(state: WorkingTimeRecordStateModel): QueryModel {
@@ -346,5 +354,46 @@ export class WorkingTimeRecordState {
 				this.progressSpinnerService.hideProgressSpinner();
 			})
 		);
+	}
+
+	@Action(ClosePreviousMonth)
+	deactivate(ctx: StateContext<WorkingTimeRecordStateModel>, action: ClosePreviousMonth) {
+		const message = `Czy na pewno chcesz zamknąć poprzedni miesiąc?`;
+
+		const dialogData = new ConfirmationDialogModel('Potwierdzenie zamknięcia miesiąca', message);
+
+		return this.zone
+			.run(() =>
+				this.dialogRef.open(ConfirmationDialogComponent, {
+					maxWidth: '400px',
+					data: dialogData
+				})
+			)
+			.afterClosed()
+			.pipe(
+				switchMap((dialogResultAction) => {
+					if (dialogResultAction === undefined || dialogResultAction === false) {
+						return of({});
+					}
+
+					this.progressSpinnerService.showProgressSpinner();
+
+					return this.workingTimeRecordService.closePreviousMonth().pipe(
+						tap((_) => {
+							this.toastService.success(
+								`Zamykanie poprzedniego miesiąca zostało rozpoczęte. Może to potrwać kilka minut.`,
+								'Sukces'
+							);
+						}),
+						catchError((e: HttpErrorResponse) => {
+							this.toastService.error(`Wystąpił błąd przy zamykaniu miesiąca - ${e.message}`);
+							return throwError(() => e);
+						}),
+						finalize(() => {
+							this.progressSpinnerService.hideProgressSpinner();
+						})
+					);
+				})
+			);
 	}
 }

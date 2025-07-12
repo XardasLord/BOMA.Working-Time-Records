@@ -32,25 +32,37 @@ export namespace WorkingTimeRecord {
 	}
 
 	export class ChangeDate {
-		constructor(public year: number, public month: number) {}
+		constructor(
+			public year: number,
+			public month: number
+		) {}
 
 		static readonly type = `${prefix} ${ChangeDate.name}`;
 	}
 
 	export class UpdateSummaryData {
-		constructor(public employeeId: number, public updateModel: WorkingTimeRecordSummaryDataFormModel) {}
+		constructor(
+			public employeeId: number,
+			public updateModel: WorkingTimeRecordSummaryDataFormModel
+		) {}
 
 		static readonly type = `${prefix} ${UpdateSummaryData.name}`;
 	}
 
 	export class UpdateDetailedData {
-		constructor(public employeeId: number, public updateModel: WorkingTimeRecordDetailedDataFormModel) {}
+		constructor(
+			public employeeId: number,
+			public updateModel: WorkingTimeRecordDetailedDataFormModel
+		) {}
 
 		static readonly type = `${prefix} ${UpdateDetailedData.name}`;
 	}
 
 	export class UpdateReportHoursData {
-		constructor(public employeeId: number, public updateModel: WorkingTimeRecordReportHoursDataFormModel) {}
+		constructor(
+			public employeeId: number,
+			public updateModel: WorkingTimeRecordReportHoursDataFormModel
+		) {}
 
 		static readonly type = `${prefix} ${UpdateReportHoursData.name}`;
 	}
@@ -59,5 +71,11 @@ export namespace WorkingTimeRecord {
 		constructor() {}
 
 		static readonly type = `${prefix} ${SendHoursToGratyfikant.name}`;
+	}
+
+	export class ClosePreviousMonth {
+		constructor() {}
+
+		static readonly type = `${prefix} ${ClosePreviousMonth.name}`;
 	}
 }

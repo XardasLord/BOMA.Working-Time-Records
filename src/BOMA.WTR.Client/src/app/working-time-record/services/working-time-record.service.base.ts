@@ -14,4 +14,5 @@ export abstract class IWorkingTimeRecordService extends RemoteServiceBase {
 	public abstract updateDetailedData(employeeId: number, updateModel: WorkingTimeRecordDetailedDataFormModel): Observable<void>;
 	public abstract updateReportHoursData(employeeId: number, updateModel: WorkingTimeRecordReportHoursDataFormModel): Observable<void>;
 	public abstract sendHoursToGratyfikant(queryModel: QueryModel): Observable<void>;
+	public abstract closePreviousMonth(): Observable<void>;
 }

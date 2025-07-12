@@ -45,7 +45,3 @@
 		<tr mat-row *matRowDef="let record; columns: columnsToDisplay$ | async"></tr>
 	</table>
 </div>
-
-<button mat-fab color="primary" class="print-table" matTooltip="Drukuj" ngxPrint printSectionId="print-content" [useExistingCss]="true">
-	<mat-icon>print</mat-icon>
-</button>

@@ -44,6 +44,10 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 		});
 	}
 
+	closePreviousMonth(): Observable<void> {
+		return this.httpClient.post<void>(`${this.apiEndpoint}/workingTimeRecords/close-month`, null);
+	}
+
 	private getQueryParams(queryModel: QueryModel): HttpParams {
 		let queryParams = new HttpParams()
 			.set('year', queryModel.year)

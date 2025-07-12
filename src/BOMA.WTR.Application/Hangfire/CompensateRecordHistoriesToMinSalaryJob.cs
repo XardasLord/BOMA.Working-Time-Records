@@ -21,20 +21,20 @@ public class CompensateRecordHistoriesToMinSalaryJob(
         // We could base here on the last year & month history in DB
         var previousMonthDate = DateTime.Now.AddMonths(-1).Date;
         
-        context.SetTextColor(ConsoleTextColor.DarkBlue);
-        context.WriteLine($"Month: {previousMonthDate}");
+        context.SetTextColor(ConsoleTextColor.DarkYellow);
+        context.WriteLine($"Month: {previousMonthDate:MM.yyyy}");
         context.ResetTextColor();
         
         var workingHoursInMonth = (decimal)previousMonthDate.WorkingHoursInMonthExcludingBankHolidays();
         if (workingHoursInMonth >= 168)
         {
-            context.SetTextColor(ConsoleTextColor.DarkBlue);
-            context.WriteLine($"Number of working hours in {previousMonthDate.ToShortDateString()} equals {workingHoursInMonth} and does not require salary compensation factor to be included.");
+            context.SetTextColor(ConsoleTextColor.DarkYellow);
+            context.WriteLine($"Number of working hours in {previousMonthDate:MM.yyyy} equals {workingHoursInMonth} and does not require salary compensation factor to be included.");
             return;
         }
         
         context.SetTextColor(ConsoleTextColor.Green);
-        context.WriteLine($"Number of working hours in {previousMonthDate.ToShortDateString()} equals {workingHoursInMonth} so it requires a salary compensation factor to be included.");
+        context.WriteLine($"Number of working hours in {previousMonthDate:MM.yyyy} equals {workingHoursInMonth} so it requires a salary compensation factor to be included.");
         context.ResetTextColor();
         
         // Otherwise we should compensate to the minimum salary based on the employee with the lowest salary

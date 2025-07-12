@@ -1,9 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import { Store } from '@ngxs/store';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { AuthState } from '../../../shared/auth/state/auth.state';
+import { WorkingTimeRecord } from '../../state/working-time-record.action';
 import { Role } from '../../../shared/auth/models/userDetails';
 import { WorkingTimeRecordDetailedTableComponent } from '../working-time-record-detailed-table/working-time-record-detailed-table.component';
 import { WorkingTimeRecordSummaryTableComponent } from '../working-time-record-summary-table/working-time-record-summary-table.component';
@@ -11,6 +13,7 @@ import { WorkingTimeRecordReportHoursTableComponent } from '../working-time-reco
 import { WorkingTimeRecordReportHoursSummaryTableComponent } from '../working-time-record-report-hours-summary-table/working-time-record-report-hours-summary-table.component';
 import { WorkingTimeRecordReportAbsentsTableComponent } from '../working-time-record-report-absents-table/working-time-record-report-absents-table.component';
 import GetAll = WorkingTimeRecord.GetAll;
+import ClosePreviousMonth = WorkingTimeRecord.ClosePreviousMonth;
 
 @Component({
 	selector: 'app-working-time-record-list',
@@ -19,6 +22,8 @@ import GetAll = WorkingTimeRecord.GetAll;
 })
 export class WorkingTimeRecordListComponent implements OnInit {
 	private store = inject(Store);
+
+	userRole = this.store.selectSnapshot(AuthState.getUserRole);
 
 	allTabs: WorkingTimeTab[] = [
 		{
@@ -59,6 +64,10 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		this.filteredTabs$ = this.userRole$.pipe(
 			map((role) => this.allTabs.filter((tab) => tab.visibleFor.length === 0 || tab.visibleFor.includes(role!)))
 		);
+	}
+
+	closePreviousMonth() {
+		this.store.dispatch(new ClosePreviousMonth());
 	}
 }
 
