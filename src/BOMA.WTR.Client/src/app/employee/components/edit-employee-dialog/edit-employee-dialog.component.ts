@@ -50,7 +50,11 @@ export class EditEmployeeDialogComponent {
 			departmentName: new FormControl<string | null>(employee.departmentName),
 			shiftTypeId: new FormControl<number | null>(employee.shiftTypeId, { nonNullable: true, validators: [Validators.required] }),
 			shiftTypeName: new FormControl<string | null>(employee.shiftTypeName),
-			position: new FormControl<string>(employee.position, { nonNullable: true, validators: [Validators.max(64)] })
+			position: new FormControl<string>(employee.position, { nonNullable: true, validators: [Validators.max(64)] }),
+			personalIdentityNumber: new FormControl<string>(employee.personalIdentityNumber, {
+				nonNullable: true,
+				validators: [Validators.minLength(11), Validators.maxLength(11)]
+			})
 		});
 
 		this.store.dispatch(new ResetForm({ path: 'employee.editEmployeeForm', value: this.editEmployeeForm.value }));

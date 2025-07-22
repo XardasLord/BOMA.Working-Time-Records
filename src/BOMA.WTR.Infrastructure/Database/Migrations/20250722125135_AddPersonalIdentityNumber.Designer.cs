@@ -4,16 +4,19 @@ using BOMA.WTR.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BOMA.WRT.Infrastructure.Database.Migrations
+namespace BOMA.WTR.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(BomaDbContext))]
-    partial class BomaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250722125135_AddPersonalIdentityNumber")]
+    partial class AddPersonalIdentityNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -269,7 +272,7 @@ namespace BOMA.WRT.Infrastructure.Database.Migrations
                             Id = 1,
                             Description = "Minimalne wynagrodzenie pracownika [PLN]",
                             Key = "MinimumWage",
-                            LastModified = new DateTimeOffset(new DateTime(2025, 6, 24, 6, 12, 56, 656, DateTimeKind.Unspecified).AddTicks(8054), new TimeSpan(0, 0, 0, 0, 0)),
+                            LastModified = new DateTimeOffset(new DateTime(2025, 7, 22, 12, 51, 33, 209, DateTimeKind.Unspecified).AddTicks(9043), new TimeSpan(0, 0, 0, 0, 0)),
                             Type = "int",
                             Value = "4666"
                         });

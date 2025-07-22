@@ -136,6 +136,7 @@ export class EmployeeState {
 								shiftTypeId: action.employee.shiftTypeId,
 								shiftTypeName: action.employee.shiftTypeName,
 								position: action.employee.position,
+								personalIdentityNumber: action.employee.personalIdentityNumber,
 								isActive: true
 							}
 						])
@@ -176,6 +177,7 @@ export class EmployeeState {
 								shiftTypeId: action.employee.shiftTypeId,
 								shiftTypeName: action.employee.shiftTypeName,
 								position: action.employee.position,
+								personalIdentityNumber: action.employee.personalIdentityNumber,
 								isActive: true
 							})
 						)

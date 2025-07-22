@@ -10,5 +10,6 @@ export interface EmployeeModel {
 	shiftTypeId: number | null;
 	shiftTypeName: string;
 	position: string;
+	personalIdentityNumber: string;
 	isActive: boolean;
 }

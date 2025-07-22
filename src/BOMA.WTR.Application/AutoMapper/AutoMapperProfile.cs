@@ -26,6 +26,7 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.ShiftTypeId, opt => opt.MapFrom(src => src.JobInformation.ShiftType))
             .ForMember(dest => dest.ShiftTypeName, opt => opt.MapFrom(src => (int?)src.JobInformation.ShiftType))
             .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.JobInformation.Position.Name))
+            .ForMember(dest => dest.PersonalIdentityNumber, opt => opt.MapFrom(src => src.PersonalIdentityNumber.Number))
             .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive));
 
         CreateMap<WorkingTimeRecord, WorkingTimeRecordDetailsViewModel>()

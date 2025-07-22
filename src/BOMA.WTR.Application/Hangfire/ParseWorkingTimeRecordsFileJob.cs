@@ -75,8 +75,9 @@ public class ParseWorkingTimeRecordsFileJob
                         var salary = Money.Empty;
                         var bonus = PercentageBonus.Empty;
                         var jobInformation = JobInformation.Empty;
+                        var personalIdentityNumber = PersonalIdentityNumber.Empty;
 
-                        currentEmployee = Employee.Add(name, salary, bonus, jobInformation, rogerFileModel.UserRcpId.Value, rogerFileModel.DepartmentId!.Value);
+                        currentEmployee = Employee.Add(name, salary, bonus, jobInformation, personalIdentityNumber, rogerFileModel.UserRcpId.Value, rogerFileModel.DepartmentId!.Value);
                         await _employeeRepository.AddAsync(currentEmployee, cancellationToken);
 
                         addedNewEmployees++;

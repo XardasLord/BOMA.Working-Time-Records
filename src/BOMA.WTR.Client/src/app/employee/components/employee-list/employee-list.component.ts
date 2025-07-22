@@ -33,6 +33,7 @@ export class EmployeeListComponent implements OnInit, AfterViewInit, OnDestroy {
 		nameof<EmployeeModel>('rcpId'),
 		nameof<EmployeeModel>('firstName'),
 		nameof<EmployeeModel>('lastName'),
+		nameof<EmployeeModel>('personalIdentityNumber'),
 		nameof<EmployeeModel>('departmentName'),
 		nameof<EmployeeModel>('shiftTypeName'),
 		nameof<EmployeeModel>('position')

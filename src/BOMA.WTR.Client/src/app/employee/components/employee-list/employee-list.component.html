@@ -26,6 +26,11 @@
 			<td mat-cell *matCellDef="let employee" class="px-4 py-2">{{ employee?.lastName }}</td>
 		</ng-container>
 
+		<ng-container matColumnDef="personalIdentityNumber">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header="departmentName">PESEL</th>
+			<td mat-cell *matCellDef="let employee">{{ employee?.personalIdentityNumber }}</td>
+		</ng-container>
+
 		<!-- Dział -->
 		<ng-container matColumnDef="departmentName">
 			<th

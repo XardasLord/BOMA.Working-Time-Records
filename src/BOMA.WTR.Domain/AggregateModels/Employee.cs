@@ -17,6 +17,7 @@ public class Employee : Entity<int>, IAggregateRoot
     private Department _department;
     private int _departmentId;
     private JobInformation _jobInformation;
+    private PersonalIdentityNumber _personalIdentityNumber;
     internal bool _isActive;
     private readonly List<WorkingTimeRecord> _workingTimeRecords;
     private readonly List<WorkingTimeRecordAggregatedHistory> _workingTimeRecordAggregatedHistories;
@@ -27,13 +28,14 @@ public class Employee : Entity<int>, IAggregateRoot
         _workingTimeRecordAggregatedHistories = [];
     }
 
-    private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, JobInformation jobInformation, int rcpId, int departmentId) 
+    private Employee(Name name, Money salary, PercentageBonus salaryBonusPercentage, JobInformation jobInformation, PersonalIdentityNumber personalIdentityNumber, int rcpId, int departmentId) 
         : this()
     {
         _name = name;
         _salary = salary;
         _salaryBonusPercentage = salaryBonusPercentage;
         _jobInformation = jobInformation;
+        _personalIdentityNumber = personalIdentityNumber;
         _rcpId = rcpId;
         _departmentId = departmentId;
         _isActive = true;
@@ -46,21 +48,23 @@ public class Employee : Entity<int>, IAggregateRoot
     public Department Department => _department;
     public int DepartmentId => _departmentId;
     public JobInformation JobInformation => _jobInformation;
+    public PersonalIdentityNumber PersonalIdentityNumber => _personalIdentityNumber;
     public bool IsActive => _isActive;
     public virtual IReadOnlyCollection<WorkingTimeRecord> WorkingTimeRecords => _workingTimeRecords;
     public virtual IReadOnlyCollection<WorkingTimeRecordAggregatedHistory> WorkingTimeRecordAggregatedHistories => _workingTimeRecordAggregatedHistories;
 
-    public static Employee Add(Name name, Money salary, PercentageBonus percentageSalaryBonus, JobInformation jobInformation, int rcpId, int departmentId)
+    public static Employee Add(Name name, Money salary, PercentageBonus percentageSalaryBonus, JobInformation jobInformation, PersonalIdentityNumber personalIdentityNumber, int rcpId, int departmentId)
     {
-        return new Employee(name, salary, percentageSalaryBonus, jobInformation, rcpId, departmentId);
+        return new Employee(name, salary, percentageSalaryBonus, jobInformation, personalIdentityNumber, rcpId, departmentId);
     }
     
-    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, JobInformation jobInformation, int rcpId, int departmentId)
+    public void UpdateData(Name name, Money salary, PercentageBonus salaryPercentageBonus, JobInformation jobInformation, PersonalIdentityNumber personalIdentityNumber, int rcpId, int departmentId)
     {
         _name = name;
         _salary = salary;
         _salaryBonusPercentage = salaryPercentageBonus;
         _jobInformation = jobInformation;
+        _personalIdentityNumber = personalIdentityNumber;
         _rcpId = rcpId;
         _departmentId = departmentId;
     }

@@ -62,6 +62,14 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                 .HasConversion(new EnumToNumberConverter<ShiftType, byte>())
                 .IsRequired(false);
         });
+        
+        builder.OwnsOne(x => x.PersonalIdentityNumber, identity =>
+        {
+            identity.Property(p => p.Number)
+                .HasColumnName("PersonalIdentityNumber")
+                .HasMaxLength(11)
+                .IsRequired(false);
+        });
 
         builder.Property(x => x.RcpId)
             .HasColumnName("RcpId")
