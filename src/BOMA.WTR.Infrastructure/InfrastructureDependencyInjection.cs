@@ -12,6 +12,7 @@ using BOMA.WTR.Infrastructure.DomainService;
 using BOMA.WTR.Infrastructure.ErrorHandling;
 using BOMA.WTR.Infrastructure.ErrorHandling.Exceptions;
 using BOMA.WTR.Infrastructure.Identity;
+using BOMA.WTR.Infrastructure.InsERT.Gratyfikant;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.SqlServer;
@@ -42,6 +43,7 @@ public static class InfrastructureDependencyInjection
                 x => x.EnableRetryOnFailure()));
 
         services.AddBomaIdentity(configuration);
+        services.AddGratyfikant(configuration);
         
         services.AddTransient(typeof(IAggregateReadRepository<>), typeof(AggregateReadRepository<>));
         services.AddTransient(typeof(IAggregateRepository<>), typeof(AggregateRepository<>));

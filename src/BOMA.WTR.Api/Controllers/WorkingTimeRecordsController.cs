@@ -1,4 +1,5 @@
 ﻿using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Commands.CloseMonth;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Commands.SendToGratyfikant;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,5 +22,13 @@ public class WorkingTimeRecordsController : ApiBaseController
         await Mediator.Send(new CloseMonthCommand());
 
         return NoContent();
+    }
+    
+    [HttpPost("gratyfikant")]
+    public async Task<ActionResult<List<string>>> SendToGratyfikant([FromQuery] GetRecordsQueryModel queryModel)
+    {
+        var response = await Mediator.Send(new SendToGratyfikantCommand(queryModel));
+
+        return Ok(response);
     }
 }

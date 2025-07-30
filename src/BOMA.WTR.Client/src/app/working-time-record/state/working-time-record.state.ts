@@ -37,6 +37,15 @@ import { patch, removeItem } from '@ngxs/store/operators';
 import { EmployeeModel } from '../../shared/models/employee.model';
 import ClosePreviousMonth = WorkingTimeRecord.ClosePreviousMonth;
 import { MatDialog } from '@angular/material/dialog';
+import {
+	InformationDialogComponent,
+	InformationDialogModel
+} from '../../shared/components/information-dialog/information-dialog.component';
+import { KeyValuePair } from '../models/key-value-pair.model';
+import { DepartmentsEnum } from '../../shared/models/departments.enum';
+import { DepartmentsArray } from '../../shared/models/departments-array';
+import { ShiftTypesEnum } from '../../shared/models/shift-types.enum';
+import { ShiftTypesArray } from '../../shared/models/shift-types-array';
 
 export interface WorkingTimeRecordStateModel {
 	query: QueryModel;
@@ -334,30 +343,65 @@ export class WorkingTimeRecordState {
 	}
 
 	@Action(SendHoursToGratyfikant)
-	sendHoursToGratyfikant(ctx: StateContext<WorkingTimeRecordStateModel>): Observable<void> {
-		this.progressSpinnerService.showProgressSpinner();
+	sendHoursToGratyfikant(ctx: StateContext<WorkingTimeRecordStateModel>) {
+		const message = `Czy na pewno chcesz wysłać aktualnie widoczne godziny za podany okres do Gratyfikanta?
+<br>Rok: <b>${ctx.getState().query.year}</b>
+<br>Miesiąc: <b>${ctx.getState().query.month}</b>
+<br>Dział: <b>${DepartmentsArray.filter((x) => x.value === ctx.getState().query.departmentId)[0].key}</b>
+<br>Zmiana: <b>${ShiftTypesArray.filter((x) => x.value === ctx.getState().query.shiftId)[0].key}</b>
+<br><br>Po synchronizacji otrzymasz szczegółową informację o błędach, które wystąpiły podczas wysyłki danych do Gratyfikanta.`;
 
-		return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query).pipe(
-			tap(() => {
-				this.toastService.success('Dane zostały wysłane do Gratyfikanta', 'Synchronizacja danych', {
-					onActivateTick: true
-				});
-			}),
-			catchError((e: HttpErrorResponse) => {
-				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`, 'Synchronizacja danych', {
-					onActivateTick: true
-				});
+		const dialogData = new ConfirmationDialogModel('Potwierdzenie wysłania godzin', message);
 
-				return throwError(() => e);
-			}),
-			finalize(() => {
-				this.progressSpinnerService.hideProgressSpinner();
-			})
-		);
+		return this.zone
+			.run(() =>
+				this.dialogRef.open(ConfirmationDialogComponent, {
+					maxWidth: '400px',
+					data: dialogData
+				})
+			)
+			.afterClosed()
+			.pipe(
+				switchMap((dialogResultAction) => {
+					if (dialogResultAction === undefined || dialogResultAction === false) {
+						return of({});
+					}
+
+					this.progressSpinnerService.showProgressSpinner();
+
+					return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query).pipe(
+						tap((response) => {
+							this.toastService.success('Dane zostały wysłane do Gratyfikanta', 'Synchronizacja danych', {
+								onActivateTick: true
+							});
+
+							const resultMessage = `<u>Poniżej znajduje się lista błędów związanych z wysyłką danych do Gratyfikanta:</u>${response.map((e) => `<li>${e}</li>`).join('')}`;
+							const resultDialogData = new InformationDialogModel('Informacja z synchronizacji godzin ', resultMessage);
+
+							this.zone.run(() =>
+								this.dialogRef.open(InformationDialogComponent, {
+									maxWidth: '600px',
+									data: resultDialogData
+								})
+							);
+						}),
+						catchError((e: HttpErrorResponse) => {
+							this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`, 'Synchronizacja danych', {
+								onActivateTick: true
+							});
+
+							return throwError(() => e);
+						}),
+						finalize(() => {
+							this.progressSpinnerService.hideProgressSpinner();
+						})
+					);
+				})
+			);
 	}
 
 	@Action(ClosePreviousMonth)
-	deactivate(ctx: StateContext<WorkingTimeRecordStateModel>, action: ClosePreviousMonth) {
+	closePreviousMonth(ctx: StateContext<WorkingTimeRecordStateModel>, action: ClosePreviousMonth) {
 		const message = `Czy na pewno chcesz zamknąć poprzedni miesiąc?`;
 
 		const dialogData = new ConfirmationDialogModel('Potwierdzenie zamknięcia miesiąca', message);
