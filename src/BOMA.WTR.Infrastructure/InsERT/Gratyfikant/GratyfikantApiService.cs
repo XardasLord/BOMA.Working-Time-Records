@@ -5,6 +5,7 @@ using System.Text.Json;
 using BOMA.WTR.Application.InsERT;
 using BOMA.WTR.Application.InsERT.Gratyfikant;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
+using BOMA.WTR.Infrastructure.InsERT.Gratyfikant.PayloadModels;
 
 namespace BOMA.WTR.Infrastructure.InsERT.Gratyfikant;
 
@@ -17,7 +18,32 @@ public class GratyfikantApiService(IHttpClientFactory httpClientFactory) : IGrat
 
     public async Task<List<string>> SendHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> records)
     {
-        var payloadContent = PrepareContentRequest(records);
+        var payloadModel = records
+            .Select(x => new HoursSyncPayloadModel
+            {
+                Employee = new EmployeePayloadModel
+                {
+                    FirstName = x.Employee.FirstName,
+                    LastName = x.Employee.LastName,
+                    PersonalIdentityNumber = x.Employee.PersonalIdentityNumber
+                },
+                WorkingTimeRecords = x.WorkingTimeRecordsAggregated.Select(r => new WorkingTimeRecordPayloadModel
+                {
+                    Date = r.Date,
+                    DayWorkTimePeriod = r.DayWorkTimePeriodNormalized,
+                    NightWorkTimePeriod = r.NightWorkTimePeriodNormalized,
+                    WorkedMinutes = r.WorkedMinutes,
+                    WorkedHoursRounded = r.WorkedHoursRounded,
+                    BaseNormativeHours = r.BaseNormativeHours,
+                    FiftyPercentageBonusHours = r.FiftyPercentageBonusHours,
+                    HundredPercentageBonusHours = r.HundredPercentageBonusHours,
+                    SaturdayHours = r.SaturdayHours,
+                    NightHours = r.NightHours
+                }).ToList()
+            })
+            .ToList();
+        
+        var payloadContent = PrepareContentRequest(payloadModel);
         
         var httpClient = PrepareHttpClient();
         using var response = await httpClient.PostAsync("api/gratyfikant", payloadContent);
@@ -26,7 +52,7 @@ public class GratyfikantApiService(IHttpClientFactory httpClientFactory) : IGrat
         
          var responseModel = await response.Content.ReadFromJsonAsync<List<string>>();
          
-         return responseModel;
+         return responseModel ?? [];
     }
 
     private static StringContent PrepareContentRequest(object payload)
