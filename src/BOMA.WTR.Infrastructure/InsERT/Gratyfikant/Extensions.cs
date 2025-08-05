@@ -20,7 +20,7 @@ public static class Extensions
         services.AddHttpClient(ExternalHttpClientNames.GratyfikantHttpClientName, config =>
         {
             config.BaseAddress = new Uri(options.ApiUrl);
-            config.Timeout = new TimeSpan(0, 1, 0);
+            config.Timeout = new TimeSpan(0, 2, 0);
             config.DefaultRequestHeaders.Clear();
         });
         
