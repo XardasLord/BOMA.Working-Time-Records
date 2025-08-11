@@ -1,6 +1,6 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, inject, NgZone, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { catchError, finalize, Observable, of, Subscription, switchMap, tap, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
@@ -15,19 +15,35 @@ import {
 import moment from 'moment';
 import SendHoursToGratyfikant = WorkingTimeRecord.SendHoursToGratyfikant;
 import UpdateReportHoursData = WorkingTimeRecord.UpdateReportHoursData;
+import { MatDialog } from '@angular/material/dialog';
+import { DepartmentsArray } from '../../../shared/models/departments-array';
+import { ShiftTypesArray } from '../../../shared/models/shift-types-array';
+import {
+	ConfirmationDialogComponent,
+	ConfirmationDialogModel
+} from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import {
+	InformationDialogComponent,
+	InformationDialogModel
+} from '../../../shared/components/information-dialog/information-dialog.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	selector: 'app-working-time-record-report-hours-table',
 	templateUrl: './working-time-record-report-hours-table.component.html',
 	styleUrls: ['./working-time-record-report-hours-table.component.scss']
 })
-export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit {
+export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit, OnDestroy {
+	private dialogRef = inject(MatDialog);
+
 	detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
 	numberOfDays$ = this.store.select(WorkingTimeRecordState.getDaysInMonth);
 	columnsToDisplay$ = this.store.select(WorkingTimeRecordState.getColumnsToDisplayForReportHours);
 
 	reportHoursForm: FormGroup<WorkingTimeRecordReportHoursFormGroup>;
 	editingRow: EmployeeWorkingTimeRecordDetailsModel | null = null;
+
+	private subscription = new Subscription();
 
 	constructor(
 		private store: Store,
@@ -108,6 +124,10 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 		this.detailedRecords$ = this.store.select(WorkingTimeRecordState.getReportHourRecordsNormalizedForTable);
 	}
 
+	ngOnDestroy(): void {
+		this.subscription.unsubscribe();
+	}
+
 	trackRecord(index: number, element: EmployeeWorkingTimeRecordDetailsModel): number {
 		return element.employee.id;
 	}
@@ -133,7 +153,37 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 	}
 
 	sendHoursToGratyfikant() {
-		this.store.dispatch(new SendHoursToGratyfikant());
+		const query = this.store.selectSnapshot(WorkingTimeRecordState.getSearchQueryModel);
+
+		const message = `Czy na pewno chcesz wysłać aktualnie widoczne godziny za podany okres do Gratyfikanta?
+<br>Rok: <b>${query.year}</b>
+<br>Miesiąc: <b>${query.month}</b>
+<br>Dział: <b>${DepartmentsArray.filter((x) => x.value === query.departmentId)[0].key}</b>
+<br>Zmiana: <b>${ShiftTypesArray.filter((x) => x.value === query.shiftId)[0].key}</b>
+<br><br>Po synchronizacji otrzymasz szczegółową informację o błędach, które wystąpiły podczas wysyłki danych do Gratyfikanta.`;
+
+		const dialogData = new ConfirmationDialogModel('Potwierdzenie wysłania godzin', message);
+
+		this.subscription.add(
+			this.dialogRef
+				.open(ConfirmationDialogComponent, {
+					maxWidth: '400px',
+					data: dialogData
+				})
+				.afterClosed()
+				.pipe(
+					switchMap((dialogResultAction) => {
+						if (dialogResultAction === undefined || dialogResultAction === false) {
+							return of({});
+						}
+
+						this.store.dispatch(new SendHoursToGratyfikant());
+
+						return of({});
+					})
+				)
+				.subscribe()
+		);
 	}
 
 	isRowEditing(row: EmployeeWorkingTimeRecordDetailsModel): boolean {

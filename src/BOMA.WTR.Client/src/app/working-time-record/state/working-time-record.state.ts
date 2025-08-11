@@ -344,60 +344,35 @@ export class WorkingTimeRecordState {
 
 	@Action(SendHoursToGratyfikant)
 	sendHoursToGratyfikant(ctx: StateContext<WorkingTimeRecordStateModel>) {
-		const message = `Czy na pewno chcesz wysłać aktualnie widoczne godziny za podany okres do Gratyfikanta?
-<br>Rok: <b>${ctx.getState().query.year}</b>
-<br>Miesiąc: <b>${ctx.getState().query.month}</b>
-<br>Dział: <b>${DepartmentsArray.filter((x) => x.value === ctx.getState().query.departmentId)[0].key}</b>
-<br>Zmiana: <b>${ShiftTypesArray.filter((x) => x.value === ctx.getState().query.shiftId)[0].key}</b>
-<br><br>Po synchronizacji otrzymasz szczegółową informację o błędach, które wystąpiły podczas wysyłki danych do Gratyfikanta.`;
+		this.progressSpinnerService.showProgressSpinner();
 
-		const dialogData = new ConfirmationDialogModel('Potwierdzenie wysłania godzin', message);
+		return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query).pipe(
+			tap((response) => {
+				this.toastService.success('Dane zostały wysłane do Gratyfikanta', 'Synchronizacja danych', {
+					onActivateTick: true
+				});
 
-		return this.zone
-			.run(() =>
-				this.dialogRef.open(ConfirmationDialogComponent, {
-					maxWidth: '400px',
-					data: dialogData
-				})
-			)
-			.afterClosed()
-			.pipe(
-				switchMap((dialogResultAction) => {
-					if (dialogResultAction === undefined || dialogResultAction === false) {
-						return of({});
-					}
+				const resultMessage = `<u>Poniżej znajduje się lista błędów związanych z wysyłką danych do Gratyfikanta:</u>${response.map((e) => `<li>${e}</li>`).join('')}`;
+				const resultDialogData = new InformationDialogModel('Informacja z synchronizacji godzin ', resultMessage);
 
-					this.progressSpinnerService.showProgressSpinner();
+				this.zone.run(() =>
+					this.dialogRef.open(InformationDialogComponent, {
+						maxWidth: '600px',
+						data: resultDialogData
+					})
+				);
+			}),
+			catchError((e: HttpErrorResponse) => {
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`, 'Synchronizacja danych', {
+					onActivateTick: true
+				});
 
-					return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query).pipe(
-						tap((response) => {
-							this.toastService.success('Dane zostały wysłane do Gratyfikanta', 'Synchronizacja danych', {
-								onActivateTick: true
-							});
-
-							const resultMessage = `<u>Poniżej znajduje się lista błędów związanych z wysyłką danych do Gratyfikanta:</u>${response.map((e) => `<li>${e}</li>`).join('')}`;
-							const resultDialogData = new InformationDialogModel('Informacja z synchronizacji godzin ', resultMessage);
-
-							this.zone.run(() =>
-								this.dialogRef.open(InformationDialogComponent, {
-									maxWidth: '600px',
-									data: resultDialogData
-								})
-							);
-						}),
-						catchError((e: HttpErrorResponse) => {
-							this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`, 'Synchronizacja danych', {
-								onActivateTick: true
-							});
-
-							return throwError(() => e);
-						}),
-						finalize(() => {
-							this.progressSpinnerService.hideProgressSpinner();
-						})
-					);
-				})
-			);
+				return throwError(() => e);
+			}),
+			finalize(() => {
+				this.progressSpinnerService.hideProgressSpinner();
+			})
+		);
 	}
 
 	@Action(ClosePreviousMonth)
