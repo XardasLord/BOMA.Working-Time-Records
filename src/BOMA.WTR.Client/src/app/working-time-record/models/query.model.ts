@@ -32,15 +32,7 @@ export const DefaultColumnsToDisplayForDetailedTable: string[] = [
 	'emptyLabel'
 ];
 
-export const DefaultColumnsToDisplayForReportHoursTable: string[] = [
-	'actions',
-	'index',
-	'fullName',
-	'shiftType',
-	'position',
-	'sumHours',
-	'emptyLabel'
-];
+export const DefaultColumnsToDisplayForReportHoursTable: string[] = ['actions', 'index', 'fullName', 'sumHours', 'emptyLabel'];
 
 export const DefaultColumnsToDisplayForAbsentReportTable: string[] = ['index', 'fullName', 'shiftType', 'absentDaysCount'];
 
