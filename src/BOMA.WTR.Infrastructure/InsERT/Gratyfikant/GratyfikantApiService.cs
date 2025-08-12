@@ -19,33 +19,37 @@ public class GratyfikantApiService(IHttpClientFactory httpClientFactory) : IGrat
 
     public async Task<List<string>> SendHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> records, DepartmentType departmentType)
     {
-        var payloadModel = records
-            .Select(x => new HoursSyncPayloadModel
-            {
-                DepartmentType = departmentType,
-                Employee = new EmployeePayloadModel
+        var payload = new HoursSyncPayloadModel
+        {
+            DepartmentType = departmentType,
+            Employees = records.Select(x => new EmployeesSyncPayloadModel 
                 {
-                    FirstName = x.Employee.FirstName,
-                    LastName = x.Employee.LastName,
-                    PersonalIdentityNumber = x.Employee.PersonalIdentityNumber
-                },
-                WorkingTimeRecords = x.WorkingTimeRecordsAggregated.Select(r => new WorkingTimeRecordPayloadModel
-                {
-                    Date = r.Date,
-                    DayWorkTimePeriod = r.DayWorkTimePeriodNormalized,
-                    NightWorkTimePeriod = r.NightWorkTimePeriodNormalized,
-                    WorkedMinutes = r.WorkedMinutes,
-                    WorkedHoursRounded = r.WorkedHoursRounded,
-                    BaseNormativeHours = r.BaseNormativeHours,
-                    FiftyPercentageBonusHours = r.FiftyPercentageBonusHours,
-                    HundredPercentageBonusHours = r.HundredPercentageBonusHours,
-                    SaturdayHours = r.SaturdayHours,
-                    NightHours = r.NightHours
-                }).ToList()
-            })
-            .ToList();
+                    Employee = new EmployeePayloadModel
+                    {
+                        FirstName = x.Employee.FirstName,
+                        LastName  = x.Employee.LastName,
+                        PersonalIdentityNumber = x.Employee.PersonalIdentityNumber
+                    },
+                    WorkingTimeRecords = x.WorkingTimeRecordsAggregated
+                        .Select(r => new WorkingTimeRecordPayloadModel
+                        {
+                            Date = r.Date,
+                            DayWorkTimePeriod = r.DayWorkTimePeriodNormalized,
+                            NightWorkTimePeriod = r.NightWorkTimePeriodNormalized,
+                            WorkedMinutes = r.WorkedMinutes,
+                            WorkedHoursRounded = r.WorkedHoursRounded,
+                            BaseNormativeHours = r.BaseNormativeHours,
+                            FiftyPercentageBonusHours = r.FiftyPercentageBonusHours,
+                            HundredPercentageBonusHours = r.HundredPercentageBonusHours,
+                            SaturdayHours = r.SaturdayHours,
+                            NightHours = r.NightHours
+                        })
+                        .ToList()
+                })
+                .ToList()
+        };
         
-        var payloadContent = PrepareContentRequest(payloadModel);
+        var payloadContent = PrepareContentRequest(payload);
         
         var httpClient = PrepareHttpClient();
         using var response = await httpClient.PostAsync("api/gratyfikant", payloadContent);
