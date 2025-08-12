@@ -3,6 +3,7 @@ import {
 	WorkingTimeRecordReportHoursDataFormModel,
 	WorkingTimeRecordSummaryDataFormModel
 } from '../models/working-time-record-summary-data-form.model';
+import { SendHoursDialogResponse } from '../components/send-hours-dialog/send-hours-dialog.component';
 
 export namespace WorkingTimeRecord {
 	const prefix = '[WorkingTimeRecord]';
@@ -68,7 +69,7 @@ export namespace WorkingTimeRecord {
 	}
 
 	export class SendHoursToGratyfikant {
-		constructor() {}
+		constructor(public payload: SendHoursDialogResponse) {}
 
 		static readonly type = `${prefix} ${SendHoursToGratyfikant.name}`;
 	}

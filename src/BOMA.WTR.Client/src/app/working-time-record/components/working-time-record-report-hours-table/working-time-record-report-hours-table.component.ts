@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, inject, NgZone, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { catchError, finalize, Observable, of, Subscription, switchMap, tap, throwError } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { WorkingTimeRecordState } from '../../state/working-time-record.state';
 import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
@@ -18,15 +18,8 @@ import UpdateReportHoursData = WorkingTimeRecord.UpdateReportHoursData;
 import { MatDialog } from '@angular/material/dialog';
 import { DepartmentsArray } from '../../../shared/models/departments-array';
 import { ShiftTypesArray } from '../../../shared/models/shift-types-array';
-import {
-	ConfirmationDialogComponent,
-	ConfirmationDialogModel
-} from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
-import {
-	InformationDialogComponent,
-	InformationDialogModel
-} from '../../../shared/components/information-dialog/information-dialog.component';
-import { HttpErrorResponse } from '@angular/common/http';
+import { SendHoursDialogComponent, SendHoursDialogModel, SendHoursDialogResponse } from '../send-hours-dialog/send-hours-dialog.component';
+import { DepartmentsEnum } from '../../../shared/models/departments.enum';
 
 @Component({
 	selector: 'app-working-time-record-report-hours-table',
@@ -162,27 +155,22 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 <br>Zmiana: <b>${ShiftTypesArray.filter((x) => x.value === query.shiftId)[0].key}</b>
 <br><br>Po synchronizacji otrzymasz szczegółową informację o błędach, które wystąpiły podczas wysyłki danych do Gratyfikanta.`;
 
-		const dialogData = new ConfirmationDialogModel('Potwierdzenie wysłania godzin', message);
+		const dialogData = new SendHoursDialogModel('Potwierdzenie wysłania godzin', message, query.month, query.year);
 
 		this.subscription.add(
 			this.dialogRef
-				.open(ConfirmationDialogComponent, {
+				.open(SendHoursDialogComponent, {
 					maxWidth: '400px',
 					data: dialogData
 				})
 				.afterClosed()
-				.pipe(
-					switchMap((dialogResultAction) => {
-						if (dialogResultAction === undefined || dialogResultAction === false) {
-							return of({});
-						}
+				.subscribe((result: SendHoursDialogResponse | null) => {
+					if (!result) {
+						return;
+					}
 
-						this.store.dispatch(new SendHoursToGratyfikant());
-
-						return of({});
-					})
-				)
-				.subscribe()
+					this.store.dispatch(new SendHoursToGratyfikant(result));
+				})
 		);
 	}
 
@@ -268,5 +256,21 @@ export class WorkingTimeRecordReportHoursTableComponent implements AfterViewInit
 
 		this.store.dispatch(new UpdateReportHoursData(updateModel.employeeId, updateModel));
 		this.cancelEditMode();
+	}
+
+	canShowSendHoursButton(): boolean {
+		const query = this.store.selectSnapshot(WorkingTimeRecordState.getSearchQueryModel);
+
+		const allowedDepartments = [
+			DepartmentsEnum.WarehouseDepartment,
+			DepartmentsEnum.AccessoryDepartment,
+			DepartmentsEnum.ProductionDepartment,
+			DepartmentsEnum.PackingDepartment,
+			DepartmentsEnum.BomaDepartment
+		];
+
+		const allowedValues = DepartmentsArray.filter((d) => allowedDepartments.includes(d.key)).map((d) => d.value);
+
+		return allowedValues.includes(query.departmentId);
 	}
 }

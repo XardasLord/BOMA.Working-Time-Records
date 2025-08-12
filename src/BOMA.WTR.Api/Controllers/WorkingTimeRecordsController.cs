@@ -25,9 +25,9 @@ public class WorkingTimeRecordsController : ApiBaseController
     }
     
     [HttpPost("gratyfikant")]
-    public async Task<ActionResult<List<string>>> SendToGratyfikant([FromQuery] GetRecordsQueryModel queryModel)
+    public async Task<ActionResult<List<string>>> SendToGratyfikant([FromQuery] GetRecordsQueryModel queryModel, [FromQuery] DateRangeQueryModel dateRangeQueryModel)
     {
-        var response = await Mediator.Send(new SendToGratyfikantCommand(queryModel));
+        var response = await Mediator.Send(new SendToGratyfikantCommand(queryModel, dateRangeQueryModel));
 
         return Ok(response);
     }

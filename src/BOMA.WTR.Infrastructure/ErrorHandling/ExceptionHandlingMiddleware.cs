@@ -36,7 +36,7 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
         {
             title = GetTitle(exception),
             status = statusCode,
-            detail = exception.Message,
+            details = exception.Message,
             errors = GetErrors(exception)
         };
         httpContext.Response.ContentType = "application/json";

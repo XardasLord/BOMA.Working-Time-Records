@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>
+	{{ title }}
+</h1>
+
+<div mat-dialog-content class="space-y-4">
+	<p [innerHTML]="message"></p>
+
+	<mat-form-field appearance="outline" class="w-full">
+		<mat-label>Zakres synchronizacji dat</mat-label>
+
+		<!-- Powiązanie z formGroup "range" -->
+		<mat-date-range-input [rangePicker]="picker" [formGroup]="range" [min]="firstOfMonth" [max]="today">
+			<input matStartDate placeholder="Od" formControlName="start" />
+			<input matEndDate placeholder="Do" formControlName="end" />
+		</mat-date-range-input>
+
+		<mat-datepicker-toggle matSuffix [for]="picker" />
+		<mat-date-range-picker #picker />
+
+		<!-- Komunikaty o błędach -->
+		<mat-error *ngIf="range.get('start')?.hasError('matDatepickerMin')">
+			Data „Od” nie może być wcześniejsza niż pierwszy dzień bieżącego miesiąca.
+		</mat-error>
+		<mat-error *ngIf="range.get('start')?.hasError('matDatepickerParse')"> Niepoprawna data początkowa. </mat-error>
+
+		<mat-error *ngIf="range.get('end')?.hasError('endBeforeStart')"> Data „Do” nie może być wcześniejsza niż „Od”. </mat-error>
+		<mat-error *ngIf="range.get('end')?.hasError('matDatepickerMax')"> Data „Do” nie może być późniejsza niż dzisiaj. </mat-error>
+		<mat-error *ngIf="range.get('end')?.hasError('matDatepickerParse')"> Niepoprawna data końcowa. </mat-error>
+	</mat-form-field>
+
+	<!-- (opcjonalnie) szybkie ustawienie pełnego miesiąca -->
+	<div class="flex gap-2">
+		<button mat-stroked-button (click)="setThisMonth()">Pełny bieżący miesiąc</button>
+		<button mat-button (click)="clearRange()">Wyczyść</button>
+	</div>
+</div>
+
+<div mat-dialog-actions align="end" class="pt-2">
+	<button mat-button (click)="onDismiss()">Nie</button>
+	<button mat-raised-button color="primary" (click)="onConfirm()" [disabled]="range.invalid">Tak</button>
+</div>

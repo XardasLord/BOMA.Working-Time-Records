@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using BOMA.WTR.Application.InsERT;
 using BOMA.WTR.Application.InsERT.Gratyfikant;
+using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Commands.SendToGratyfikant;
 using BOMA.WTR.Application.UseCases.WorkingTimeRecords.Queries.Models;
 using BOMA.WTR.Infrastructure.InsERT.Gratyfikant.PayloadModels;
 
@@ -16,11 +17,12 @@ public class GratyfikantApiService(IHttpClientFactory httpClientFactory) : IGrat
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
     };
 
-    public async Task<List<string>> SendHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> records)
+    public async Task<List<string>> SendHours(IEnumerable<EmployeeWorkingTimeRecordViewModel> records, DepartmentType departmentType)
     {
         var payloadModel = records
             .Select(x => new HoursSyncPayloadModel
             {
+                DepartmentType = departmentType,
                 Employee = new EmployeePayloadModel
                 {
                     FirstName = x.Employee.FirstName,

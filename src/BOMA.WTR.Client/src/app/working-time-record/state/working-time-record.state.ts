@@ -291,7 +291,7 @@ export class WorkingTimeRecordState {
 				this.toastService.success('Dane zostały zapisane');
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.error.details}`);
 				return throwError(() => e);
 			}),
 			finalize(() => {
@@ -312,7 +312,7 @@ export class WorkingTimeRecordState {
 				this.toastService.success('Dane zostały zapisane');
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.error.details}`);
 				return throwError(() => e);
 			}),
 			finalize(() => {
@@ -333,7 +333,7 @@ export class WorkingTimeRecordState {
 				this.toastService.success('Dane zostały zapisane');
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`);
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.error.details}`);
 				return throwError(() => e);
 			}),
 			finalize(() => {
@@ -343,10 +343,10 @@ export class WorkingTimeRecordState {
 	}
 
 	@Action(SendHoursToGratyfikant)
-	sendHoursToGratyfikant(ctx: StateContext<WorkingTimeRecordStateModel>) {
+	sendHoursToGratyfikant(ctx: StateContext<WorkingTimeRecordStateModel>, action: SendHoursToGratyfikant) {
 		this.progressSpinnerService.showProgressSpinner();
 
-		return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query).pipe(
+		return this.workingTimeRecordService.sendHoursToGratyfikant(ctx.getState().query, action.payload.start, action.payload.end).pipe(
 			tap((response) => {
 				this.toastService.success('Dane zostały wysłane do Gratyfikanta', 'Synchronizacja danych', {
 					onActivateTick: true
@@ -363,7 +363,7 @@ export class WorkingTimeRecordState {
 				);
 			}),
 			catchError((e: HttpErrorResponse) => {
-				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.message}`, 'Synchronizacja danych', {
+				this.toastService.error(`Wystąpił błąd przy aktualizacji danych - ${e.error.details}`, 'Synchronizacja danych', {
 					onActivateTick: true
 				});
 
@@ -405,7 +405,7 @@ export class WorkingTimeRecordState {
 							);
 						}),
 						catchError((e: HttpErrorResponse) => {
-							this.toastService.error(`Wystąpił błąd przy zamykaniu miesiąca - ${e.message}`);
+							this.toastService.error(`Wystąpił błąd przy zamykaniu miesiąca - ${e.error.details}`);
 							return throwError(() => e);
 						}),
 						finalize(() => {

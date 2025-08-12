@@ -180,7 +180,13 @@
 </div>
 
 <div class="fixed bottom-6 right-40 flex flex-row items-center space-x-3 z-50">
-	<button mat-fab color="accent" matTooltip="Wyślij aktualnie widoczne godziny pracy do gratyfikanta" (click)="sendHoursToGratyfikant()">
+	<button
+		mat-fab
+		color="accent"
+		matTooltip="Wyślij aktualnie widoczne godziny pracy do gratyfikanta"
+		(click)="sendHoursToGratyfikant()"
+		[disabled]="!canShowSendHoursButton()"
+	>
 		<mat-icon>send</mat-icon>
 	</button>
 </div>

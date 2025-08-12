@@ -9,6 +9,7 @@ import {
 	WorkingTimeRecordReportHoursDataFormModel,
 	WorkingTimeRecordSummaryDataFormModel
 } from '../models/working-time-record-summary-data-form.model';
+import { formatDate } from '@angular/common';
 
 @Injectable()
 export class WorkingTimeRecordService extends IWorkingTimeRecordService {
@@ -36,8 +37,13 @@ export class WorkingTimeRecordService extends IWorkingTimeRecordService {
 		return this.httpClient.patch<void>(`${this.apiEndpoint}/employees/${employeeId}/workingTimeRecordsReportHours`, updateModel);
 	}
 
-	sendHoursToGratyfikant(queryModel: QueryModel): Observable<string[]> {
-		const queryParams = this.getQueryParams(queryModel);
+	sendHoursToGratyfikant(queryModel: QueryModel, startDate: Date, endDate: Date): Observable<string[]> {
+		let queryParams = this.getQueryParams(queryModel);
+
+		const start = formatDate(startDate, 'yyyy-MM-dd', 'pl-PL'); // lokalny czas
+		const end = formatDate(endDate, 'yyyy-MM-dd', 'pl-PL');
+
+		queryParams = queryParams.set('startDate', start).set('endDate', end);
 
 		return this.httpClient.post<string[]>(`${this.apiEndpoint}/workingTimeRecords/gratyfikant`, null, {
 			params: queryParams

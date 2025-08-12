@@ -11,9 +11,32 @@ public class SendToGratyfikantCommandHandler(
 {
     public async Task<List<string>> Handle(SendToGratyfikantCommand command, CancellationToken cancellationToken)
     {
+        var departmentType = (DepartmentType)command.QueryModel.DepartmentId!;
+        if (departmentType is DepartmentType.Akcesoria or DepartmentType.Zlecenia or DepartmentType.Wszyscy)
+        {
+            throw new InvalidOperationException($"Nie można eksportować godzin do Gratyfikanta dla działu '{departmentType.ToString()}'");
+        }
+        
         var records = await mediator.Send(new GetAllWorkingTimeRecordsQuery(command.QueryModel), cancellationToken);
         
-        var response = await gratyfikantService.SendHours(records);
+        var start = command.DateRangeQueryModel.StartDate;
+        var endExclusive = command.DateRangeQueryModel.EndDate.Date.AddDays(1);
+        
+        records = records
+            .Where(r => r.WorkingTimeRecordsAggregated
+                .Where(wtr => wtr.DayWorkTimePeriodNormalized is not null || wtr.NightWorkTimePeriodNormalized is not null && wtr.WorkedHoursRounded > 0)
+                .Any(wtr => wtr.Date >= start && wtr.Date < endExclusive))
+            .Select(r => 
+            {
+                r.WorkingTimeRecordsAggregated = r.WorkingTimeRecordsAggregated
+                    .Where(wtr => wtr.Date >= start && wtr.Date < endExclusive)
+                    .Where(wtr => wtr.DayWorkTimePeriodNormalized is not null || wtr.NightWorkTimePeriodNormalized is not null && wtr.WorkedHoursRounded > 0)
+                    .ToList();
+                return r;
+            })
+            .ToList();
+        
+        var response = await gratyfikantService.SendHours(records, departmentType);
         
         return response;
     }
