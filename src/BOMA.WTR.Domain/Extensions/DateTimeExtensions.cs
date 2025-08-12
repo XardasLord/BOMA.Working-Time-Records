@@ -4,6 +4,14 @@ public static class DateTimeExtensions
 {
     private static readonly Dictionary<DateTime, bool> BankHolidays = new()
     {
+        // Last argument is true if the bank holiday is on a Saturday, otherwise false
+        { new DateTime(2022, 1, 1), false },
+        { new DateTime(2022, 1, 6), false },
+        { new DateTime(2022, 4, 15), false },
+        { new DateTime(2022, 4, 18), false },
+        { new DateTime(2022, 5, 1), false },
+        { new DateTime(2022, 5, 3), false },
+        { new DateTime(2022, 5, 29), false },
         { new DateTime(2022, 6, 5), false },
         { new DateTime(2022, 6, 16), false },
         { new DateTime(2022, 8, 15), false },
@@ -63,7 +71,30 @@ public static class DateTimeExtensions
         { new DateTime(2026, 11, 11), false },
         { new DateTime(2026, 12, 24), false },
         { new DateTime(2026, 12, 25), false },
-        { new DateTime(2026, 12, 26), true }
+        { new DateTime(2026, 12, 26), true },
+        
+        { new DateTime(2027, 1, 1), false },
+        { new DateTime(2027, 1, 6), false },
+        { new DateTime(2027, 3, 29), false },
+        { new DateTime(2027, 5, 1), true },
+        { new DateTime(2027, 5, 3), false },
+        { new DateTime(2027, 5, 27), false },
+        { new DateTime(2027, 11, 1), false },
+        { new DateTime(2027, 11, 11), false },
+        { new DateTime(2027, 12, 24), false },
+        { new DateTime(2027, 12, 25), true },
+        
+        { new DateTime(2028, 1, 1), true },
+        { new DateTime(2028, 1, 6), false },
+        { new DateTime(2028, 4, 17), false },
+        { new DateTime(2028, 5, 1), false },
+        { new DateTime(2028, 5, 3), false },
+        { new DateTime(2028, 6, 15), false },
+        { new DateTime(2028, 8, 15), false },
+        { new DateTime(2028, 11, 1), false },
+        { new DateTime(2028, 11, 11), true },
+        { new DateTime(2028, 12, 25), false },
+        { new DateTime(2028, 12, 26), false },
     };
     
     public static int WeekDaysInMonth(this DateTime dateTime)
