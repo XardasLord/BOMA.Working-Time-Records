@@ -12,7 +12,7 @@ public class SendToGratyfikantCommandHandler(
     public async Task<List<string>> Handle(SendToGratyfikantCommand command, CancellationToken cancellationToken)
     {
         var departmentType = (DepartmentType)command.QueryModel.DepartmentId!;
-        if (departmentType is DepartmentType.Akcesoria or DepartmentType.Zlecenia or DepartmentType.Wszyscy)
+        if (departmentType is DepartmentType.Zlecenia or DepartmentType.Agencja or DepartmentType.Wszyscy)
         {
             throw new InvalidOperationException($"Nie można eksportować godzin do Gratyfikanta dla działu '{departmentType.ToString()}'");
         }
