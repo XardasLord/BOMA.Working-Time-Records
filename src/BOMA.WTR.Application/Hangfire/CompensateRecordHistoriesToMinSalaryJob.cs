@@ -78,6 +78,10 @@ public class CompensateRecordHistoriesToMinSalaryJob(
         {
             foreach (var historyEntry in employee.WorkingTimeRecordAggregatedHistories)
             {
+                // Remove previous compensation if exists
+                historyEntry.SalaryInformation.FinalSumSalary -= historyEntry.SalaryInformation.MinSalaryCompensationAmount;
+                
+                // Add new compensation
                 historyEntry.SalaryInformation.MinSalaryCompensationFactor = minSalaryCompensationFactor;
                 historyEntry.SalaryInformation.MinSalaryCompensationAmount = Math.Round(historyEntry.SalaryInformation.GrossBaseSalary * minSalaryCompensationFactor, 2);
                 historyEntry.SalaryInformation.FinalSumSalary += historyEntry.SalaryInformation.MinSalaryCompensationAmount;
