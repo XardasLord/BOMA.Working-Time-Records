@@ -10,7 +10,7 @@ import { Role } from '../../../shared/auth/models/userDetails';
 import { WorkingTimeRecordDetailedTableComponent } from '../working-time-record-detailed-table/working-time-record-detailed-table.component';
 import { WorkingTimeRecordSummaryTableComponent } from '../working-time-record-summary-table/working-time-record-summary-table.component';
 import { WorkingTimeRecordReportHoursTableComponent } from '../working-time-record-report-hours-table/working-time-record-report-hours-table.component';
-import { WorkingTimeRecordReportHoursSummaryTableComponent } from '../working-time-record-report-hours-summary-table/working-time-record-report-hours-summary-table.component';
+import { WorkingTimeRecordReportsComponent } from '../working-time-record-report-hours-summary-table/working-time-record-reports.component';
 import { WorkingTimeRecordReportAbsentsTableComponent } from '../working-time-record-report-absents-table/working-time-record-report-absents-table.component';
 import GetAll = WorkingTimeRecord.GetAll;
 import ClosePreviousMonth = WorkingTimeRecord.ClosePreviousMonth;
@@ -42,8 +42,8 @@ export class WorkingTimeRecordListComponent implements OnInit {
 			visibleFor: []
 		},
 		{
-			label: 'Raport godzinowy - podsumowanie',
-			component: WorkingTimeRecordReportHoursSummaryTableComponent,
+			label: 'Raporty',
+			component: WorkingTimeRecordReportsComponent,
 			visibleFor: []
 		},
 		{
