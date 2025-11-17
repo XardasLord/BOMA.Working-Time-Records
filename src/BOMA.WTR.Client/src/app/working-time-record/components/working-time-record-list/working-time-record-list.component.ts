@@ -44,7 +44,7 @@ export class WorkingTimeRecordListComponent implements OnInit {
 		{
 			label: 'Raporty',
 			component: WorkingTimeRecordReportsComponent,
-			visibleFor: []
+			visibleFor: [Role.Admin]
 		},
 		{
 			label: 'Raport nieobecności',
