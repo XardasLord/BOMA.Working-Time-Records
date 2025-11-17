@@ -1,0 +1,124 @@
+.summary-box {
+	background-color: #ffffff;
+	border: 1px solid #e0e0e0;
+	border-radius: 16px;
+	padding: 20px 24px;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* Nagłówek sekcji */
+.summary-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.summary-title {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #1a237e;
+}
+
+.summary-subtitle {
+	margin: 2px 0 0;
+	font-size: 13px;
+	color: #757575;
+}
+
+/* „Pigułka” z liczbą pracowników */
+.summary-pill {
+	align-self: center;
+	padding: 6px 12px;
+	border-radius: 999px;
+	font-size: 13px;
+	background: #e8eaf6;
+	color: #1a237e;
+	white-space: nowrap;
+}
+
+/* Część z wierszami */
+.summary-body {
+	margin-top: 8px;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Pojedynczy wiersz */
+.summary-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 0;
+	border-bottom: 1px solid #f7f7f7;
+	gap: 12px;
+}
+
+.summary-row:last-child {
+	border-bottom: none;
+}
+
+/* Podkreślenie ważniejszych pozycji (np. suma końcowa) */
+.summary-row--highlight {
+	margin-top: 6px;
+	padding-top: 14px;
+	border-top: 2px solid #c5cae9;
+	border-bottom: none;
+}
+
+/* Opis (lewa strona) */
+.summary-label {
+	font-weight: 500;
+	color: #424242;
+	font-size: 14px;
+}
+
+/* Wartość (prawa strona) */
+.summary-value {
+	font-weight: 600;
+	font-size: 15px;
+	color: #1a237e;
+	text-align: right;
+}
+
+/* Akcent dla kluczowej wartości (suma) */
+.summary-value--accent {
+	font-size: 16px;
+}
+
+/* Lepszy wygląd na komórkach – łamanie tekstu */
+@media (max-width: 599px) {
+	.summary-row {
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.summary-value {
+		max-width: 50%;
+		word-break: break-word;
+	}
+}
+
+/* Tryb do druku – bez cieni, bez tła */
+@media print {
+	.summary-container {
+		padding: 0;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px;
+	}
+
+	.summary-box {
+		box-shadow: none;
+		border: 1px solid #aaa;
+	}
+
+	.summary-pill {
+		border: 1px solid #1a237e;
+	}
+}

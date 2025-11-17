@@ -1,0 +1,73 @@
+<section class="summary-box">
+	<header class="summary-header">
+		<div>
+			<h3 class="summary-title">Wynagrodzenia</h3>
+			<p class="summary-subtitle">Podsumowanie składników płac</p>
+		</div>
+		<span class="summary-pill"> 🧑 {{ getTotalNumberOfEmployees() | async }} pracowników </span>
+	</header>
+
+	<div class="summary-body">
+		<div class="summary-row">
+			<span class="summary-label">🕓 Brutto</span>
+			<span class="summary-value">
+				{{ getTotalGrossBaseSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⏱️ Premia</span>
+			<span class="summary-value">
+				{{ getTotalBonusSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⏱️ Nadgodziny</span>
+			<span class="summary-value">
+				{{ getTotalOvertimeSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">📆 Soboty</span>
+			<span class="summary-value">
+				{{ getTotalSaturdaySalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">🌙 Nocki</span>
+			<span class="summary-value">
+				{{ getTotalNightSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">🏖️ Urlop</span>
+			<span class="summary-value">
+				{{ getTotalHolidaySalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">🤒 Chorobowe</span>
+			<span class="summary-value">
+				{{ getTotalSicknessSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">➕ Dodatki</span>
+			<span class="summary-value">
+				{{ getTotalAdditionalSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⚖️ Wyrównanie</span>
+			<span class="summary-value">
+				{{ getTotalCompensationSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+
+		<div class="summary-row summary-row--highlight">
+			<span class="summary-label">📊 Suma końcowa</span>
+			<span class="summary-value summary-value--accent">
+				{{ getTotalFinalSalarySum() | async | currency: 'PLN' }}
+			</span>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,36 @@
+<section class="summary-box">
+	<header class="summary-header">
+		<div>
+			<h3 class="summary-title">Czas pracy</h3>
+			<p class="summary-subtitle">Podsumowanie godzin w miesiącu</p>
+		</div>
+		<span class="summary-pill"> 🧑 {{ getTotalNumberOfEmployees() | async }} pracowników </span>
+	</header>
+
+	<div class="summary-body">
+		<div class="summary-row">
+			<span class="summary-label">🕓 Godziny nominalne</span>
+			<span class="summary-value">
+				{{ getTotalNormativeHoursSum() | async }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⏱️ Nadgodziny 50%</span>
+			<span class="summary-value">
+				{{ getTotalFiftyPercentageBonusHoursSum() | async }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">⏱️ Nadgodziny 100%</span>
+			<span class="summary-value">
+				{{ getTotalHundredPercentageBonusHoursSum() | async }}
+			</span>
+		</div>
+		<div class="summary-row">
+			<span class="summary-label">📆 Soboty</span>
+			<span class="summary-value">
+				{{ getTotalSaturdayHoursSum() | async }}
+			</span>
+		</div>
+	</div>
+</section>

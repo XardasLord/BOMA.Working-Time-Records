@@ -1,72 +1,25 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Store } from '@ngxs/store';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { WorkingTimeRecordState } from '../../state/working-time-record.state';
-import { EmployeeWorkingTimeRecordDetailsModel } from '../../models/employee-working-time-record-details.model';
-
-import { Role } from '../../../shared/auth/models/userDetails';
+import { EmployeeWorkingTimeRecordDetailsModel } from '../../../working-time-record/models/employee-working-time-record-details.model';
+import { ReportsState } from '../../state/reports.state';
+import { map } from 'rxjs/operators';
 
 @Component({
-	selector: 'app-working-time-record-reports',
-	templateUrl: './working-time-record-reports.component.html',
-	styleUrls: ['./working-time-record-reports.component.scss']
+	selector: 'app-salary-report',
+	standalone: true,
+	imports: [AsyncPipe, CurrencyPipe],
+	templateUrl: './salary-report.component.html',
+	styleUrl: './salary-report.component.scss'
 })
-export class WorkingTimeRecordReportsComponent implements AfterViewInit {
-	protected readonly Role = Role;
+export class SalaryReportComponent {
+	private store = inject(Store);
 
-	detailedRecords$!: Observable<EmployeeWorkingTimeRecordDetailsModel[]>;
-
-	constructor(private store: Store) {}
-
-	ngAfterViewInit() {
-		this.detailedRecords$ = this.store.select(WorkingTimeRecordState.getDetailedRecords);
-	}
+	detailedRecords$: Observable<EmployeeWorkingTimeRecordDetailsModel[]> = this.store.select(ReportsState.getDetailedRecords);
 
 	getTotalNumberOfEmployees(): Observable<number> {
 		return this.detailedRecords$?.pipe(map((results) => results.length));
-	}
-
-	getTotalNormativeHoursSum(): Observable<number> {
-		return this.detailedRecords$?.pipe(
-			map((results) =>
-				results
-					.map((r) => r.workingTimeRecordsAggregated.reduce((accumulator, obj) => accumulator + obj.baseNormativeHours, 0))
-					.reduce((acc, obj) => acc + obj, 0)
-			)
-		);
-	}
-
-	getTotalFiftyPercentageBonusHoursSum(): Observable<number> {
-		return this.detailedRecords$?.pipe(
-			map((results) =>
-				results
-					.map((r) => r.workingTimeRecordsAggregated.reduce((accumulator, obj) => accumulator + obj.fiftyPercentageBonusHours, 0))
-					.reduce((acc, obj) => acc + obj, 0)
-			)
-		);
-	}
-
-	getTotalHundredPercentageBonusHoursSum(): Observable<number> {
-		return this.detailedRecords$?.pipe(
-			map((results) =>
-				results
-					.map((r) =>
-						r.workingTimeRecordsAggregated.reduce((accumulator, obj) => accumulator + obj.hundredPercentageBonusHours, 0)
-					)
-					.reduce((acc, obj) => acc + obj, 0)
-			)
-		);
-	}
-
-	getTotalSaturdayHoursSum(): Observable<number> {
-		return this.detailedRecords$?.pipe(
-			map((results) =>
-				results
-					.map((r) => r.workingTimeRecordsAggregated.reduce((accumulator, obj) => accumulator + obj.saturdayHours, 0))
-					.reduce((acc, obj) => acc + obj, 0)
-			)
-		);
 	}
 
 	getTotalGrossBaseSalarySum(): Observable<number> {

@@ -3,11 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { NavigationComponent } from '../ui/components/navigation/navigation.component';
 import { Role } from '../../shared/auth/models/userDetails';
 import { HasRoleGuard } from '../guards/has-role.guard';
+import { ReportsService } from '../../reports/services/reports.service';
+import { provideStates } from '@ngxs/store';
+import { ReportsState } from '../../reports/state/reports.state';
 
 export const RoutePaths = {
 	Employees: 'employees',
 	Groups: 'groups',
 	WorkingTimeRecords: 'working-time-records',
+	Reports: 'reports',
 	Users: 'users',
 	Settings: 'settings',
 	Auth: 'auth',
@@ -27,6 +31,15 @@ const routes: Routes = [
 			{
 				path: RoutePaths.WorkingTimeRecords,
 				loadChildren: () => import('../../working-time-record/working-time-record.module').then((m) => m.WorkingTimeRecordModule)
+			},
+			{
+				path: RoutePaths.Reports,
+				loadComponent: () => import('../../reports/pages/reports/reports.component').then((c) => c.ReportsComponent),
+				canActivate: [HasRoleGuard],
+				data: {
+					roles: [Role.Admin]
+				},
+				providers: [provideStates([ReportsState]), ReportsService]
 			},
 			{
 				path: RoutePaths.Users,

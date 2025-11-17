@@ -1,0 +1,15 @@
+.summary-container {
+	padding: 24px;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 24px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+/* 2 kolumny na większych ekranach */
+@media (min-width: 960px) {
+	.summary-container {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}

@@ -1,0 +1,39 @@
+<section class="flex flex-wrap gap-4 mb-4 md:flex-row flex-col">
+	<mat-form-field appearance="outline" class="w-56">
+		<mat-label>Pracownik</mat-label>
+		<input matInput (valueChanged)="searchTextChanged($event)" [value]="(queryModel$ | async)?.searchText" appDebounce />
+		<mat-icon matPrefix class="text-gray-500">person</mat-icon>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline" class="w-56">
+		<mat-label>Rok</mat-label>
+		<mat-select (selectionChange)="yearChanged($event.value)" [value]="(queryModel$ | async)?.year">
+			<mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+		</mat-select>
+		<mat-icon matPrefix class="text-gray-500">calendar_today</mat-icon>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline" class="w-56">
+		<mat-label>Miesiąc</mat-label>
+		<mat-select (selectionChange)="monthChanged($event.value)" [value]="(queryModel$ | async)?.month">
+			<mat-option *ngFor="let month of months" [value]="month.value">{{ month.key }}</mat-option>
+		</mat-select>
+		<mat-icon matPrefix class="text-gray-500">calendar_month</mat-icon>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline" class="w-56">
+		<mat-label>Dział</mat-label>
+		<mat-select (selectionChange)="groupChanged($event.value)" [value]="(queryModel$ | async)?.departmentId">
+			<mat-option *ngFor="let department of departments" [value]="department.value">{{ department.key }}</mat-option>
+		</mat-select>
+		<mat-icon matPrefix class="text-gray-500">group</mat-icon>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline" class="w-56">
+		<mat-label>Zmiana</mat-label>
+		<mat-select (selectionChange)="shiftChanged($event.value)" [value]="(queryModel$ | async)?.shiftId">
+			<mat-option *ngFor="let shift of shifts" [value]="shift.value">{{ shift.key }}</mat-option>
+		</mat-select>
+		<mat-icon matPrefix class="text-gray-500">schedule</mat-icon>
+	</mat-form-field>
+</section>
