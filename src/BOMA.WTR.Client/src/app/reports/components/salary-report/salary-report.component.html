@@ -4,69 +4,69 @@
 			<h3 class="summary-title">Wynagrodzenia</h3>
 			<p class="summary-subtitle">Podsumowanie składników płac</p>
 		</div>
-		<span class="summary-pill"> 🧑 {{ getTotalNumberOfEmployees() | async }} pracowników </span>
+		<span class="summary-pill"> 🧑 {{ (reportData$ | async)?.salaryReport?.employeesCount }} pracowników </span>
 	</header>
 
 	<div class="summary-body">
 		<div class="summary-row">
 			<span class="summary-label">🕓 Brutto</span>
 			<span class="summary-value">
-				{{ getTotalGrossBaseSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.grossBaseSalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⏱️ Premia</span>
 			<span class="summary-value">
-				{{ getTotalBonusSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.bonusSalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⏱️ Nadgodziny</span>
 			<span class="summary-value">
-				{{ getTotalOvertimeSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.overtimeSalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">📆 Soboty</span>
 			<span class="summary-value">
-				{{ getTotalSaturdaySalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.saturdaySalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">🌙 Nocki</span>
 			<span class="summary-value">
-				{{ getTotalNightSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.nightSalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">🏖️ Urlop</span>
 			<span class="summary-value">
-				{{ getTotalHolidaySalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.holidaySalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">🤒 Chorobowe</span>
 			<span class="summary-value">
-				{{ getTotalSicknessSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.sicknessSalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">➕ Dodatki</span>
 			<span class="summary-value">
-				{{ getTotalAdditionalSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.additionalSalary | currency: 'PLN' }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⚖️ Wyrównanie</span>
 			<span class="summary-value">
-				{{ getTotalCompensationSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.compensationSalary | currency: 'PLN' }}
 			</span>
 		</div>
 
 		<div class="summary-row summary-row--highlight">
 			<span class="summary-label">📊 Suma końcowa</span>
 			<span class="summary-value summary-value--accent">
-				{{ getTotalFinalSalarySum() | async | currency: 'PLN' }}
+				{{ (reportData$ | async)?.salaryReport?.finalSalary | currency: 'PLN' }}
 			</span>
 		</div>
 	</div>

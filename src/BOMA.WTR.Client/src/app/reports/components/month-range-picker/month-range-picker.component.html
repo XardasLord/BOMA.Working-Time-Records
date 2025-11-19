@@ -1,0 +1,36 @@
+<div class="flex gap-2">
+	<mat-form-field appearance="outline" class="flex-1">
+		<mat-label>Od miesiąca</mat-label>
+		<input
+			matInput
+			[matDatepicker]="startPicker"
+			[formControl]="startMonthControl"
+			readonly
+			placeholder="Wybierz"
+			(click)="startPicker.open()"
+		/>
+		<mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+		<mat-datepicker
+			#startPicker
+			startView="year"
+			(monthSelected)="onStartMonthSelected($event, startPicker)"
+			panelClass="month-only-picker"
+		>
+		</mat-datepicker>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline" class="flex-1">
+		<mat-label>Do miesiąca</mat-label>
+		<input
+			matInput
+			[matDatepicker]="endPicker"
+			[formControl]="endMonthControl"
+			readonly
+			placeholder="Wybierz"
+			(click)="endPicker.open()"
+		/>
+		<mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+		<mat-datepicker #endPicker startView="year" (monthSelected)="onEndMonthSelected($event, endPicker)" panelClass="month-only-picker">
+		</mat-datepicker>
+	</mat-form-field>
+</div>

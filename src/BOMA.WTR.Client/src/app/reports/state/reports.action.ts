@@ -25,12 +25,12 @@ export namespace Reports {
 		static readonly type = `${prefix} ${ChangeShift.name}`;
 	}
 
-	export class ChangeDate {
+	export class ChangeDateRange {
 		constructor(
-			public year: number,
-			public month: number
+			public startDate: Date,
+			public endDate: Date
 		) {}
 
-		static readonly type = `${prefix} ${ChangeDate.name}`;
+		static readonly type = `${prefix} ${ChangeDateRange.name}`;
 	}
 }

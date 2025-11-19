@@ -5,21 +5,12 @@
 		<mat-icon matPrefix class="text-gray-500">person</mat-icon>
 	</mat-form-field>
 
-	<mat-form-field appearance="outline" class="w-56">
-		<mat-label>Rok</mat-label>
-		<mat-select (selectionChange)="yearChanged($event.value)" [value]="(queryModel$ | async)?.year">
-			<mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
-		</mat-select>
-		<mat-icon matPrefix class="text-gray-500">calendar_today</mat-icon>
-	</mat-form-field>
-
-	<mat-form-field appearance="outline" class="w-56">
-		<mat-label>Miesiąc</mat-label>
-		<mat-select (selectionChange)="monthChanged($event.value)" [value]="(queryModel$ | async)?.month">
-			<mat-option *ngFor="let month of months" [value]="month.value">{{ month.key }}</mat-option>
-		</mat-select>
-		<mat-icon matPrefix class="text-gray-500">calendar_month</mat-icon>
-	</mat-form-field>
+	<app-month-range-picker
+		[startDate]="(queryModel$ | async)?.startDate || null"
+		[endDate]="(queryModel$ | async)?.endDate || null"
+		(dateRangeChanged)="dateRangeChanged($event)"
+	>
+	</app-month-range-picker>
 
 	<mat-form-field appearance="outline" class="w-56">
 		<mat-label>Dział</mat-label>

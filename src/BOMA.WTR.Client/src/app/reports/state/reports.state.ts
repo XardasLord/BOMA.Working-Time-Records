@@ -9,12 +9,13 @@ import { Reports } from './reports.action';
 import LoadData = Reports.LoadData;
 import ApplyFilter = Reports.ApplyFilter;
 import ChangeGroup = Reports.ChangeGroup;
-import ChangeDate = Reports.ChangeDate;
+import ChangeDateRange = Reports.ChangeDateRange;
 import ChangeShift = Reports.ChangeShift;
+import { ReportDataModel } from '../models/report-data.model';
 
 export interface ReportsStateModel {
 	query: QueryModel;
-	detailedRecords: EmployeeWorkingTimeRecordDetailsModel[];
+	reportData: ReportDataModel | null;
 }
 
 const REPORTS_STATE_TOKEN = new StateToken<ReportsStateModel>('reports');
@@ -23,7 +24,7 @@ const REPORTS_STATE_TOKEN = new StateToken<ReportsStateModel>('reports');
 	name: REPORTS_STATE_TOKEN,
 	defaults: {
 		query: DefaultQueryModel,
-		detailedRecords: []
+		reportData: null
 	}
 })
 @Injectable()
@@ -37,19 +38,19 @@ export class ReportsState {
 	}
 
 	@Selector([REPORTS_STATE_TOKEN])
-	static getDetailedRecords(state: ReportsStateModel): EmployeeWorkingTimeRecordDetailsModel[] {
-		return state.detailedRecords;
+	static getReportData(state: ReportsStateModel): ReportDataModel | null {
+		return state.reportData;
 	}
 
 	@Action(LoadData)
-	loadData(ctx: StateContext<ReportsStateModel>, _: LoadData): Observable<EmployeeWorkingTimeRecordDetailsModel[]> {
+	loadData(ctx: StateContext<ReportsStateModel>, _: LoadData): Observable<ReportDataModel> {
 		this.progressSpinnerService.showProgressSpinner();
 
 		return this.reportsService.loadData(ctx.getState().query).pipe(
 			take(1),
 			tap((response) => {
 				ctx.patchState({
-					detailedRecords: response
+					reportData: response
 				});
 			}),
 			catchError((e) => {
@@ -97,11 +98,11 @@ export class ReportsState {
 		return ctx.dispatch(new LoadData());
 	}
 
-	@Action(ChangeDate)
-	changeDate(ctx: StateContext<ReportsStateModel>, action: ChangeDate): Observable<void> {
+	@Action(ChangeDateRange)
+	changeDateRange(ctx: StateContext<ReportsStateModel>, action: ChangeDateRange): Observable<void> {
 		const updatedQuery = { ...ctx.getState().query };
-		updatedQuery.year = action.year;
-		updatedQuery.month = action.month;
+		updatedQuery.startDate = action.startDate;
+		updatedQuery.endDate = action.endDate;
 
 		ctx.patchState({
 			query: updatedQuery

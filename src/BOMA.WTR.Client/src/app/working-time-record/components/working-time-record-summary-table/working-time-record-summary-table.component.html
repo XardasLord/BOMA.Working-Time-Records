@@ -83,7 +83,9 @@
 
 			<ng-container matColumnDef="night">
 				<th mat-header-cell *matHeaderCellDef>Nocka</th>
-				<td mat-cell *matCellDef="let record; let i = index">{{ record?.salaryInformation?.nightBaseSalary | currency: 'PLN' }}</td>
+				<td mat-cell *matCellDef="let record; let i = index">
+					{{ record?.salaryInformation?.nightBaseSalary | currency: 'PLN' }}
+				</td>
 				<td mat-footer-cell *matFooterCellDef></td>
 			</ng-container>
 

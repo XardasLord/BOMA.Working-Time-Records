@@ -4,32 +4,32 @@
 			<h3 class="summary-title">Czas pracy</h3>
 			<p class="summary-subtitle">Podsumowanie godzin w miesiącu</p>
 		</div>
-		<span class="summary-pill"> 🧑 {{ getTotalNumberOfEmployees() | async }} pracowników </span>
+		<span class="summary-pill"> 🧑 {{ (reportData$ | async)?.workingHoursReport?.employeesCount }} pracowników </span>
 	</header>
 
 	<div class="summary-body">
 		<div class="summary-row">
 			<span class="summary-label">🕓 Godziny nominalne</span>
 			<span class="summary-value">
-				{{ getTotalNormativeHoursSum() | async }}
+				{{ (reportData$ | async)?.workingHoursReport?.normativeHours }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⏱️ Nadgodziny 50%</span>
 			<span class="summary-value">
-				{{ getTotalFiftyPercentageBonusHoursSum() | async }}
+				{{ (reportData$ | async)?.workingHoursReport?.fiftyPercentageBonusHours }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⏱️ Nadgodziny 100%</span>
 			<span class="summary-value">
-				{{ getTotalHundredPercentageBonusHoursSum() | async }}
+				{{ (reportData$ | async)?.workingHoursReport?.hundredPercentageBonusHours }}
 			</span>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">📆 Soboty</span>
 			<span class="summary-value">
-				{{ getTotalSaturdayHoursSum() | async }}
+				{{ (reportData$ | async)?.workingHoursReport?.saturdayHours }}
 			</span>
 		</div>
 	</div>
