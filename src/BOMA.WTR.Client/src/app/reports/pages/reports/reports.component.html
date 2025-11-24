@@ -4,3 +4,9 @@
 	<app-working-hours-report />
 	<app-salary-report />
 </div>
+
+<div class="fixed bottom-6 right-6 flex flex-row items-center space-x-3 z-50">
+	<button mat-fab color="primary" matTooltip="Drukuj" ngxPrint printSectionId="print-content" [useExistingCss]="true">
+		<mat-icon>print</mat-icon>
+	</button>
+</div>
