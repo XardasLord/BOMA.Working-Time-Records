@@ -10,57 +10,147 @@
 	<div class="summary-body">
 		<div class="summary-row">
 			<span class="summary-label">🕓 Brutto</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.grossBaseSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.grossBaseSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.grossBaseSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⏱️ Premia</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.bonusSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.bonusSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.bonusSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⏱️ Nadgodziny</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.overtimeSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.overtimeSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.overtimeSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">📆 Soboty</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.saturdaySalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.saturdaySalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.saturdaySalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">🌙 Nocki</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.nightSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.nightSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.nightSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">🏖️ Urlop</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.holidaySalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.holidaySalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.holidaySalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">🤒 Chorobowe</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.sicknessSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.sicknessSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.sicknessSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">➕ Dodatki</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.additionalSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.additionalSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.additionalSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 		<div class="summary-row">
 			<span class="summary-label">⚖️ Wyrównanie</span>
-			<span class="summary-value">
-				{{ (reportData$ | async)?.salaryReport?.compensationSalary | currency: 'PLN' }}
-			</span>
+			<div class="summary-value-container">
+				<span class="summary-value">
+					{{ (reportData$ | async)?.salaryReport?.compensationSalary | currency: 'PLN' }}
+				</span>
+				<span class="summary-percentage">
+					({{
+						calculatePercentage(
+							(reportData$ | async)?.salaryReport?.compensationSalary,
+							(reportData$ | async)?.salaryReport?.finalSalary
+						) | number: '1.0-1'
+					}}%)
+				</span>
+			</div>
 		</div>
 
 		<div class="summary-row summary-row--highlight">
